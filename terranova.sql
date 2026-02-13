@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 13, 2026 alle 10:01
+-- Creato il: Feb 13, 2026 alle 11:44
 -- Versione del server: 10.4.28-MariaDB
 -- Versione PHP: 8.2.4
 
@@ -196,6 +196,76 @@ CREATE TABLE `anamnesi` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `attivita_fisica`
+--
+
+CREATE TABLE `attivita_fisica` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `descrizione` text NOT NULL,
+  `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `attivita_visita`
+--
+
+CREATE TABLE `attivita_visita` (
+  `fk_visita` int(11) NOT NULL,
+  `fk_attivita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `farmaci`
+--
+
+CREATE TABLE `farmaci` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `descrizione` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `farmaci_prescritti`
+--
+
+CREATE TABLE `farmaci_prescritti` (
+  `fk_visita` int(11) NOT NULL,
+  `fk_farmaci` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `integratori`
+--
+
+CREATE TABLE `integratori` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `descrizione` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `integratori_prescritti`
+--
+
+CREATE TABLE `integratori_prescritti` (
+  `fk_visita` int(11) NOT NULL,
+  `fk_integratori` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `osservazioni_finali`
 --
 
@@ -257,6 +327,53 @@ CREATE TABLE `stato_psico-fisico` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `supporti`
+--
+
+CREATE TABLE `supporti` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `descrizione` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `supporti_prescritti`
+--
+
+CREATE TABLE `supporti_prescritti` (
+  `fk_visita` int(11) NOT NULL,
+  `fk_supporti` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `terapie`
+--
+
+CREATE TABLE `terapie` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `descrizione` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `terapie_prescritte`
+--
+
+CREATE TABLE `terapie_prescritte` (
+  `fk_terapie` int(11) NOT NULL,
+  `fk_visita` int(11) NOT NULL,
+  `note` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `visita`
 --
 
@@ -293,6 +410,45 @@ ALTER TABLE `anamnesi`
   ADD KEY `fk_paziente` (`fk_paziente`);
 
 --
+-- Indici per le tabelle `attivita_fisica`
+--
+ALTER TABLE `attivita_fisica`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `attivita_visita`
+--
+ALTER TABLE `attivita_visita`
+  ADD PRIMARY KEY (`fk_visita`,`fk_attivita`),
+  ADD KEY `fk_attivita` (`fk_attivita`);
+
+--
+-- Indici per le tabelle `farmaci`
+--
+ALTER TABLE `farmaci`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `farmaci_prescritti`
+--
+ALTER TABLE `farmaci_prescritti`
+  ADD PRIMARY KEY (`fk_visita`,`fk_farmaci`),
+  ADD KEY `fk_farmaci` (`fk_farmaci`);
+
+--
+-- Indici per le tabelle `integratori`
+--
+ALTER TABLE `integratori`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `integratori_prescritti`
+--
+ALTER TABLE `integratori_prescritti`
+  ADD PRIMARY KEY (`fk_visita`,`fk_integratori`),
+  ADD KEY `fk_integratori` (`fk_integratori`);
+
+--
 -- Indici per le tabelle `osservazioni_finali`
 --
 ALTER TABLE `osservazioni_finali`
@@ -320,6 +476,32 @@ ALTER TABLE `stato_psico-fisico`
   ADD KEY `fk_visita` (`fk_visita`);
 
 --
+-- Indici per le tabelle `supporti`
+--
+ALTER TABLE `supporti`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `supporti_prescritti`
+--
+ALTER TABLE `supporti_prescritti`
+  ADD PRIMARY KEY (`fk_visita`,`fk_supporti`),
+  ADD KEY `fk_supporti` (`fk_supporti`);
+
+--
+-- Indici per le tabelle `terapie`
+--
+ALTER TABLE `terapie`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `terapie_prescritte`
+--
+ALTER TABLE `terapie_prescritte`
+  ADD PRIMARY KEY (`fk_visita`,`fk_terapie`),
+  ADD KEY `fk_tp_terapie` (`fk_terapie`);
+
+--
 -- Indici per le tabelle `visita`
 --
 ALTER TABLE `visita`
@@ -340,6 +522,24 @@ ALTER TABLE `alimenti`
 -- AUTO_INCREMENT per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `attivita_fisica`
+--
+ALTER TABLE `attivita_fisica`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `farmaci`
+--
+ALTER TABLE `farmaci`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `integratori`
+--
+ALTER TABLE `integratori`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -367,6 +567,18 @@ ALTER TABLE `stato_psico-fisico`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `supporti`
+--
+ALTER TABLE `supporti`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `terapie`
+--
+ALTER TABLE `terapie`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT per la tabella `visita`
 --
 ALTER TABLE `visita`
@@ -390,6 +602,27 @@ ALTER TABLE `anamnesi`
   ADD CONSTRAINT `anamnesi_ibfk_1` FOREIGN KEY (`fk_paziente`) REFERENCES `paziente` (`id`);
 
 --
+-- Limiti per la tabella `attivita_visita`
+--
+ALTER TABLE `attivita_visita`
+  ADD CONSTRAINT `fk_attivita` FOREIGN KEY (`fk_attivita`) REFERENCES `attivita_fisica` (`id`),
+  ADD CONSTRAINT `fk_av_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
+-- Limiti per la tabella `farmaci_prescritti`
+--
+ALTER TABLE `farmaci_prescritti`
+  ADD CONSTRAINT `fk_farmaci` FOREIGN KEY (`fk_farmaci`) REFERENCES `farmaci` (`id`),
+  ADD CONSTRAINT `fk_fp_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
+-- Limiti per la tabella `integratori_prescritti`
+--
+ALTER TABLE `integratori_prescritti`
+  ADD CONSTRAINT `fk_integratori` FOREIGN KEY (`fk_integratori`) REFERENCES `integratori` (`id`),
+  ADD CONSTRAINT `fk_ip_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
 -- Limiti per la tabella `osservazioni_finali`
 --
 ALTER TABLE `osservazioni_finali`
@@ -406,6 +639,20 @@ ALTER TABLE `sonno`
 --
 ALTER TABLE `stato_psico-fisico`
   ADD CONSTRAINT `stato_psico-fisico_ibfk_1` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
+-- Limiti per la tabella `supporti_prescritti`
+--
+ALTER TABLE `supporti_prescritti`
+  ADD CONSTRAINT `fk_sp_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`),
+  ADD CONSTRAINT `fk_supporti` FOREIGN KEY (`fk_supporti`) REFERENCES `supporti` (`id`);
+
+--
+-- Limiti per la tabella `terapie_prescritte`
+--
+ALTER TABLE `terapie_prescritte`
+  ADD CONSTRAINT `fk_tp_terapie` FOREIGN KEY (`fk_terapie`) REFERENCES `terapie` (`id`),
+  ADD CONSTRAINT `fk_tp_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
 
 --
 -- Limiti per la tabella `visita`
