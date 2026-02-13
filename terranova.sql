@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `alimenti` (
   `id` int(11) NOT NULL,
-  `nome` text NOT NULL
+  `nome` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -283,15 +283,15 @@ CREATE TABLE `osservazioni_finali` (
 
 CREATE TABLE `paziente` (
   `id` int(11) NOT NULL,
-  `nome` text NOT NULL,
-  `cognome` text NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `cognome` varchar(50) NOT NULL,
   `datanascita` date NOT NULL,
-  `citta` text NOT NULL,
-  `indirizzo` text NOT NULL,
+  `citta` varchar(50) NOT NULL,
+  `indirizzo` varchar(200) NOT NULL,
   `civico` int(11) NOT NULL,
-  `proffessione` text NOT NULL,
-  `email` text DEFAULT NULL,
-  `telefono` text NOT NULL
+  `proffessione` varchar(50) NOT NULL,
+  `email` varchar(300) DEFAULT NULL,
+  `telefono` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -302,7 +302,7 @@ CREATE TABLE `paziente` (
 
 CREATE TABLE `sonno` (
   `id` int(11) NOT NULL,
-  `ore` text NOT NULL,
+  `ore` varchar(50) NOT NULL,
   `risvegli` text NOT NULL,
   `difficolta` text NOT NULL,
   `qualita` text NOT NULL,
