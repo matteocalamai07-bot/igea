@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 11, 2026 alle 13:25
+-- Creato il: Feb 13, 2026 alle 10:01
 -- Versione del server: 10.4.28-MariaDB
 -- Versione PHP: 8.2.4
 
@@ -20,6 +20,155 @@ SET time_zone = "+00:00";
 --
 -- Database: `terranova`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `alimenti`
+--
+
+CREATE TABLE `alimenti` (
+  `id` int(11) NOT NULL,
+  `nome` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `alimenti`
+--
+
+INSERT INTO `alimenti` (`id`, `nome`) VALUES
+(1, 'Causticum D30'),
+(2, 'Ca-Mg-Fosfato'),
+(3, 'Fenolo'),
+(4, 'Anatra'),
+(5, 'Agnello'),
+(6, 'Gallina'),
+(7, 'Vitello'),
+(8, 'Tacchino'),
+(9, 'Manzo'),
+(10, 'Carne Maiale'),
+(11, 'Grassi Maiale'),
+(12, 'Albume uovo'),
+(13, 'Tuorlo uovo'),
+(14, 'Latte di mucca'),
+(15, 'Siero Latte'),
+(16, 'Formaggio'),
+(17, 'Yogurt'),
+(18, 'Ricotta'),
+(19, 'Latte Cagliato'),
+(20, 'Margarina'),
+(21, 'Merluzzo'),
+(22, 'Trota'),
+(23, 'Carpa'),
+(24, 'Salmone'),
+(25, 'Rombo'),
+(26, 'Aringa'),
+(27, 'Baccalà'),
+(28, 'Sardina'),
+(29, 'Sogliola'),
+(30, 'Tonno'),
+(31, 'Astice'),
+(32, 'Gambero'),
+(33, 'Ostrica'),
+(34, 'Cozze'),
+(35, 'Polpo'),
+(36, 'Calamaro'),
+(37, 'Ananas'),
+(38, 'Mela'),
+(39, 'Arancia'),
+(40, 'Banana'),
+(41, 'Pera'),
+(42, 'Fragola'),
+(43, 'Pompelmo'),
+(44, 'Ribes'),
+(45, 'Amarena'),
+(46, 'Ciliegia'),
+(47, 'Mandarino'),
+(48, 'Pesca'),
+(49, 'Uva'),
+(50, 'Limone'),
+(51, 'Prugna/Susina'),
+(52, 'Kiwi'),
+(53, 'Frutta Secca'),
+(54, 'Nocciola'),
+(55, 'Noci'),
+(56, 'Arachide'),
+(57, 'Cacao'),
+(58, 'Cioccolato'),
+(59, 'Marzapane'),
+(60, 'Olio di mais'),
+(61, 'Avocado'),
+(62, 'Cavolfiore'),
+(63, 'Piselli'),
+(64, 'Patata'),
+(65, 'Aglio'),
+(66, 'Carota'),
+(67, 'Peperone'),
+(68, 'Prezzemolo'),
+(69, 'Sedano'),
+(70, 'Asparagi'),
+(71, 'Melanzana'),
+(72, 'Funghi'),
+(73, 'Spinaci'),
+(74, 'Pomodoro'),
+(75, 'Cavolo'),
+(76, 'Cipolla'),
+(77, 'Ceci'),
+(78, 'Lenticchie'),
+(79, 'Fagioli'),
+(80, 'Gelatina'),
+(81, 'Farina Orzo'),
+(82, 'Farina Avena'),
+(83, 'Farina Mais'),
+(84, 'Riso'),
+(85, 'Farina Segale'),
+(86, 'Farina Soia'),
+(87, 'Crusca f.'),
+(88, 'F. frumento'),
+(89, 'Farina farro'),
+(90, 'Lievito'),
+(91, 'Glutine'),
+(92, 'Birra'),
+(93, 'Caffè'),
+(94, 'Lattosio'),
+(95, 'Senape'),
+(96, 'Te\''),
+(97, 'Vino rosso'),
+(98, 'Vino bianco'),
+(99, 'Zucchero'),
+(100, 'Glutammato'),
+(101, 'Aspartame'),
+(102, 'Acido Formico'),
+(103, 'Acidobenzoico'),
+(104, 'Esametil'),
+(105, 'Nitrato Sodio'),
+(106, 'Nitrito Sodio'),
+(107, 'Solfito sodio'),
+(108, 'Acido E-216'),
+(109, 'Acido Sorbico'),
+(110, 'Anice'),
+(111, 'Pepe Caienna'),
+(112, 'Cannella'),
+(113, 'Curry'),
+(114, 'Maggiorana'),
+(115, 'Noce moscata'),
+(116, 'Timo'),
+(117, 'Pepe'),
+(118, 'Menta'),
+(119, 'Rosmarino'),
+(120, 'Salvia');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `alimenti_sospesi`
+--
+
+CREATE TABLE `alimenti_sospesi` (
+  `fk_alimenti` int(11) NOT NULL,
+  `fk_visita` int(11) NOT NULL,
+  `note` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -78,6 +227,21 @@ CREATE TABLE `paziente` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `sonno`
+--
+
+CREATE TABLE `sonno` (
+  `id` int(11) NOT NULL,
+  `ore` text NOT NULL,
+  `risvegli` text NOT NULL,
+  `difficolta` text NOT NULL,
+  `qualita` text NOT NULL,
+  `fk_visita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `stato_psico-fisico`
 --
 
@@ -109,6 +273,19 @@ CREATE TABLE `visita` (
 --
 
 --
+-- Indici per le tabelle `alimenti`
+--
+ALTER TABLE `alimenti`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `alimenti_sospesi`
+--
+ALTER TABLE `alimenti_sospesi`
+  ADD PRIMARY KEY (`fk_visita`,`fk_alimenti`),
+  ADD KEY `fk_sospesi_alimenti` (`fk_alimenti`);
+
+--
 -- Indici per le tabelle `anamnesi`
 --
 ALTER TABLE `anamnesi`
@@ -129,6 +306,13 @@ ALTER TABLE `paziente`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indici per le tabelle `sonno`
+--
+ALTER TABLE `sonno`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_visita` (`fk_visita`);
+
+--
 -- Indici per le tabelle `stato_psico-fisico`
 --
 ALTER TABLE `stato_psico-fisico`
@@ -145,6 +329,12 @@ ALTER TABLE `visita`
 --
 -- AUTO_INCREMENT per le tabelle scaricate
 --
+
+--
+-- AUTO_INCREMENT per la tabella `alimenti`
+--
+ALTER TABLE `alimenti`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT per la tabella `anamnesi`
@@ -165,6 +355,12 @@ ALTER TABLE `paziente`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `sonno`
+--
+ALTER TABLE `sonno`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT per la tabella `stato_psico-fisico`
 --
 ALTER TABLE `stato_psico-fisico`
@@ -181,6 +377,13 @@ ALTER TABLE `visita`
 --
 
 --
+-- Limiti per la tabella `alimenti_sospesi`
+--
+ALTER TABLE `alimenti_sospesi`
+  ADD CONSTRAINT `fk_sospesi_alimenti` FOREIGN KEY (`fk_alimenti`) REFERENCES `alimenti` (`id`),
+  ADD CONSTRAINT `fk_sospesi_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
 -- Limiti per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
@@ -191,6 +394,12 @@ ALTER TABLE `anamnesi`
 --
 ALTER TABLE `osservazioni_finali`
   ADD CONSTRAINT `osservazioni_finali_ibfk_1` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
+-- Limiti per la tabella `sonno`
+--
+ALTER TABLE `sonno`
+  ADD CONSTRAINT `sonno_ibfk_1` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
 
 --
 -- Limiti per la tabella `stato_psico-fisico`
