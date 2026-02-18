@@ -1,4 +1,3 @@
-<!-- sistemare eventuali errori con i nomi delle variabili -->
 <?php
 // Connessione database
 $conn = new mysqli("localhost", "root", "", "terranova");
@@ -12,7 +11,7 @@ if ($conn->connect_error) {
 <html lang="it">
     <head>
         <meta charset="UTF-8">
-        <title>Igea - Dashboard</title>
+        <title>Igea - Home</title>
     </head>
     <body>
         <header>
@@ -27,8 +26,8 @@ if ($conn->connect_error) {
         <div class="container">
             <!-- AZIONI RAPIDE -->
             <div class="azioni-rapide">
-                <a href="nuova_visita.php">+ Nuova Visita</a>
                 <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
+                <a href="nuova_visita.php">+ Nuova Visita</a>
                 <a href="nuova_terapia.php">+ Nuova Terapia</a>
             </div>
 
