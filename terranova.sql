@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 13, 2026 alle 11:44
+-- Creato il: Feb 18, 2026 alle 12:23
 -- Versione del server: 10.4.28-MariaDB
 -- Versione PHP: 8.2.4
 
@@ -193,6 +193,13 @@ CREATE TABLE `anamnesi` (
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `anamnesi`
+--
+
+INSERT INTO `anamnesi` (`id`, `allergie`, `dettagli_allergie`, `fumo`, `dettagli_fumo`, `alcol`, `dettagli_alcol`, `patologie`, `dettagli_patologie`, `interventi`, `dettagli_interventi`, `esami`, `dettagli_esami`, `fk_paziente`) VALUES
+(1, 0, 'FINTO_TEST_Nulla', 0, 'FINTO_TEST_Nulla', 1, 'FINTO_TEST_Bicchiere_di_vino_mafioso', 0, 'FINTO_TEST_nulla', 1, 'FINTO_TEST_Da_Stand', 0, 'FINTO_TEST_Non_Verrebbe_arrestato', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -294,6 +301,13 @@ CREATE TABLE `paziente` (
   `telefono` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `paziente`
+--
+
+INSERT INTO `paziente` (`id`, `nome`, `cognome`, `datanascita`, `citta`, `indirizzo`, `civico`, `proffessione`, `email`, `telefono`) VALUES
+(1, 'FINTO_TEST_Giorno', 'FINTO_TEST_Giovanna', '2000-02-08', 'FINTO_TEST_Napoli', 'FINTO_TEST_Via_Mafia', 1, 'FINTO_TEST_Capo_Mafioso', 'FINTO_TEST_capo@mafia.it', '+3911111111111111111');
+
 -- --------------------------------------------------------
 
 --
@@ -379,11 +393,18 @@ CREATE TABLE `terapie_prescritte` (
 
 CREATE TABLE `visita` (
   `id` int(11) NOT NULL,
-  `data` date NOT NULL DEFAULT current_timestamp(),
+  `data` date NOT NULL DEFAULT curdate(),
   `livello_stress` int(11) NOT NULL,
   `alimentazione` text NOT NULL,
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `visita`
+--
+
+INSERT INTO `visita` (`id`, `data`, `livello_stress`, `alimentazione`, `fk_paziente`) VALUES
+(1, '2026-02-18', 10, 'FINTO_TEST_TUTTO', 1);
 
 --
 -- Indici per le tabelle scaricate
@@ -522,7 +543,7 @@ ALTER TABLE `alimenti`
 -- AUTO_INCREMENT per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `attivita_fisica`
@@ -552,7 +573,7 @@ ALTER TABLE `osservazioni_finali`
 -- AUTO_INCREMENT per la tabella `paziente`
 --
 ALTER TABLE `paziente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `sonno`
@@ -582,7 +603,7 @@ ALTER TABLE `terapie`
 -- AUTO_INCREMENT per la tabella `visita`
 --
 ALTER TABLE `visita`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Limiti per le tabelle scaricate
