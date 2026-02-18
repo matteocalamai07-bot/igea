@@ -44,7 +44,14 @@ if ($conn->connect_error) {
                     </tr>
 
                     <?php
-                    $query = //da implementareper la stampa di data, paziente e note
+                    $query = "
+                        SELECT v.data, p.nome, p.cognome, GROUP_CONCAT(o.osservazione SEPARATOR '|') AS osservazioni
+                        FROM paziente p INNER JOIN visita v ON p.id = v.fk_paziente
+                        INNER JOIN osservazioni_finali o ON v.id = o.fk_visita
+                        GROUP BY v.id
+                        ORDER BY v.data DESC
+                        LIMIT 5;
+                    ";
 
                     //prende i risultati della query
                     $result = $conn->query($query);
@@ -53,7 +60,7 @@ if ($conn->connect_error) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<td>".$row['data']."</td>";
                         echo "<td>".$row['nome']." ".$row['cognome']."</td>";
-                        echo "<td>".substr($row['note'], 0, 50)."...</td>";
+                        echo "<td>".substr($row['osservazioni'], 0, 100)."...</td>";
                         echo "</tr>";
                     }
                     ?>
