@@ -13,6 +13,32 @@
     <head>
         <meta charset="UTF-8">
         <title>Igea - Pazienti</title>
+        <script>
+            document.getElementById("searchPaziente").addEventListener("keyup", function () {
+
+            let valore = this.value;
+
+            if (valore.length === 0) {
+                document.getElementById("risultatiRicerca").innerHTML = "";
+                return;
+            }
+
+            let xhr = new XMLHttpRequest();
+            xhr.open(
+                "GET",
+                "ajax_cerca_pazienti.php?q=" + encodeURIComponent(valore),
+                true
+            );
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById("risultatiRicerca").innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.send();
+            });
+        </script>
     </head>
     <body>
         <header>
@@ -29,9 +55,14 @@
             <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
         </div>
 
-        <div class="ricerca-paziente">
-            <label>Ricerca Paziente:</label>
-            <!-- Implementazione futura: campo di ricerca per nome, cognome -->
+        <div class="section">
+        <h2>Ricerca Paziente</h2>
+
+            <input type="text" id="searchPaziente" placeholder="Digita nome o cognome..." autocomplete="off" style="width:300px; padding:8px;">
+
+            <div id="risultatiRicerca"
+                style="width:300px; border:1px solid #ccc;">
+            </div>
         </div>
 
         <div class="section">
