@@ -27,6 +27,7 @@ if ($conn->connect_error) {
         <div class="container">
             <!-- AZIONI RAPIDE -->
             <div class="azioni-rapide">
+                <label>Azioni rapide:</label><br>
                 <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
                 <a href="nuova_visita.php">+ Nuova Visita</a>
             </div>
