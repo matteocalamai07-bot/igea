@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Connessione database
 $conn = new mysqli("localhost", "root", "", "terranova");
 
@@ -28,7 +29,6 @@ if ($conn->connect_error) {
             <div class="azioni-rapide">
                 <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
                 <a href="nuova_visita.php">+ Nuova Visita</a>
-                <a href="nuova_terapia.php">+ Nuova Terapia</a>
             </div>
 
             <!-- ATTIVITÀ RECENTI -->

@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Connessione database
 $conn = new mysqli("localhost", "root", "", "terranova");
 
@@ -11,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tipo = $_POST["tipo"]; 
     $nome = $_POST["nome"];
     $descrizione = $_POST["descrizione"];
+    
 
     switch($tipo){
         case "farmaci":
@@ -66,6 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="submit">
             </div>
         </form>
-        <a href="index.php">Torna alla Home</a> 
+        <a href="farmaci.php">Torna Indietro</a> 
+        <br>
+        <a href="index.php">Torna alla Home</a>
     </body>
  </html>
