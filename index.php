@@ -13,6 +13,7 @@ if ($conn->connect_error) {
     <head>
         <meta charset="UTF-8">
         <title>Igea - Home</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <header>

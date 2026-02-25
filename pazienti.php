@@ -11,6 +11,7 @@ if ($conn->connect_error) {
 <head>
     <meta charset="UTF-8">
     <title>Igea - Pazienti</title>
+    <link rel="stylesheet" href="style.css">
 
     <style>
         #risultatiRicerca {

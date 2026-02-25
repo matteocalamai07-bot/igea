@@ -43,8 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <head>
         <meta charset="UTF-8">
         <title>Igea - Inserimento Terapia</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body> 
+        <h1>Igea - Nuova Terapia/Farmaco</h1>
         <form method="POST" action=""> 
             <div>
                 Seleziona il tipo:

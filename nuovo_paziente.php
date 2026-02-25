@@ -80,6 +80,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Igea - Inserimento Paziente</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <h1>Igea - Nuovo Paziente</h1>
