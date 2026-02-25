@@ -74,11 +74,12 @@ if ($conn->connect_error) {
 <div class="section">
     <h2>Pazienti</h2>
 
-    <table>
+    <table border="1">
         <tr>
             <th>Nome</th>
             <th>Cognome</th>
             <th>Data di Nascita</th>
+            <th>Scheda Paziente</th>
             <th>Elimina</th>
         </tr>
 
@@ -91,6 +92,11 @@ if ($conn->connect_error) {
             echo "<td>{$row['nome']}</td>";
             echo "<td>{$row['cognome']}</td>";
             echo "<td>{$row['datanascita']}</td>";
+            echo "<td>
+                    <a href='scheda_paziente.php?id={$row['id']}'>
+                    Visualizza
+                    </a>
+                  </td>";
             echo "<td>
                     <a href='elimina_paziente.php?id={$row['id']}'
                        onclick=\"return confirm('Sei sicuro di voler eliminare questo paziente?');\">

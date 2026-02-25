@@ -1,42 +1,59 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "terranova");
-
 if ($conn->connect_error) {
     exit;
 }
 
-$testo = $_GET['q'] ?? '';
-
-if (strlen($testo) < 1) {
+$testo = trim($_GET['q'] ?? '');
+if ($testo === '') {
     exit;
 }
 
-$stmt = $conn->prepare("
-    SELECT id, nome, cognome
-    FROM paziente
-    WHERE nome LIKE CONCAT('%', ?, '%')
-       OR cognome LIKE CONCAT('%', ?, '%')
-    ORDER BY cognome
-    LIMIT 10
-");
+/* 🔹 SPLIT PER SPAZI */
+$parole = preg_split('/\s+/', $testo);
 
-$stmt->bind_param("ss", $testo, $testo);
+/* 🔹 UNA SOLA PAROLA */
+if (count($parole) === 1) {
+
+    $p = $parole[0];
+
+    $stmt = $conn->prepare("
+        SELECT id, nome, cognome
+        FROM paziente
+        WHERE nome LIKE CONCAT('%', ?, '%')
+           OR cognome LIKE CONCAT('%', ?, '%')
+        ORDER BY cognome
+        LIMIT 10
+    ");
+    $stmt->bind_param("ss", $p, $p);
+
+} else {
+
+    /* 🔹 DUE PAROLE: nome+cognome OR cognome+nome */
+    $p1 = $parole[0];
+    $p2 = $parole[1];
+
+    $stmt = $conn->prepare("
+        SELECT id, nome, cognome
+        FROM paziente
+        WHERE (nome LIKE CONCAT('%', ?, '%') AND cognome LIKE CONCAT('%', ?, '%'))
+           OR (nome LIKE CONCAT('%', ?, '%') AND cognome LIKE CONCAT('%', ?, '%'))
+        ORDER BY cognome
+        LIMIT 10
+    ");
+    $stmt->bind_param("ssss", $p1, $p2, $p2, $p1);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 
+/* 🔹 OUTPUT */
 if ($result->num_rows > 0) {
-    echo "<ul>";
+    echo "<ul style='list-style:none; margin:0; padding:0;'>";
     while ($row = $result->fetch_assoc()) {
-
-        $nomeCompleto = htmlspecialchars($row['nome'] . " " . $row['cognome']);
-
-        echo "<li onclick=\"document.getElementById('searchPaziente').value='$nomeCompleto';
-                           document.getElementById('risultatiRicerca').innerHTML='';\">
-                <a href='scheda_paziente.php?id={$row['id']}' 
-                   style='text-decoration:none; color:black;'>
-                   $nomeCompleto
-                </a>
-              </li>";
+        echo "<li style='padding:6px; border-bottom:1px solid #eee; cursor:pointer'>";
+        echo htmlspecialchars($row['nome'] . " " . $row['cognome']);
+        echo "</li>";
     }
     echo "</ul>";
 } else {
@@ -44,4 +61,3 @@ if ($result->num_rows > 0) {
 }
 
 $conn->close();
-?>
