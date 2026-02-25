@@ -38,7 +38,7 @@
             </nav>
         </header>
         <div class="container">
-            <h2>Dettagli Paziente</h2>
+            <h2 style="text-align: center;">Dettagli Paziente</h2>
             <div>
                 <?php 
                     $query = "SELECT * FROM paziente WHERE id = " . $_GET['id'];
