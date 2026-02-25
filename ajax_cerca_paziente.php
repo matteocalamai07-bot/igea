@@ -51,9 +51,12 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     echo "<ul style='list-style:none; margin:0; padding:0;'>";
     while ($row = $result->fetch_assoc()) {
-        echo "<li style='padding:6px; border-bottom:1px solid #eee; cursor:pointer'>";
-        echo htmlspecialchars($row['nome'] . " " . $row['cognome']);
-        echo "</li>";
+        echo "<li style='padding:6px; border-bottom:1px solid #eee; cursor:pointer'>
+            <a href='scheda_paziente.php?id={$row['id']}' 
+            style='text-decoration:none; color:black; display:block;'>
+                " . htmlspecialchars($row['nome'] . " " . $row['cognome']) . "
+            </a>
+        </li>";
     }
     echo "</ul>";
 } else {
