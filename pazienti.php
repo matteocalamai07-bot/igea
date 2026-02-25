@@ -81,6 +81,7 @@ if ($conn->connect_error) {
             <th>Cognome</th>
             <th>Data di Nascita</th>
             <th>Scheda Paziente</th>
+            <th>Aggiungi Anamnesi
             <th>Elimina</th>
         </tr>
 
@@ -96,6 +97,11 @@ if ($conn->connect_error) {
             echo "<td>
                     <a href='scheda_paziente.php?id={$row['id']}'>
                     Visualizza
+                    </a>
+                  </td>";
+            echo "<td>
+                    <a href='aggiungi_anamnesi.php?id={$row['id']}'>
+                    Aggiungi Anamnesi
                     </a>
                   </td>";
             echo "<td>
