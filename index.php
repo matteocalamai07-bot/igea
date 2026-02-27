@@ -38,7 +38,7 @@ if ($conn->connect_error) {
             <div class="section">
                 <h2>Attività Recenti</h2>
 
-                <table>
+                <table border="1">
                     <tr>
                         <th>Data</th>
                         <th>Paziente</th>

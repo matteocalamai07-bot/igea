@@ -34,7 +34,7 @@
         <div class="section">
             <h2>Farmaci:</h2>
 
-            <table>
+            <table border="1">
                 <tr>
                     <th>Nome</th>
                     <th>Descrizione</th>
@@ -61,7 +61,7 @@
         <div class="section">
             <h2>Integratori:</h2>
 
-            <table>
+            <table border="1">
                 <tr>
                     <th>Nome</th>
                     <th>Descrizione</th>
@@ -88,7 +88,7 @@
         <div class="section">
             <h2>Supporti:</h2>
 
-            <table>
+            <table border="1">
                 <tr>
                     <th>Nome</th>
                     <th>Descrizione</th>
@@ -115,7 +115,7 @@
         <div class="section">
             <h2>Terapie:</h2>
 
-            <table>
+            <table border="1">
                 <tr>
                     <th>Nome</th>
                     <th>Descrizione</th>
