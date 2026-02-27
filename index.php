@@ -17,7 +17,7 @@ if ($conn->connect_error) {
     </head>
     <body>
         <header>
-            <h1>Igea - Gestionale Naturopata</h1>
+            <h1>Igea - Home</h1>
             <nav>
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
@@ -71,5 +71,6 @@ if ($conn->connect_error) {
         </div>
     </body>
 </html>
+
 
 <?php $conn->close(); ?>
