@@ -18,8 +18,6 @@ if ($conn->connect_error) {
             width: 300px;
             border: 1px solid #ccc;
             background: white;
-            position: absolute;
-            z-index: 1000;
             max-height: 200px;
             overflow-y: auto;
         }

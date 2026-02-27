@@ -84,6 +84,10 @@
     </head>
     <body>
         <h1>Igea - Nuovo Paziente</h1>
+        <div class="top-links">
+            <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
+            <a href="index.php" class="btn-top">Torna alla Home</a>
+        </div>
         <form method="POST" action=""> 
             <div>
                 Inserisci il nome:
@@ -124,8 +128,5 @@
             
             <button type="submit">Salva Paziente</button>
         </form>
-        <a href="pazienti.php">Torna alla lista dei pazienti</a>
-        <br>
-        <a href="index.php">Torna alla Home</a>
     </body>
 </html>

@@ -47,6 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </head>
     <body> 
         <h1>Igea - Nuova Terapia/Farmaco</h1>
+        <div class="top-links">
+            <a href="farmaci.php" class="btn-top">Torna Indietro</a>
+            <a href="index.php" class="btn-top">Torna alla Home</a>
+        </div>
         <form method="POST" action=""> 
             <div>
                 Seleziona il tipo:
@@ -70,8 +74,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="submit">
             </div>
         </form>
-        <a href="farmaci.php">Torna Indietro</a> 
-        <br>
-        <a href="index.php">Torna alla Home</a>
     </body>
  </html>
