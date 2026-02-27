@@ -84,6 +84,7 @@
     </head>
     <body>
         <h1>Igea - Nuovo Paziente</h1>
+        <br>
         <div class="top-links">
             <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
             <a href="index.php" class="btn-top">Torna alla Home</a>

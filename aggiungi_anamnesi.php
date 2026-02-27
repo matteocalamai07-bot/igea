@@ -168,6 +168,11 @@ $conn->close();
 <body>
 
 <h1>Igea - Anamnesi Paziente <?php echo $existing_anamnesi ? '(modifica)' : '(nuova)'; ?></h1>
+<br>
+<div class="top-links">
+    <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
+    <a href="index.php" class="btn-top">Torna alla Home</a>
+</div>
 
 <?php
 if (!empty($errors)) {
@@ -179,101 +184,98 @@ if (!empty($errors)) {
 }
 ?>
 
-<form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
-    <?php if ($existing_anamnesi): ?>
-        <input type="hidden" name="anamnesi_id" value="<?php echo $anamnesi_id; ?>">
-    <?php endif; ?>
+    <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
+        <?php if ($existing_anamnesi): ?>
+            <input type="hidden" name="anamnesi_id" value="<?php echo $anamnesi_id; ?>">
+        <?php endif; ?>
 
-    <div>
-        Allergie:
-        <select name="allergie" required>
-            <option value="">-- Seleziona --</option>
-            <option value="No" <?php if($allergie === 'No') echo 'selected'; ?>>No</option>
-            <option value="Si" <?php if($allergie === 'Si') echo 'selected'; ?>>Sì</option>
-        </select>
-    </div>
+        <div>
+            Allergie:
+            <select name="allergie" required>
+                <option value="">-- Seleziona --</option>
+                <option value="No" <?php if($allergie === 'No') echo 'selected'; ?>>No</option>
+                <option value="Si" <?php if($allergie === 'Si') echo 'selected'; ?>>Sì</option>
+            </select>
+        </div>
 
-    <div>
-        Dettagli allergie:
-        <input type="text" name="dettagli_allergie" value="<?php echo htmlspecialchars($dettagli_allergie); ?>">
-    </div>
+        <div>
+            Dettagli allergie:
+            <input type="text" name="dettagli_allergie" value="<?php echo htmlspecialchars($dettagli_allergie); ?>">
+        </div>
 
-    <div>
-        Fuma:
-        <select name="fumo" required>
-            <option value="">-- Seleziona --</option>
-            <option value="No" <?php if($fumo === 'No') echo 'selected'; ?>>No</option>
-            <option value="Si" <?php if($fumo === 'Si') echo 'selected'; ?>>Sì</option>
-        </select>
-    </div>
+        <div>
+            Fuma:
+            <select name="fumo" required>
+                <option value="">-- Seleziona --</option>
+                <option value="No" <?php if($fumo === 'No') echo 'selected'; ?>>No</option>
+                <option value="Si" <?php if($fumo === 'Si') echo 'selected'; ?>>Sì</option>
+            </select>
+        </div>
 
-    <div>
-        Dettagli fumo:
-        <input type="text" name="dettagli_fumo" value="<?php echo htmlspecialchars($dettagli_fumo); ?>">
-    </div>
+        <div>
+            Dettagli fumo:
+            <input type="text" name="dettagli_fumo" value="<?php echo htmlspecialchars($dettagli_fumo); ?>">
+        </div>
 
-    <div>
-        Alcol:
-        <select name="alcol" required>
-            <option value="">-- Seleziona --</option>
-            <option value="No" <?php if($alcol === 'No') echo 'selected'; ?>>No</option>
-            <option value="Si" <?php if($alcol === 'Si') echo 'selected'; ?>>Sì</option>
-        </select>
-    </div>
+        <div>
+            Alcol:
+            <select name="alcol" required>
+                <option value="">-- Seleziona --</option>
+                <option value="No" <?php if($alcol === 'No') echo 'selected'; ?>>No</option>
+                <option value="Si" <?php if($alcol === 'Si') echo 'selected'; ?>>Sì</option>
+            </select>
+        </div>
 
-    <div>
-        Dettagli alcol:
-        <input type="text" name="dettagli_alcol" value="<?php echo htmlspecialchars($dettagli_alcol); ?>">
-    </div>
+        <div>
+            Dettagli alcol:
+            <input type="text" name="dettagli_alcol" value="<?php echo htmlspecialchars($dettagli_alcol); ?>">
+        </div>
 
-    <div>
-        Patologie:
-        <select name="patologie" required>
-            <option value="">-- Seleziona --</option>
-            <option value="No" <?php if($patologie === 'No') echo 'selected'; ?>>No</option>
-            <option value="Si" <?php if($patologie === 'Si') echo 'selected'; ?>>Sì</option>
-        </select>
-    </div>
+        <div>
+            Patologie:
+            <select name="patologie" required>
+                <option value="">-- Seleziona --</option>
+                <option value="No" <?php if($patologie === 'No') echo 'selected'; ?>>No</option>
+                <option value="Si" <?php if($patologie === 'Si') echo 'selected'; ?>>Sì</option>
+            </select>
+        </div>
 
-    <div>
-        Dettagli patologie:
-        <input type="text" name="dettagli_patologie" value="<?php echo htmlspecialchars($dettagli_patologie); ?>">
-    </div>
+        <div>
+            Dettagli patologie:
+            <input type="text" name="dettagli_patologie" value="<?php echo htmlspecialchars($dettagli_patologie); ?>">
+        </div>
 
-    <div>
-        Interventi:
-        <select name="interventi" required>
-            <option value="">-- Seleziona --</option>
-            <option value="No" <?php if($interventi === 'No') echo 'selected'; ?>>No</option>
-            <option value="Si" <?php if($interventi === 'Si') echo 'selected'; ?>>Sì</option>
-        </select>
-    </div>
+        <div>
+            Interventi:
+            <select name="interventi" required>
+                <option value="">-- Seleziona --</option>
+                <option value="No" <?php if($interventi === 'No') echo 'selected'; ?>>No</option>
+                <option value="Si" <?php if($interventi === 'Si') echo 'selected'; ?>>Sì</option>
+            </select>
+        </div>
 
-    <div>
-        Dettagli interventi:
-        <input type="text" name="dettagli_interventi" value="<?php echo htmlspecialchars($dettagli_interventi); ?>">
-    </div>
+        <div>
+            Dettagli interventi:
+            <input type="text" name="dettagli_interventi" value="<?php echo htmlspecialchars($dettagli_interventi); ?>">
+        </div>
 
-    <div>
-        Esami:
-        <select name="esami" required>
-            <option value="">-- Seleziona --</option>
-            <option value="No" <?php if($esami === 'No') echo 'selected'; ?>>No</option>
-            <option value="Si" <?php if($esami === 'Si') echo 'selected'; ?>>Sì</option>
-        </select>
-    </div>
+        <div>
+            Esami:
+            <select name="esami" required>
+                <option value="">-- Seleziona --</option>
+                <option value="No" <?php if($esami === 'No') echo 'selected'; ?>>No</option>
+                <option value="Si" <?php if($esami === 'Si') echo 'selected'; ?>>Sì</option>
+            </select>
+        </div>
 
-    <div>
-        Dettagli esami:
-        <input type="text" name="dettagli_esami" value="<?php echo htmlspecialchars($dettagli_esami); ?>">
-    </div>
+        <div>
+            Dettagli esami:
+            <input type="text" name="dettagli_esami" value="<?php echo htmlspecialchars($dettagli_esami); ?>">
+        </div>
 
-    <br>
-    <button type="submit"><?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?></button>
+        <br>
+        <button type="submit"><?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?></button>
 
-</form>
-
-<a href="pazienti.php">Torna alla lista pazienti</a>
-<br>
+    </form>
 </body>
 </html>

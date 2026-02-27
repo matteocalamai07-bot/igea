@@ -47,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </head>
     <body> 
         <h1>Igea - Nuova Terapia/Farmaco</h1>
+        <br>
         <div class="top-links">
             <a href="farmaci.php" class="btn-top">Torna Indietro</a>
             <a href="index.php" class="btn-top">Torna alla Home</a>
