@@ -7,13 +7,11 @@ if ($conn->connect_error) {
 
 $id = intval($_GET['id']);
 
-$query1 = "DELETE FROM anamnesi WHERE fk_paziente = $id";
-$conn->query($query1);
-$query = "DELETE FROM paziente WHERE id = $id";
+$query = "DELETE FROM anamnesi WHERE fk_paziente = $id";
 $conn->query($query);
 
 $conn->close();
 
-header("Location: pazienti.php");
+header("Location: scheda_paziente.php?id=" . $_GET['id']);
 exit;
 ?>

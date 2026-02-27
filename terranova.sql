@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 20, 2026 alle 12:27
--- Versione del server: 10.4.28-MariaDB
--- Versione PHP: 8.2.4
+-- Creato il: Feb 27, 2026 alle 10:17
+-- Versione del server: 10.4.32-MariaDB
+-- Versione PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -22,11 +22,7 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS `terranova`
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_general_ci;
 
-USE `terranova`;
 --
 -- Struttura della tabella `alimenti`
 --
@@ -182,20 +178,27 @@ CREATE TABLE `alimenti_sospesi` (
 
 CREATE TABLE `anamnesi` (
   `id` int(11) NOT NULL,
-  `allergie` tinyint(1) NOT NULL,
+  `allergie` varchar(10) NOT NULL,
   `dettagli_allergie` text DEFAULT NULL,
-  `fumo` tinyint(1) NOT NULL,
+  `fumo` varchar(10) NOT NULL,
   `dettagli_fumo` text DEFAULT NULL,
-  `alcol` tinyint(1) NOT NULL,
+  `alcol` varchar(10) NOT NULL,
   `dettagli_alcol` text DEFAULT NULL,
-  `patologie` tinyint(1) NOT NULL,
+  `patologie` varchar(10) NOT NULL,
   `dettagli_patologie` text DEFAULT NULL,
-  `interventi` tinyint(1) NOT NULL,
+  `interventi` varchar(10) NOT NULL,
   `dettagli_interventi` text DEFAULT NULL,
-  `esami` tinyint(1) NOT NULL,
+  `esami` varchar(10) NOT NULL,
   `dettagli_esami` text DEFAULT NULL,
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `anamnesi`
+--
+
+INSERT INTO `anamnesi` (`id`, `allergie`, `dettagli_allergie`, `fumo`, `dettagli_fumo`, `alcol`, `dettagli_alcol`, `patologie`, `dettagli_patologie`, `interventi`, `dettagli_interventi`, `esami`, `dettagli_esami`, `fk_paziente`) VALUES
+(3, 'Si', 'Polvere', 'No', '', 'Si', 'vodka al posto dell\'acqua', 'No', '', 'Si', 'osso rotto', 'No', '', 5);
 
 -- --------------------------------------------------------
 
@@ -298,6 +301,15 @@ CREATE TABLE `paziente` (
   `telefono` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `paziente`
+--
+
+INSERT INTO `paziente` (`id`, `nome`, `cognome`, `datanascita`, `citta`, `indirizzo`, `civico`, `professione`, `email`, `telefono`) VALUES
+(3, 'Gabriele', 'Chipa', '2025-06-05', 'Grocity', 'Via Pippo', 34, 'Lavavetri', 'giovanninanni@polo.it', '1234567890'),
+(4, 'Mattia', 'Vacchi', '2023-08-17', 'Lagunablu', 'Via dal ***', 25, 'Studente', 'studia@pippo.it', '0987654321'),
+(5, 'Matteo', 'Ceserani', '1975-08-27', 'Grosseto', 'Via Scansanese', 618, 'Insegnante', 'giovanninanni@polo.it', '1234567890');
+
 -- --------------------------------------------------------
 
 --
@@ -383,7 +395,7 @@ CREATE TABLE `terapie_prescritte` (
 
 CREATE TABLE `visita` (
   `id` int(11) NOT NULL,
-  `data` date NOT NULL DEFAULT curdate(),
+  `data` date NOT NULL DEFAULT current_timestamp(),
   `livello_stress` int(11) NOT NULL,
   `alimentazione` text NOT NULL,
   `fk_paziente` int(11) NOT NULL
@@ -526,7 +538,7 @@ ALTER TABLE `alimenti`
 -- AUTO_INCREMENT per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la tabella `attivita_fisica`
@@ -556,7 +568,7 @@ ALTER TABLE `osservazioni_finali`
 -- AUTO_INCREMENT per la tabella `paziente`
 --
 ALTER TABLE `paziente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `sonno`
@@ -574,7 +586,7 @@ ALTER TABLE `stato_psico-fisico`
 -- AUTO_INCREMENT per la tabella `supporti`
 --
 ALTER TABLE `supporti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `terapie`

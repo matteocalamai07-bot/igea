@@ -22,6 +22,7 @@ if ($conn->connect_error) {
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
                 <a href="farmaci.php">Terapie</a>
+                <a href="alimenti.php">Alimenti</a>
             </nav>
         </header>
 

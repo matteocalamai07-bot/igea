@@ -35,6 +35,7 @@
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
                 <a href="farmaci.php">Terapie</a>
+                <a href="alimenti.php">Alimenti</a>
             </nav>
         </header>
         <div class="container">
@@ -59,6 +60,32 @@
                     }
                 ?>
             </div>
+            <h2 style="text-align: center;">Anamnesi Paziente</h2>
+            <div>
+                <?php
+                    $query_anamnesi = "SELECT * FROM anamnesi WHERE fk_paziente = " . $_GET['id'];
+                    $result_anamnesi = $conn->query($query_anamnesi);
+                    if ($result_anamnesi->num_rows > 0) {
+                        while ($row_anamnesi = $result_anamnesi->fetch_assoc()) {
+                            echo "<p><strong>Allergie:</strong> " . htmlspecialchars($row_anamnesi['allergie']) . "</p>";
+                            echo "<p><strong>Dettagli Allergie:</strong> " . htmlspecialchars($row_anamnesi['dettagli_allergie']) . "</p>";
+                            echo "<p><strong>Fumo:</strong> " . htmlspecialchars($row_anamnesi['fumo']) . "</p>";
+                            echo "<p><strong>Dettagli Fumo:</strong> " . htmlspecialchars($row_anamnesi['dettagli_fumo']) . "</p>";
+                            echo "<p><strong>Alcol:</strong> " . htmlspecialchars($row_anamnesi['alcol']) . "</p>";
+                            echo "<p><strong>Dettagli Alcol:</strong> " . htmlspecialchars($row_anamnesi['dettagli_alcol']) . "</p>";
+                            echo "<p><strong>Patologie:</strong> " . htmlspecialchars($row_anamnesi['patologie']) . "</p>";
+                            echo "<p><strong>Dettagli Patologie:</strong> " . htmlspecialchars($row_anamnesi['dettagli_patologie']) . "</p>";
+                            echo "<p><strong>Interventi:</strong> " . htmlspecialchars($row_anamnesi['interventi']) . "</p>";
+                            echo "<p><strong>Dettagli Interventi:</strong> " . htmlspecialchars($row_anamnesi['dettagli_interventi']) . "</p>";
+                            echo "<p><strong>Esami:</strong> " . htmlspecialchars($row_anamnesi['esami']) . "</p>";
+                            echo "<p><strong>Dettagli Esami:</strong> " . htmlspecialchars($row_anamnesi['dettagli_esami']) . "</p>";
+                            echo "<p><a href='elimina_anamnesi.php?id=" . $_GET['id'] . "'>Elimina Anamnesi</a></p>";
+                        }
+                    } else {
+                        echo "<p>Nessuna anamnesi disponibile.</p>";
+                        echo "<p><a href='aggiungi_anamnesi.php?id=" . $_GET['id'] . "'>Aggiungi Anamnesi</a></p>";
+                    }
+                ?>
         </div>
         <script>
             $(document).ready(function() {
