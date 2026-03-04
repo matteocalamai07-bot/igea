@@ -14,6 +14,32 @@ if ($conn->connect_error) {
         <meta charset="UTF-8">
         <title>Igea - Home</title>
         <link rel="stylesheet" href="style.css">
+
+        <style>
+            #risultatiRicerca {
+                width: 300px;
+                border: 1px solid #ccc;
+                background: white;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+
+            #risultatiRicerca ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            #risultatiRicerca li {
+                padding: 6px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+            }
+
+            #risultatiRicerca li:hover {
+                background: #f0f0f0;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -29,9 +55,21 @@ if ($conn->connect_error) {
         <div class="container">
             <!-- AZIONI RAPIDE -->
             <div class="azioni-rapide">
-                <label>Azioni rapide:</label><br>
-                <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
-                <a href="nuova_visita.php">+ Nuova Visita</a>
+                <label>Azioni rapide:</label>
+
+                <div class="azioni-row">
+                    <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
+
+                    <div class="ricerca-box">
+                        <input
+                            type="text"
+                            id="searchPaziente"
+                            placeholder="Cerca paziente per nome o cognome..."
+                            autocomplete="off"
+                        >
+                        <div id="risultatiRicerca"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- ATTIVITÀ RECENTI -->
@@ -69,8 +107,31 @@ if ($conn->connect_error) {
                 </table>
             </div>
         </div>
+
+        <!--  JAVASCRIPT AJAX -->
+        <script>
+        document.getElementById("searchPaziente").addEventListener("keyup", function () {
+
+            let valore = this.value.trim();
+
+            if (valore.length === 0) {
+                document.getElementById("risultatiRicerca").innerHTML = "";
+                return;
+            }
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "ajax_cerca_paziente.php?q=" + encodeURIComponent(valore), true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById("risultatiRicerca").innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.send();
+        });
+        </script>
     </body>
 </html>
-
 
 <?php $conn->close(); ?>
