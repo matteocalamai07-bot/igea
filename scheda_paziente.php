@@ -38,6 +38,13 @@
                 <a href="alimenti.php">Alimenti</a>
             </nav>
         </header>
+
+        <br><br>
+        <div class="top-links">
+            <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
+            <a href="index.php" class="btn-top">Torna alla Home</a>
+        </div>
+
         <div class="container">
             <h2 style="text-align: center;">Dettagli Paziente</h2>
             <div>
