@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 27, 2026 alle 10:17
--- Versione del server: 10.4.32-MariaDB
--- Versione PHP: 8.2.12
+-- Creato il: Mar 04, 2026 alle 13:02
+-- Versione del server: 10.4.28-MariaDB
+-- Versione PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -193,13 +193,6 @@ CREATE TABLE `anamnesi` (
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dump dei dati per la tabella `anamnesi`
---
-
-INSERT INTO `anamnesi` (`id`, `allergie`, `dettagli_allergie`, `fumo`, `dettagli_fumo`, `alcol`, `dettagli_alcol`, `patologie`, `dettagli_patologie`, `interventi`, `dettagli_interventi`, `esami`, `dettagli_esami`, `fk_paziente`) VALUES
-(3, 'Si', 'Polvere', 'No', '', 'Si', 'vodka al posto dell\'acqua', 'No', '', 'Si', 'osso rotto', 'No', '', 5);
-
 -- --------------------------------------------------------
 
 --
@@ -296,19 +289,10 @@ CREATE TABLE `paziente` (
   `citta` varchar(50) NOT NULL,
   `indirizzo` varchar(200) NOT NULL,
   `civico` int(11) NOT NULL,
-  `professione` varchar(50) NOT NULL,
+  `professione` varchar(50) DEFAULT NULL,
   `email` varchar(300) DEFAULT NULL,
-  `telefono` varchar(20) NOT NULL
+  `telefono` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dump dei dati per la tabella `paziente`
---
-
-INSERT INTO `paziente` (`id`, `nome`, `cognome`, `datanascita`, `citta`, `indirizzo`, `civico`, `professione`, `email`, `telefono`) VALUES
-(3, 'Gabriele', 'Chipa', '2025-06-05', 'Grocity', 'Via Pippo', 34, 'Lavavetri', 'giovanninanni@polo.it', '1234567890'),
-(4, 'Mattia', 'Vacchi', '2023-08-17', 'Lagunablu', 'Via dal ***', 25, 'Studente', 'studia@pippo.it', '0987654321'),
-(5, 'Matteo', 'Ceserani', '1975-08-27', 'Grosseto', 'Via Scansanese', 618, 'Insegnante', 'giovanninanni@polo.it', '1234567890');
 
 -- --------------------------------------------------------
 
@@ -338,6 +322,19 @@ CREATE TABLE `stato_psico-fisico` (
   `motivazione` text NOT NULL,
   `concentrazione` text NOT NULL,
   `fk_visita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `storico_attivita`
+--
+
+CREATE TABLE `storico_attivita` (
+  `id` int(11) NOT NULL,
+  `data` date NOT NULL DEFAULT current_timestamp(),
+  `tipo` varchar(100) NOT NULL,
+  `nome` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -492,6 +489,12 @@ ALTER TABLE `stato_psico-fisico`
   ADD KEY `fk_visita` (`fk_visita`);
 
 --
+-- Indici per le tabelle `storico_attivita`
+--
+ALTER TABLE `storico_attivita`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indici per le tabelle `supporti`
 --
 ALTER TABLE `supporti`
@@ -538,7 +541,7 @@ ALTER TABLE `alimenti`
 -- AUTO_INCREMENT per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `attivita_fisica`
@@ -568,7 +571,7 @@ ALTER TABLE `osservazioni_finali`
 -- AUTO_INCREMENT per la tabella `paziente`
 --
 ALTER TABLE `paziente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `sonno`
@@ -583,10 +586,16 @@ ALTER TABLE `stato_psico-fisico`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `storico_attivita`
+--
+ALTER TABLE `storico_attivita`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT per la tabella `supporti`
 --
 ALTER TABLE `supporti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `terapie`
