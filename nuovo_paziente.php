@@ -41,14 +41,10 @@
         if (empty($civico)) {
             $errors[] = "Il numero civico è obbligatorio.";
         }
-        if (empty($email)) {
-            $errors[] = "L'email è obbligatoria.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = "Il formato dell'email non è valido.";
         }
-        if (empty($telefono)) {
-            $errors[] = "Il telefono è obbligatorio.";
-        } elseif (!preg_match('/^[0-9+\-\s()]+$/', $telefono)) {
+        if (!preg_match('/^[0-9+\-\s()]+$/', $telefono)) {
             $errors[] = "Il formato del telefono non è valido. Usa solo numeri, spazi, parentesi e trattini.";
         }
 
@@ -120,11 +116,11 @@
             </div> 
             <div>
                 Inserisci l'email:
-                <input type="email" name="email" required>
+                <input type="email" name="email">
             </div> 
             <div>
                 Inserisci il telefono:
-                <input type="tel" name="telefono" pattern="[0-9+\-\s()]+" title="Solo numeri, spazi, parentesi e trattini" required>
+                <input type="tel" name="telefono" pattern="[0-9+\-\s()]+" title="Solo numeri, spazi, parentesi e trattini">
             </div> 
             
             <button type="submit">Salva Paziente</button>
