@@ -31,6 +31,19 @@
         </div>
 
         <div class="section">
+        <h2>Ricerca Alimenti da eliminare</h2>
+
+    <input
+        type="text"
+        id="searchAlimenti"
+        placeholder="Digita il nome dell'alimento..."
+        autocomplete="off"
+    >
+
+    <div id="risultatiRicerca"></div>
+</div>
+
+        <div class="section">
             <h2>Alimenti:</h2>
 
             <table border="1">
@@ -54,6 +67,29 @@
                 ?>
             </table>
         </div>
+        <!--  JAVASCRIPT AJAX -->
+    <script>
+    document.getElementById("searchAlimenti").addEventListener("keyup", function () {
+
+        let valore = this.value.trim();
+
+        if (valore.length === 0) {
+            document.getElementById("risultatiRicerca").innerHTML = "";
+            return;
+        }
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "ajax_cerca_alimenti.php?q=" + encodeURIComponent(valore), true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                document.getElementById("risultatiRicerca").innerHTML = xhr.responseText;
+            }
+        };
+
+        xhr.send();
+    });
+    </script>
     </body>
 </html>
 
