@@ -152,38 +152,26 @@
         </div>
 
         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
             let deleteUrl = "";
 
-            function confermaEliminazione(url){
+            window.confermaEliminazione = function(url){
                 deleteUrl = url;
                 document.getElementById("confirmModal").style.display = "flex";
             }
 
-            function chiudiModal(){
+            window.chiudiModal = function(){
                 document.getElementById("confirmModal").style.display = "none";
             }
 
-            document.getElementById("confirmDelete").onclick = function(){
+            document.getElementById("confirmDelete").addEventListener("click", function(){
                 window.location.href = deleteUrl;
-            };
+            });
 
-            /* POPUP ELIMINAZIONE */
-
-            let deleteUrl = "";
-
-            function confermaEliminazione(url){
-                deleteUrl = url;
-                document.getElementById("confirmModal").style.display = "flex";
-            }
-
-            function chiudiModal(){
-                document.getElementById("confirmModal").style.display = "none";
-            }
-
-            document.getElementById("confirmDelete").onclick = function(){
-                window.location.href = deleteUrl;
-            };
+        });
         </script>
+
     </body>
 </html>
 
