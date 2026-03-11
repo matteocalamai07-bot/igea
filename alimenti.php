@@ -59,37 +59,68 @@
                         echo "<tr>";
                         echo "<td>".$row['nome']."</td>";
                         echo "<td>
-                                <a href='elimina_alimento.php?id=".$row['id']."' 
-                                onclick=\"return confirm('Sei sicuro di voler eliminare questo elemento?');\">Elimina</a>
-                              </td>";
+                                <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">
+                                Elimina
+                                </a>
+                                </td>";
                         echo "</tr>";
                     }
                 ?>
             </table>
         </div>
+
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal">
+            <h3>Conferma eliminazione</h3>
+            <p>Sei sicuro di voler eliminare questo elemento?</p>
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="chiudiModal()">Annulla</button>
+                    <button class="btn-delete" id="confirmDelete">Elimina</button>
+                </div>
+            </div>
+        </div>
+
+
         <!--  JAVASCRIPT AJAX -->
-    <script>
-    document.getElementById("searchAlimenti").addEventListener("keyup", function () {
+        <script>
+        document.getElementById("searchAlimenti").addEventListener("keyup", function () {
 
-        let valore = this.value.trim();
+            let valore = this.value.trim();
 
-        if (valore.length === 0) {
-            document.getElementById("risultatiRicerca").innerHTML = "";
-            return;
+            if (valore.length === 0) {
+                document.getElementById("risultatiRicerca").innerHTML = "";
+                return;
+            }
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "ajax_cerca_alimenti.php?q=" + encodeURIComponent(valore), true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById("risultatiRicerca").innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.send();
+        });
+
+        /* POPUP ELIMINAZIONE */
+
+        let deleteUrl = "";
+
+        function confermaEliminazione(url){
+            deleteUrl = url;
+            document.getElementById("confirmModal").style.display = "flex";
         }
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", "ajax_cerca_alimenti.php?q=" + encodeURIComponent(valore), true);
+        function chiudiModal(){
+            document.getElementById("confirmModal").style.display = "none";
+        }
 
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                document.getElementById("risultatiRicerca").innerHTML = xhr.responseText;
-            }
+        document.getElementById("confirmDelete").onclick = function(){
+            window.location.href = deleteUrl;
         };
-
-        xhr.send();
-    });
-    </script>
+        </script>
     </body>
 </html>
 

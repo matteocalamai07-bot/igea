@@ -37,9 +37,9 @@ if ($result->num_rows > 0) {
 
         echo "<li style='padding:6px; border-bottom:1px solid #eee; cursor:pointer;'>";
 
-        echo "<a href='elimina_alimento.php?id=".$row['id']."'
-              onclick=\"return confirm('Sei sicuro di voler eliminare questo alimento?');\"
-              style='text-decoration:none; color:black; display:block;'>";
+        echo "<a href='#'
+                onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\"
+                style='text-decoration:none;color:black;display:block;'>";
 
         echo htmlspecialchars($row['nome']);
 
