@@ -31,6 +31,7 @@
             <a href="nuova_terapia.php">+ Nuova Terapia/Farmaco</a>
         </div>
 
+        <!-- FARMACI -->
         <div class="section">
             <h2>Farmaci:</h2>
 
@@ -49,8 +50,7 @@
                         echo "<td>".$row['nome']."</td>";
                         echo "<td>".$row['descrizione']."</td>";
                         echo "<td>
-                                <a href='elimina_farmaco.php?id=".$row['id']."' 
-                                onclick=\"return confirm('Sei sicuro di voler eliminare questo elemento?');\">Elimina</a>
+                                <a href='#' onclick=\"confermaEliminazione('elimina_farmaco.php?id=".$row['id']."'); return false;\">Elimina</a>
                               </td>";
                         echo "</tr>";
                     }
@@ -58,6 +58,7 @@
             </table>
         </div>
 
+        <!-- INTEGRATORI -->
         <div class="section">
             <h2>Integratori:</h2>
 
@@ -76,8 +77,7 @@
                         echo "<td>".$row['nome']."</td>";
                         echo "<td>".$row['descrizione']."</td>";
                         echo "<td>
-                                <a href='elimina_integratore.php?id=".$row['id']."' 
-                                onclick=\"return confirm('Sei sicuro di voler eliminare questo elemento?');\">Elimina</a>
+                                <a href='#' onclick=\"confermaEliminazione('elimina_integratore.php?id=".$row['id']."'); return false;\">Elimina</a>
                               </td>";
                         echo "</tr>";
                     }
@@ -85,6 +85,7 @@
             </table>
         </div>
 
+        <!-- SUPPORTI -->
         <div class="section">
             <h2>Supporti:</h2>
 
@@ -103,8 +104,7 @@
                         echo "<td>".$row['nome']."</td>";
                         echo "<td>".$row['descrizione']."</td>";
                         echo "<td>
-                                <a href='elimina_supporto.php?id=".$row['id']."' 
-                                onclick=\"return confirm('Sei sicuro di voler eliminare questo elemento?');\">Elimina</a>
+                                <a href='#' onclick=\"confermaEliminazione('elimina_supporto.php?id=".$row['id']."'); return false;\">Elimina</a>
                               </td>";
                         echo "</tr>";
                     }
@@ -112,6 +112,7 @@
             </table>
         </div>
 
+        <!-- TERAPIE -->
         <div class="section">
             <h2>Terapie:</h2>
 
@@ -130,14 +131,59 @@
                         echo "<td>".$row['nome']."</td>";
                         echo "<td>".$row['descrizione']."</td>";
                         echo "<td>
-                                <a href='elimina_terapia.php?id=".$row['id']."' 
-                                onclick=\"return confirm('Sei sicuro di voler eliminare questo elemento?');\">Elimina</a>
+                                <a href='#' onclick=\"confermaEliminazione('elimina_terapia.php?id=".$row['id']."'); return false;\">Elimina</a>
                               </td>";
                         echo "</tr>";
                     }
                 ?>
             </table>
         </div>
+
+        <!-- POPUP MODALE -->
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal">
+                <h3>Conferma eliminazione</h3>
+                <p>Sei sicuro di voler eliminare questo elemento?</p>
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="chiudiModal()">Annulla</button>
+                    <button class="btn-delete" id="confirmDelete">Elimina</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let deleteUrl = "";
+
+            function confermaEliminazione(url){
+                deleteUrl = url;
+                document.getElementById("confirmModal").style.display = "flex";
+            }
+
+            function chiudiModal(){
+                document.getElementById("confirmModal").style.display = "none";
+            }
+
+            document.getElementById("confirmDelete").onclick = function(){
+                window.location.href = deleteUrl;
+            };
+
+            /* POPUP ELIMINAZIONE */
+
+            let deleteUrl = "";
+
+            function confermaEliminazione(url){
+                deleteUrl = url;
+                document.getElementById("confirmModal").style.display = "flex";
+            }
+
+            function chiudiModal(){
+                document.getElementById("confirmModal").style.display = "none";
+            }
+
+            document.getElementById("confirmDelete").onclick = function(){
+                window.location.href = deleteUrl;
+            };
+        </script>
     </body>
 </html>
 
