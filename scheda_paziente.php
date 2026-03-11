@@ -86,7 +86,12 @@
                             echo "<p><strong>Dettagli Interventi:</strong> " . htmlspecialchars($row_anamnesi['dettagli_interventi']) . "</p>";
                             echo "<p><strong>Esami:</strong> " . htmlspecialchars($row_anamnesi['esami']) . "</p>";
                             echo "<p><strong>Dettagli Esami:</strong> " . htmlspecialchars($row_anamnesi['dettagli_esami']) . "</p>";
-                            echo "<p><a href='elimina_anamnesi.php?id=" . $_GET['id'] . "'>Elimina Anamnesi</a></p>";
+                            echo "<p>
+                                    <button class='btn-delete-anamnesi'
+                                        onclick=\"confermaEliminazione('elimina_anamnesi.php?id=".$row_anamnesi['id']."'); return false;\">
+                                        Elimina Anamnesi
+                                    </button>
+                                </p>";
                         }
                     } else {
                         echo "<p>Nessuna anamnesi disponibile.</p>";
@@ -94,6 +99,20 @@
                     }
                 ?>
         </div>
+
+        <!-- POPUP MODALE ELIMINAZIONE -->
+
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal">
+            <h3>Conferma eliminazione</h3>
+            <p>Sei sicuro di voler eliminare questo paziente?</p>
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="chiudiModal()">Annulla</button>
+                    <button class="btn-delete" id="confirmDelete">Elimina</button>
+                </div>
+            </div>
+        </div>
+
         <script>
             $(document).ready(function() {
                 $('.editable').click(function() {
@@ -148,6 +167,23 @@
                     });
                 });
             });
+
+            /* POPUP ELIMINAZIONE */
+
+            let deleteUrl = "";
+
+            function confermaEliminazione(url){
+                deleteUrl = url;
+                document.getElementById("confirmModal").style.display = "flex";
+            }
+
+            function chiudiModal(){
+                document.getElementById("confirmModal").style.display = "none";
+            }
+
+            document.getElementById("confirmDelete").onclick = function(){
+                window.location.href = deleteUrl;
+            };
         </script>
     </body>
 </html>

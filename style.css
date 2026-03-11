@@ -459,3 +459,115 @@ body > h1 {
 .ricerca-box input {
     margin-top: 0;         /* rimuove spazio extra sopra */
 }
+
+/* =========================
+   POPUP ELIMINAZIONE
+========================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15,23,42,0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal {
+    background: white;
+    padding: 32px;
+    border-radius: 20px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+}
+
+.modal h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.modal p {
+    margin: 10px 0 25px 0;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.modal-buttons button {
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #e2e8f0;
+}
+
+.btn-delete {
+    color: white;
+    background: linear-gradient(135deg, #ef4444, #f87171);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+    header {
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav {
+        margin-top: 10px;
+    }
+    .modal-overlay {
+    display:none;
+    }
+
+}
+
+/* =========================
+   ELIMINA ANAMNESI BUTTON
+========================= */
+.btn-delete-anamnesi {
+    display: block;
+    margin: 25px auto;
+    padding: 12px 22px;
+    background: linear-gradient(180deg, #ff6b6b 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn-delete-anamnesi:hover {
+    background: linear-gradient(180deg, #ff7f7f 0%, #a83224 100%);
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+}
+
+.btn-delete-anamnesi:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}

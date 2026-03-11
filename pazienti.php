@@ -104,16 +104,29 @@ if ($conn->connect_error) {
                         </a>
                     </td>";
                 echo "<td>
-                        <a href='elimina_paziente.php?id={$row['id']}'
-                        onclick=\"return confirm('Sei sicuro di voler eliminare questo paziente?');\">
+                        <a href='#'
+                        onclick=\"confermaEliminazione('elimina_paziente.php?id=".$row['id']."'); return false;\">
                         Elimina
                         </a>
-                    </td>";
+                        </td>";
                 echo "</tr>";
             }
             ?>
         </table>
     </div>
+
+    <!-- POPUP MODALE ELIMINAZIONE -->
+
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal">
+            <h3>Conferma eliminazione</h3>
+            <p>Sei sicuro di voler eliminare questo paziente?</p>
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="chiudiModal()">Annulla</button>
+                    <button class="btn-delete" id="confirmDelete">Elimina</button>
+                </div>
+            </div>
+        </div>
 
     <!--  JAVASCRIPT AJAX -->
     <script>
@@ -137,6 +150,23 @@ if ($conn->connect_error) {
 
         xhr.send();
     });
+
+    /* POPUP ELIMINAZIONE */
+
+        let deleteUrl = "";
+
+        function confermaEliminazione(url){
+            deleteUrl = url;
+            document.getElementById("confirmModal").style.display = "flex";
+        }
+
+        function chiudiModal(){
+            document.getElementById("confirmModal").style.display = "none";
+        }
+
+        document.getElementById("confirmDelete").onclick = function(){
+            window.location.href = deleteUrl;
+        };
     </script>
 
 </body>
