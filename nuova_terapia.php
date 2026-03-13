@@ -70,7 +70,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif; ?>
 
             <form method="POST" action=""> 
-                <h2>Inserisci i Dati</h2>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0;">Inserisci i Dati</h2>
+                    <a href="farmaci.php" class="btn-azione" style="font-size: 0.9em; padding: 8px 12px; text-decoration: none;">← Torna alla lista delle terapie</a>
+                </div>
                 
                 <div>
                     <label>Seleziona la categoria:</label>
