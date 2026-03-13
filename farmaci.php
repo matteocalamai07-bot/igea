@@ -16,130 +16,132 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <header>
-            <h1>Igea - Terapie/Farmaci</h1>
+        
+        <aside class="sidebar">
+            <h1>Igea</h1>
             <nav>
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
                 <a href="farmaci.php">Terapie</a>
                 <a href="alimenti.php">Alimenti</a>
             </nav>
-        </header>
+        </aside>
 
-        <div class="azioni-rapide">
-            <label>Aggiungi un nuovo elemento:</label>
-            <a href="nuova_terapia.php">+ Nuova Terapia/Farmaco</a>
-        </div>
+        <main class="main-content">
+            
+            <h1>Gestione Terapie e Farmaci</h1>
 
-        <!-- FARMACI -->
-        <div class="section">
-            <h2>Farmaci:</h2>
+            <div class="azioni-rapide">
+                <label>Aggiungi un nuovo elemento</label>
+                <a href="nuova_terapia.php" class="btn-azione">+ Nuova Terapia/Farmaco</a>
+            </div>
 
-            <table border="1">
-                <tr>
-                    <th>Nome</th>
-                    <th>Descrizione</th>
-                    <th>Elimina</th>
-                </tr>
-                <?php
-                    $query = "SELECT * FROM farmaci";
-                    $result = $conn->query($query);
+            <div class="section">
+                <h2>Farmaci</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Elimina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $query = "SELECT * FROM farmaci";
+                            $result = $conn->query($query);
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>".$row['nome']."</td>";
+                                echo "<td>".$row['descrizione']."</td>";
+                                echo "<td><a href='#' onclick=\"confermaEliminazione('elimina_farmaco.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "</tr>";
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>".$row['nome']."</td>";
-                        echo "<td>".$row['descrizione']."</td>";
-                        echo "<td>
-                                <a href='#' onclick=\"confermaEliminazione('elimina_farmaco.php?id=".$row['id']."'); return false;\">Elimina</a>
-                              </td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table>
-        </div>
+            <div class="section">
+                <h2>Integratori</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Elimina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $query = "SELECT * FROM integratori";
+                            $result = $conn->query($query);
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>".$row['nome']."</td>";
+                                echo "<td>".$row['descrizione']."</td>";
+                                echo "<td><a href='#' onclick=\"confermaEliminazione('elimina_integratore.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "</tr>";
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- INTEGRATORI -->
-        <div class="section">
-            <h2>Integratori:</h2>
+            <div class="section">
+                <h2>Supporti</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Elimina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $query = "SELECT * FROM supporti";
+                            $result = $conn->query($query);
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>".$row['nome']."</td>";
+                                echo "<td>".$row['descrizione']."</td>";
+                                echo "<td><a href='#' onclick=\"confermaEliminazione('elimina_supporto.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "</tr>";
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-            <table border="1">
-                <tr>
-                    <th>Nome</th>
-                    <th>Descrizione</th>
-                    <th>Elimina</th>
-                </tr>
-                <?php
-                    $query = "SELECT * FROM integratori";
-                    $result = $conn->query($query);
+            <div class="section">
+                <h2>Terapie</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
+                            <th>Elimina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $query = "SELECT * FROM terapie";
+                            $result = $conn->query($query);
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>".$row['nome']."</td>";
+                                echo "<td>".$row['descrizione']."</td>";
+                                echo "<td><a href='#' onclick=\"confermaEliminazione('elimina_terapia.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "</tr>";
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>".$row['nome']."</td>";
-                        echo "<td>".$row['descrizione']."</td>";
-                        echo "<td>
-                                <a href='#' onclick=\"confermaEliminazione('elimina_integratore.php?id=".$row['id']."'); return false;\">Elimina</a>
-                              </td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table>
-        </div>
+        </main>
 
-        <!-- SUPPORTI -->
-        <div class="section">
-            <h2>Supporti:</h2>
-
-            <table border="1">
-                <tr>
-                    <th>Nome</th>
-                    <th>Descrizione</th>
-                    <th>Elimina</th>
-                </tr>
-                <?php
-                    $query = "SELECT * FROM supporti";
-                    $result = $conn->query($query);
-
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>".$row['nome']."</td>";
-                        echo "<td>".$row['descrizione']."</td>";
-                        echo "<td>
-                                <a href='#' onclick=\"confermaEliminazione('elimina_supporto.php?id=".$row['id']."'); return false;\">Elimina</a>
-                              </td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table>
-        </div>
-
-        <!-- TERAPIE -->
-        <div class="section">
-            <h2>Terapie:</h2>
-
-            <table border="1">
-                <tr>
-                    <th>Nome</th>
-                    <th>Descrizione</th>
-                    <th>Elimina</th>
-                </tr>
-                <?php
-                    $query = "SELECT * FROM terapie";
-                    $result = $conn->query($query);
-
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>".$row['nome']."</td>";
-                        echo "<td>".$row['descrizione']."</td>";
-                        echo "<td>
-                                <a href='#' onclick=\"confermaEliminazione('elimina_terapia.php?id=".$row['id']."'); return false;\">Elimina</a>
-                              </td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table>
-        </div>
-
-        <!-- POPUP MODALE -->
         <div class="modal-overlay" id="confirmModal">
             <div class="modal">
                 <h3>Conferma eliminazione</h3>
@@ -153,7 +155,6 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-
             let deleteUrl = "";
 
             window.confermaEliminazione = function(url){
@@ -168,11 +169,9 @@
             document.getElementById("confirmDelete").addEventListener("click", function(){
                 window.location.href = deleteUrl;
             });
-
         });
         </script>
 
     </body>
 </html>
-
 <?php $conn->close(); ?>
