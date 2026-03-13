@@ -14,53 +14,33 @@ if ($conn->connect_error) {
         <meta charset="UTF-8">
         <title>Igea - Home</title>
         <link rel="stylesheet" href="style.css">
-
-        <style>
-            #risultatiRicerca {
-                width: 300px;
-                border: 1px solid #ccc;
-                background: white;
-                max-height: 200px;
-                overflow-y: auto;
-            }
-
-            #risultatiRicerca ul {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            #risultatiRicerca li {
-                padding: 6px;
-                border-bottom: 1px solid #eee;
-                cursor: pointer;
-            }
-
-            #risultatiRicerca li:hover {
-                background: #f0f0f0;
-            }
-        </style>
     </head>
     <body>
-        <header>
-            <h1>Igea - Home</h1>
+        
+        <aside class="sidebar">
+            <h1>Igea</h1>
             <nav>
-                <a href="index.php">Home</a>
-                <a href="pazienti.php">Pazienti</a>
-                <a href="farmaci.php">Terapie</a>
-                <a href="alimenti.php">Alimenti</a>
+                <a href="index.php"> Home</a>
+                <a href="pazienti.php"> Pazienti</a>
+                <a href="farmaci.php"> Terapie</a>
+                <a href="alimenti.php"> Alimenti</a>
             </nav>
-        </header>
+        </aside>
 
-        <div class="container">
-            <!-- AZIONI RAPIDE -->
+        <main class="main-content">
+
+            <h1>Dashboard</h1>
+
             <div class="azioni-rapide">
-                <label>Azioni rapide:</label>
-
                 <div class="azioni-row">
-                    <a href="nuovo_paziente.php">+ Nuovo Paziente</a>
+                    
+                    <div>
+                        <label>Azioni rapide</label>
+                        <a href="nuovo_paziente.php" class="btn-azione">+ Nuovo Paziente</a>
+                    </div>
 
                     <div class="ricerca-box">
+                        <h2>Cerca Paziente</h2>
                         <input
                             type="text"
                             id="searchPaziente"
@@ -69,46 +49,50 @@ if ($conn->connect_error) {
                         >
                         <div id="risultatiRicerca"></div>
                     </div>
+
                 </div>
             </div>
 
-            <!-- ATTIVITÀ RECENTI -->
             <div class="section">
                 <h2>Attività Recenti</h2>
 
-                <table border="1">
-                    <tr>
-                        <th>Data</th>
-                        <th>Paziente</th>
-                        <th>Note</th>
-                    </tr>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Paziente</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $query = "
+                            SELECT v.data, p.nome, p.cognome, GROUP_CONCAT(o.osservazione SEPARATOR '|') AS osservazioni
+                            FROM paziente p INNER JOIN visita v ON p.id = v.fk_paziente
+                            INNER JOIN osservazioni_finali o ON v.id = o.fk_visita
+                            GROUP BY v.id
+                            ORDER BY v.data DESC
+                            LIMIT 5;
+                        ";
 
-                    <?php
-                    $query = "
-                        SELECT v.data, p.nome, p.cognome, GROUP_CONCAT(o.osservazione SEPARATOR '|') AS osservazioni
-                        FROM paziente p INNER JOIN visita v ON p.id = v.fk_paziente
-                        INNER JOIN osservazioni_finali o ON v.id = o.fk_visita
-                        GROUP BY v.id
-                        ORDER BY v.data DESC
-                        LIMIT 5;
-                    ";
+                        //prende i risultati della query
+                        $result = $conn->query($query);
 
-                    //prende i risultati della query
-                    $result = $conn->query($query);
-
-                    //prende una riga alla volta da result finchè non finiscono
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<td>".$row['data']."</td>";
-                        echo "<td>".$row['nome']." ".$row['cognome']."</td>";
-                        echo "<td>".substr($row['osservazioni'], 0, 100)."...</td>";
-                        echo "</tr>";
-                    }
-                    ?>
+                        //prende una riga alla volta da result finchè non finiscono
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>"; // <-- Aggiunto per correggere l'HTML
+                            echo "<td>".$row['data']."</td>";
+                            echo "<td>".$row['nome']." ".$row['cognome']."</td>";
+                            echo "<td>".substr($row['osservazioni'], 0, 100)."...</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
                 </table>
             </div>
-        </div>
 
-        <!--  JAVASCRIPT AJAX -->
+        </main>
+
         <script>
         document.getElementById("searchPaziente").addEventListener("keyup", function () {
 
