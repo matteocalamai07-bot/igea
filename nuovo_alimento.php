@@ -7,43 +7,75 @@ if ($conn->connect_error) {
     die("Connessione fallita: " . $conn->connect_error);
 }
 
+$success_msg = "";
+$error_msg = "";
+
 // SE IL FORM È STATO INVIATO 
 if ($_SERVER["REQUEST_METHOD"] == "POST") { 
-    $nome = $_POST["nome"];
+    $nome = trim($_POST["nome"]);
     
-
-    $sql = "INSERT INTO alimenti (nome) VALUES ('$nome')";
- 
-    if ($conn->query($sql) === TRUE) { 
-        echo "<p>Dati inseriti correttamente!</p>"; 
-    } else { 
-            echo "<p>Errore nell'inserimento: " . $conn->error . "</p>"; 
-    } $conn->close(); 
+    if (!empty($nome)) {
+        // Usa i prepared statements per sicurezza
+        $stmt = $conn->prepare("INSERT INTO alimenti (nome) VALUES (?)");
+        $stmt->bind_param("s", $nome);
+        
+        if ($stmt->execute()) { 
+            $success_msg = "Alimento aggiunto correttamente!"; 
+        } else { 
+            $error_msg = "Errore nell'inserimento: " . $stmt->error; 
+        }
+        $stmt->close();
+    } else {
+        $error_msg = "Il nome dell'alimento è obbligatorio.";
+    }
 }
 ?>
 
-<!-- SE NON È STATO ANCORA INVIATO, MOSTRO IL FORM --> 
- <!DOCTYPE html>
- <html lang="it">
+<!DOCTYPE html>
+<html lang="it">
     <head>
         <meta charset="UTF-8">
         <title>Igea - Inserimento Alimento</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body> 
-        <h1>Igea - Nuovo Alimento</h1>
-        <br>
-        <div class="top-links">
-            <a href="alimenti.php" class="btn-top">Torna Indietro</a>
-            <a href="index.php" class="btn-top">Torna alla Home</a>
-        </div>
-        <form method="POST" action=""> 
-            <div>
-                Nome Alimento:
-                <input type="text" name="nome" required>
-            </div>
-            <br>
-            <input type="submit" value="Aggiungi Alimento">
-        </form> 
+        
+        <aside class="sidebar">
+            <h1>Igea</h1>
+            <nav>
+                <a href="index.php">Home</a>
+                <a href="pazienti.php">Pazienti</a>
+                <a href="farmaci.php">Terapie</a>
+                <a href="alimenti.php">Alimenti</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            
+            <h1>Nuovo Alimento</h1>
+
+            <?php if (!empty($success_msg)): ?>
+                <p class="messaggio-php"><?php echo $success_msg; ?></p>
+            <?php endif; ?>
+
+            <?php if (!empty($error_msg)): ?>
+                <ul class="error-list">
+                    <li><?php echo $error_msg; ?></li>
+                </ul>
+            <?php endif; ?>
+
+            <form method="POST" action=""> 
+                <h2>Inserisci i Dati</h2>
+
+                <div>
+                    <label>Nome Alimento:</label>
+                    <input type="text" name="nome" required>
+                </div>
+                
+                <button type="submit">Aggiungi Alimento</button>
+            </form> 
+
+        </main>
     </body>
 </html>
+<?php $conn->close(); ?>
