@@ -7,6 +7,7 @@ if ($conn->connect_error) {
 }
 
 $errors = [];
+$success_msg = "";
 
 /* =========================
    CONTROLLO ID PAZIENTE
@@ -19,7 +20,7 @@ if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
 $id_paziente = intval($_GET["id"]);
 
 /* Verifico che il paziente esista */
-$check = $conn->prepare("SELECT id FROM paziente WHERE id = ?");
+$check = $conn->prepare("SELECT id, nome, cognome FROM paziente WHERE id = ?");
 $check->bind_param("i", $id_paziente);
 $check->execute();
 $result = $check->get_result();
@@ -27,6 +28,8 @@ $result = $check->get_result();
 if ($result->num_rows === 0) {
     die("Paziente non trovato.");
 }
+$paziente_info = $result->fetch_assoc();
+$nome_paziente = $paziente_info['nome'] . " " . $paziente_info['cognome'];
 $check->close();
 
 /* Cerco un'anamnesi già esistente per questo paziente */
@@ -42,7 +45,7 @@ if ($res->num_rows > 0) {
 }
 $stmt->close();
 
-/* inizializzo le variabili del form (utili anche in caso di modifica o errore di validazione) */
+/* inizializzo le variabili del form */
 $allergie = $dettagli_allergie = $fumo = $dettagli_fumo = $alcol = $dettagli_alcol = $patologie = $dettagli_patologie = $interventi = $dettagli_interventi = $esami = $dettagli_esami = "";
 if ($existing_anamnesi) {
     $allergie = $existing_anamnesi['allergie'];
@@ -85,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     /* VALIDAZIONI */
-
     if (empty($allergie)) $errors[] = "Inserisci le allergie.";
     if (empty($fumo)) $errors[] = "Inserisci se il/la paziente fuma.";
     if (empty($alcol)) $errors[] = "Inserisci se il/la paziente fa uso di alcol.";
@@ -99,18 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conn->prepare("UPDATE anamnesi SET allergie = ?, dettagli_allergie = ?, fumo = ?, dettagli_fumo = ?, alcol = ?, dettagli_alcol = ?, patologie = ?, dettagli_patologie = ?, interventi = ?, dettagli_interventi = ?, esami = ?, dettagli_esami = ? WHERE id = ?");
             $stmt->bind_param(
                 "ssssssssssssi",
-                $allergie,
-                $dettagli_allergie,
-                $fumo,
-                $dettagli_fumo,
-                $alcol,
-                $dettagli_alcol,
-                $patologie,
-                $dettagli_patologie,
-                $interventi,
-                $dettagli_interventi,
-                $esami,
-                $dettagli_esami,
+                $allergie, $dettagli_allergie, $fumo, $dettagli_fumo, $alcol, $dettagli_alcol,
+                $patologie, $dettagli_patologie, $interventi, $dettagli_interventi, $esami, $dettagli_esami,
                 $anamnesi_id
             );
         } else {
@@ -119,38 +111,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 (fk_paziente, allergie, dettagli_allergie, fumo, dettagli_fumo, alcol, dettagli_alcol, patologie, dettagli_patologie, interventi, dettagli_interventi, esami, dettagli_esami)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-
             $stmt->bind_param(
                 "issssssssssss",
-                $id_paziente,
-                $allergie,
-                $dettagli_allergie,
-                $fumo,
-                $dettagli_fumo,
-                $alcol,
-                $dettagli_alcol,
-                $patologie,
-                $dettagli_patologie,
-                $interventi,
-                $dettagli_interventi,
-                $esami,
-                $dettagli_esami
+                $id_paziente, $allergie, $dettagli_allergie, $fumo, $dettagli_fumo, $alcol, $dettagli_alcol,
+                $patologie, $dettagli_patologie, $interventi, $dettagli_interventi, $esami, $dettagli_esami
             );
         }
 
         if ($stmt->execute()) {
             if ($editing) {
-                echo "<p style='color:green;'>Anamnesi aggiornata correttamente!</p>";
+                $success_msg = "Anamnesi aggiornata correttamente!";
             } else {
-                echo "<p style='color:green;'>Anamnesi inserita correttamente!</p>";
-                /* dopo l'inserimento consideriamo che ora esista un'anamnesi */
+                $success_msg = "Anamnesi inserita correttamente!";
                 $existing_anamnesi = true;
                 $anamnesi_id = $stmt->insert_id;
             }
         } else {
-            echo "<p style='color:red;'>Errore: " . $stmt->error . "</p>";
+            $errors[] = "Errore durante il salvataggio: " . $stmt->error;
         }
-
         $stmt->close();
     }
 }
@@ -162,120 +140,194 @@ $conn->close();
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Igea - Inserimento Anamnesi</title>
+    <title>Igea - Anamnesi</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Stili extra per il form per non toccare il file CSS principale */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-col-small {
+            flex: 1;
+            min-width: 120px;
+        }
+        .form-col-large {
+            flex: 3;
+            min-width: 250px;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-input {
+            width: 100%;
+            height: 40px;
+            padding: 0 15px;
+            border: 1px solid rgba(15,23,42,0.15);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            outline: none;
+            background: #f8fafc;
+        }
+        .form-input:focus {
+            border-color: #3b82f6;
+            background: #ffffff;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Igea - Anamnesi Paziente <?php echo $existing_anamnesi ? '(modifica)' : '(nuova)'; ?></h1>
-<br>
-<div class="top-links">
-    <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
-    <a href="index.php" class="btn-top">Torna alla Home</a>
-</div>
+    <aside class="sidebar">
+        <h1>Igea</h1>
+        <nav>
+            <a href="index.php">Home</a>
+            <a href="pazienti.php" class="active">Pazienti</a>
+            <a href="farmaci.php">Terapie</a>
+            <a href="alimenti.php">Alimenti</a>
+        </nav>
+    </aside>
 
-<?php
-if (!empty($errors)) {
-    echo "<ul style='color:red;'>";
-    foreach ($errors as $error) {
-        echo "<li>$error</li>";
-    }
-    echo "</ul>";
-}
-?>
+    <main class="main-content">
 
-    <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
-        <?php if ($existing_anamnesi): ?>
-            <input type="hidden" name="anamnesi_id" value="<?php echo $anamnesi_id; ?>">
+        <div>
+            <div style="margin-bottom: 20px;">
+                <a href="pazienti.php" style="color: #475569; text-decoration: none; font-size: 0.9rem;">&larr; Torna alla lista pazienti</a>
+            </div>
+            <h1 style="font-size: 2rem; color: #0f172a; margin-top: 0; margin-bottom: 5px;">
+                Anamnesi di <?php echo htmlspecialchars($nome_paziente); ?>
+            </h1>
+            <p style="color: #64748b; margin-top: 0; margin-bottom: 30px;">
+                <?php echo $existing_anamnesi ? 'Modifica le informazioni cliniche del paziente.' : 'Inserisci le informazioni cliniche del paziente.'; ?>
+            </p>
+        </div>
+
+        <?php if (!empty($errors)): ?>
+            <div style="background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+                <ul style="margin: 0; padding-left: 20px;">
+                    <?php foreach ($errors as $error) { echo "<li>$error</li>"; } ?>
+                </ul>
+            </div>
         <?php endif; ?>
 
-        <div>
-            Allergie:
-            <select name="allergie" required>
-                <option value="">-- Seleziona --</option>
-                <option value="No" <?php if($allergie === 'No') echo 'selected'; ?>>No</option>
-                <option value="Si" <?php if($allergie === 'Si') echo 'selected'; ?>>Sì</option>
-            </select>
+        <?php if (!empty($success_msg)): ?>
+            <div style="background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+                <?php echo $success_msg; ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="card-cruscotto">
+            <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
+                <?php if ($existing_anamnesi): ?>
+                    <input type="hidden" name="anamnesi_id" value="<?php echo $anamnesi_id; ?>">
+                <?php endif; ?>
+
+                <div class="form-row">
+                    <div class="form-col-small">
+                        <label class="form-label">Allergie</label>
+                        <select name="allergie" class="form-input" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="No" <?php if($allergie === 'No') echo 'selected'; ?>>No</option>
+                            <option value="Si" <?php if($allergie === 'Si') echo 'selected'; ?>>Sì</option>
+                        </select>
+                    </div>
+                    <div class="form-col-large">
+                        <label class="form-label">Dettagli allergie</label>
+                        <input type="text" name="dettagli_allergie" class="form-input" placeholder="Specifica se presenti..." value="<?php echo htmlspecialchars($dettagli_allergie); ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col-small">
+                        <label class="form-label">Fuma</label>
+                        <select name="fumo" class="form-input" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="No" <?php if($fumo === 'No') echo 'selected'; ?>>No</option>
+                            <option value="Si" <?php if($fumo === 'Si') echo 'selected'; ?>>Sì</option>
+                        </select>
+                    </div>
+                    <div class="form-col-large">
+                        <label class="form-label">Dettagli fumo</label>
+                        <input type="text" name="dettagli_fumo" class="form-input" placeholder="Quantità/Frequenza..." value="<?php echo htmlspecialchars($dettagli_fumo); ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col-small">
+                        <label class="form-label">Alcol</label>
+                        <select name="alcol" class="form-input" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="No" <?php if($alcol === 'No') echo 'selected'; ?>>No</option>
+                            <option value="Si" <?php if($alcol === 'Si') echo 'selected'; ?>>Sì</option>
+                        </select>
+                    </div>
+                    <div class="form-col-large">
+                        <label class="form-label">Dettagli alcol</label>
+                        <input type="text" name="dettagli_alcol" class="form-input" placeholder="Frequenza..." value="<?php echo htmlspecialchars($dettagli_alcol); ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col-small">
+                        <label class="form-label">Patologie</label>
+                        <select name="patologie" class="form-input" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="No" <?php if($patologie === 'No') echo 'selected'; ?>>No</option>
+                            <option value="Si" <?php if($patologie === 'Si') echo 'selected'; ?>>Sì</option>
+                        </select>
+                    </div>
+                    <div class="form-col-large">
+                        <label class="form-label">Dettagli patologie</label>
+                        <input type="text" name="dettagli_patologie" class="form-input" placeholder="Specifica patologie..." value="<?php echo htmlspecialchars($dettagli_patologie); ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col-small">
+                        <label class="form-label">Interventi</label>
+                        <select name="interventi" class="form-input" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="No" <?php if($interventi === 'No') echo 'selected'; ?>>No</option>
+                            <option value="Si" <?php if($interventi === 'Si') echo 'selected'; ?>>Sì</option>
+                        </select>
+                    </div>
+                    <div class="form-col-large">
+                        <label class="form-label">Dettagli interventi</label>
+                        <input type="text" name="dettagli_interventi" class="form-input" placeholder="Tipo di interventi e anno..." value="<?php echo htmlspecialchars($dettagli_interventi); ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col-small">
+                        <label class="form-label">Esami recenti</label>
+                        <select name="esami" class="form-input" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="No" <?php if($esami === 'No') echo 'selected'; ?>>No</option>
+                            <option value="Si" <?php if($esami === 'Si') echo 'selected'; ?>>Sì</option>
+                        </select>
+                    </div>
+                    <div class="form-col-large">
+                        <label class="form-label">Dettagli esami</label>
+                        <input type="text" name="dettagli_esami" class="form-input" placeholder="Quali esami e quando..." value="<?php echo htmlspecialchars($dettagli_esami); ?>">
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; text-align: right;">
+                    <button type="submit" class="btn-azione" style="height: 40px; padding: 0 30px; border: none; font-size: 1rem; cursor: pointer;">
+                        <?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?>
+                    </button>
+                </div>
+
+            </form>
         </div>
 
-        <div>
-            Dettagli allergie:
-            <input type="text" name="dettagli_allergie" value="<?php echo htmlspecialchars($dettagli_allergie); ?>">
-        </div>
+    </main>
 
-        <div>
-            Fuma:
-            <select name="fumo" required>
-                <option value="">-- Seleziona --</option>
-                <option value="No" <?php if($fumo === 'No') echo 'selected'; ?>>No</option>
-                <option value="Si" <?php if($fumo === 'Si') echo 'selected'; ?>>Sì</option>
-            </select>
-        </div>
-
-        <div>
-            Dettagli fumo:
-            <input type="text" name="dettagli_fumo" value="<?php echo htmlspecialchars($dettagli_fumo); ?>">
-        </div>
-
-        <div>
-            Alcol:
-            <select name="alcol" required>
-                <option value="">-- Seleziona --</option>
-                <option value="No" <?php if($alcol === 'No') echo 'selected'; ?>>No</option>
-                <option value="Si" <?php if($alcol === 'Si') echo 'selected'; ?>>Sì</option>
-            </select>
-        </div>
-
-        <div>
-            Dettagli alcol:
-            <input type="text" name="dettagli_alcol" value="<?php echo htmlspecialchars($dettagli_alcol); ?>">
-        </div>
-
-        <div>
-            Patologie:
-            <select name="patologie" required>
-                <option value="">-- Seleziona --</option>
-                <option value="No" <?php if($patologie === 'No') echo 'selected'; ?>>No</option>
-                <option value="Si" <?php if($patologie === 'Si') echo 'selected'; ?>>Sì</option>
-            </select>
-        </div>
-
-        <div>
-            Dettagli patologie:
-            <input type="text" name="dettagli_patologie" value="<?php echo htmlspecialchars($dettagli_patologie); ?>">
-        </div>
-
-        <div>
-            Interventi:
-            <select name="interventi" required>
-                <option value="">-- Seleziona --</option>
-                <option value="No" <?php if($interventi === 'No') echo 'selected'; ?>>No</option>
-                <option value="Si" <?php if($interventi === 'Si') echo 'selected'; ?>>Sì</option>
-            </select>
-        </div>
-
-        <div>
-            Dettagli interventi:
-            <input type="text" name="dettagli_interventi" value="<?php echo htmlspecialchars($dettagli_interventi); ?>">
-        </div>
-
-        <div>
-            Esami:
-            <select name="esami" required>
-                <option value="">-- Seleziona --</option>
-                <option value="No" <?php if($esami === 'No') echo 'selected'; ?>>No</option>
-                <option value="Si" <?php if($esami === 'Si') echo 'selected'; ?>>Sì</option>
-            </select>
-        </div>
-
-        <div>
-            Dettagli esami:
-            <input type="text" name="dettagli_esami" value="<?php echo htmlspecialchars($dettagli_esami); ?>">
-        </div>
-
-        <br>
-        <button type="submit"><?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?></button>
-
-    </form>
 </body>
 </html>
