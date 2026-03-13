@@ -43,6 +43,10 @@
         <div class="top-links">
             <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
             <a href="index.php" class="btn-top">Torna alla Home</a>
+            <?php 
+                echo "<a href='nuova_visita.php?id=" . $_GET['id'] . "' class='btn-top'>Nuova Visita</a>";
+            ?>
+            
         </div>
 
         <div class="container">
