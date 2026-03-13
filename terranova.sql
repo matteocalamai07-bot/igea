@@ -205,7 +205,7 @@ CREATE TABLE `anamnesi` (
 
 CREATE TABLE `appuntamento` (
   `id` int(11) NOT NULL,
-  `data` timestamp NOT NULL DEFAULT current_timestamp(),
+  `data` timestamp NOT NULL,
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
