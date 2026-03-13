@@ -6,7 +6,6 @@
         die("Connessione fallita: " . $conn->connect_error);
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
     <head>
@@ -22,37 +21,33 @@
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
                 <a href="farmaci.php">Terapie</a>
-                <a href="alimenti.php">Alimenti</a>
+                <a href="alimenti.php" class="active">Alimenti</a>
             </nav>
         </aside>
 
         <main class="main-content">
             
-            <h1>Gestione Alimenti</h1>
-
-            <div class="azioni-rapide">
-                <div class="azioni-row">
+            <div>
+                <h1 style="font-size: 2rem; color: #0f172a; margin-bottom: 25px; margin-top: 0;">Gestione Alimenti</h1>
+                
+                <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 30px;">
+                    
                     <div>
-                        <label>Aggiungi un nuovo alimento</label>
-                        <a href="nuovo_alimento.php" class="btn-azione">+ Nuovo Alimento</a>
+                        <label style="display: block; font-size: 0.9rem; color: #475569; margin-bottom: 8px; font-weight: 600;">Aggiungi un nuovo alimento</label>
+                        <a href="nuovo_alimento.php" class="btn-azione" style="height: 40px; padding: 0 20px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none;">+ Nuovo Alimento</a>
                     </div>
 
-                    <div class="ricerca-box">
-                        <h2>Ricerca Alimenti da eliminare</h2>
-                        <input
-                            type="text"
-                            id="searchAlimenti"
-                            placeholder="Digita il nome dell'alimento..."
-                            autocomplete="off"
-                        >
+                    <div style="position: relative;">
+                        <label style="display: block; font-size: 0.9rem; color: #475569; margin-bottom: 8px; font-weight: 600;">Ricerca Alimenti da eliminare</label>
+                        <input type="text" id="searchAlimenti" placeholder="Digita il nome dell'alimento..." autocomplete="off" style="width: 300px; height: 40px; padding: 0 15px; border: 1px solid rgba(15,23,42,0.15); border-radius: 5px; box-sizing: border-box; font-size: 0.95rem; outline: none;">
                         <div id="risultatiRicerca"></div>
                     </div>
+
                 </div>
             </div>
 
-            <div class="section">
-                <h2>Alimenti Registrati</h2>
-
+            <div class="card-cruscotto">
+                <h2 style="margin-top:0;">Alimenti Registrati</h2>
                 <table>
                     <thead>
                         <tr>
@@ -69,10 +64,8 @@
                                 echo "<tr>";
                                 echo "<td>".$row['nome']."</td>";
                                 echo "<td>
-                                        <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">
-                                        Elimina
-                                        </a>
-                                        </td>";
+                                        <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">Elimina</a>
+                                      </td>";
                                 echo "</tr>";
                             }
                         ?>
