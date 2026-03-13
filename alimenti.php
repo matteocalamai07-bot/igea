@@ -15,59 +15,72 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <header>
-            <h1>Igea - Alimenti</h1>
+        
+        <aside class="sidebar">
+            <h1>Igea</h1>
             <nav>
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
                 <a href="farmaci.php">Terapie</a>
                 <a href="alimenti.php">Alimenti</a>
             </nav>
-        </header>
+        </aside>
 
-        <div class="azioni-rapide">
-            <label>Aggiungi un nuovo alimento:</label>
-            <a href="nuovo_alimento.php">+ Nuovo Alimento</a>
-        </div>
+        <main class="main-content">
+            
+            <h1>Gestione Alimenti</h1>
 
-        <div class="section">
-        <h2>Ricerca Alimenti da eliminare</h2>
+            <div class="azioni-rapide">
+                <div class="azioni-row">
+                    <div>
+                        <label>Aggiungi un nuovo alimento</label>
+                        <a href="nuovo_alimento.php" class="btn-azione">+ Nuovo Alimento</a>
+                    </div>
 
-    <input
-        type="text"
-        id="searchAlimenti"
-        placeholder="Digita il nome dell'alimento..."
-        autocomplete="off"
-    >
+                    <div class="ricerca-box">
+                        <h2>Ricerca Alimenti da eliminare</h2>
+                        <input
+                            type="text"
+                            id="searchAlimenti"
+                            placeholder="Digita il nome dell'alimento..."
+                            autocomplete="off"
+                        >
+                        <div id="risultatiRicerca"></div>
+                    </div>
+                </div>
+            </div>
 
-    <div id="risultatiRicerca"></div>
-</div>
+            <div class="section">
+                <h2>Alimenti Registrati</h2>
 
-        <div class="section">
-            <h2>Alimenti:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Elimina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $query = "SELECT * FROM alimenti";
+                            $result = $conn->query($query);
 
-            <table border="1">
-                <tr>
-                    <th>Nome</th>
-                    <th>Elimina</th>
-                </tr>
-                <?php
-                    $query = "SELECT * FROM alimenti";
-                    $result = $conn->query($query);
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>".$row['nome']."</td>";
+                                echo "<td>
+                                        <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">
+                                        Elimina
+                                        </a>
+                                        </td>";
+                                echo "</tr>";
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>".$row['nome']."</td>";
-                        echo "<td>
-                                <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">
-                                Elimina
-                                </a>
-                                </td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table>
-        </div>
+        </main>
 
         <div class="modal-overlay" id="confirmModal">
             <div class="modal">
@@ -80,11 +93,8 @@
             </div>
         </div>
 
-
-        <!--  JAVASCRIPT AJAX -->
         <script>
         document.getElementById("searchAlimenti").addEventListener("keyup", function () {
-
             let valore = this.value.trim();
 
             if (valore.length === 0) {
@@ -105,7 +115,6 @@
         });
 
         /* POPUP ELIMINAZIONE */
-
         let deleteUrl = "";
 
         function confermaEliminazione(url){
@@ -123,5 +132,4 @@
         </script>
     </body>
 </html>
-
 <?php $conn->close(); ?>
