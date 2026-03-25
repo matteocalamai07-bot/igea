@@ -32,18 +32,55 @@ $paziente_info = $result->fetch_assoc();
 $nome_paziente = $paziente_info['nome'] . " " . $paziente_info['cognome'];
 $check->close();
 
-/* Cerco un'anamnesi già esistente per questo paziente */
-$existing_anamnesi = null;
-$anamnesi_id = null;
-$stmt = $conn->prepare("SELECT * FROM anamnesi WHERE fk_paziente = ?");
+/* =========================
+   GESTIONE ELIMINAZIONE
+========================= */
+if (isset($_GET['delete_anamnesi']) && is_numeric($_GET['delete_anamnesi'])) {
+    $del = intval($_GET['delete_anamnesi']);
+    $stmt = $conn->prepare("DELETE FROM anamnesi WHERE id = ? AND fk_paziente = ?");
+    $stmt->bind_param("ii", $del, $id_paziente);
+    if ($stmt->execute()) {
+        header("Location: aggiungi_anamnesi.php?id=$id_paziente");
+        exit;
+    } else {
+        $errors[] = "Errore durante l'eliminazione: " . $stmt->error;
+    }
+    $stmt->close();
+}
+
+/* =========================
+   RECUPERA TUTTE LE ANAMNESI
+   (ordina per id DESC per mostrare le più recenti)
+========================= */
+$anamnesi_list = [];
+$stmt = $conn->prepare("SELECT * FROM anamnesi WHERE fk_paziente = ? ORDER BY id DESC");
 $stmt->bind_param("i", $id_paziente);
 $stmt->execute();
 $res = $stmt->get_result();
-if ($res->num_rows > 0) {
-    $existing_anamnesi = $res->fetch_assoc();
-    $anamnesi_id = $existing_anamnesi['id'];
+while ($row = $res->fetch_assoc()) {
+    $anamnesi_list[] = $row;
 }
 $stmt->close();
+
+/* =========================
+   SELEZIONA UNA SPECIFICA ANAMNESI (per modifica)
+   Se ?anamnesi_id=... -> carica quella anamnesi
+   Se ?new=1 -> form vuoto per nuova anamnesi
+========================= */
+$existing_anamnesi = null;
+$anamnesi_id = null;
+if (isset($_GET['anamnesi_id']) && is_numeric($_GET['anamnesi_id'])) {
+    $aid = intval($_GET['anamnesi_id']);
+    $stmt = $conn->prepare("SELECT * FROM anamnesi WHERE id = ? AND fk_paziente = ?");
+    $stmt->bind_param("ii", $aid, $id_paziente);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res->num_rows > 0) {
+        $existing_anamnesi = $res->fetch_assoc();
+        $anamnesi_id = $existing_anamnesi['id'];
+    }
+    $stmt->close();
+}
 
 /* inizializzo le variabili del form */
 $allergie = $dettagli_allergie = $fumo = $dettagli_fumo = $alcol = $dettagli_alcol = $patologie = $dettagli_patologie = $interventi = $dettagli_interventi = $esami = $dettagli_esami = "";
@@ -63,23 +100,23 @@ if ($existing_anamnesi) {
 }
 
 /* =========================
-   GESTIONE FORM
+   GESTIONE FORM (POST)
 ========================= */
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $allergie = trim($_POST["allergie"]);
-    $dettagli_allergie = trim($_POST["dettagli_allergie"]);
-    $fumo = trim($_POST["fumo"]);
-    $dettagli_fumo = trim($_POST["dettagli_fumo"]);
-    $alcol = trim($_POST["alcol"]);
-    $dettagli_alcol = trim($_POST["dettagli_alcol"]);
-    $patologie = trim($_POST["patologie"]);
-    $dettagli_patologie = trim($_POST["dettagli_patologie"]);
-    $interventi = trim($_POST["interventi"]);
-    $dettagli_interventi = trim($_POST["dettagli_interventi"]);
-    $esami = trim($_POST["esami"]);
-    $dettagli_esami = trim($_POST["dettagli_esami"]);
+    $allergie = trim($_POST["allergie"] ?? "");
+    $dettagli_allergie = trim($_POST["dettagli_allergie"] ?? "");
+    $fumo = trim($_POST["fumo"] ?? "");
+    $dettagli_fumo = trim($_POST["dettagli_fumo"] ?? "");
+    $alcol = trim($_POST["alcol"] ?? "");
+    $dettagli_alcol = trim($_POST["dettagli_alcol"] ?? "");
+    $patologie = trim($_POST["patologie"] ?? "");
+    $dettagli_patologie = trim($_POST["dettagli_patologie"] ?? "");
+    $interventi = trim($_POST["interventi"] ?? "");
+    $dettagli_interventi = trim($_POST["dettagli_interventi"] ?? "");
+    $esami = trim($_POST["esami"] ?? "");
+    $dettagli_esami = trim($_POST["dettagli_esami"] ?? "");
 
     $editing = false;
     if (isset($_POST['anamnesi_id']) && is_numeric($_POST['anamnesi_id'])) {
@@ -98,12 +135,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     /* SE NON CI SONO ERRORI */
     if (empty($errors)) {
         if ($editing) {
-            $stmt = $conn->prepare("UPDATE anamnesi SET allergie = ?, dettagli_allergie = ?, fumo = ?, dettagli_fumo = ?, alcol = ?, dettagli_alcol = ?, patologie = ?, dettagli_patologie = ?, interventi = ?, dettagli_interventi = ?, esami = ?, dettagli_esami = ? WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE anamnesi SET allergie = ?, dettagli_allergie = ?, fumo = ?, dettagli_fumo = ?, alcol = ?, dettagli_alcol = ?, patologie = ?, dettagli_patologie = ?, interventi = ?, dettagli_interventi = ?, esami = ?, dettagli_esami = ? WHERE id = ? AND fk_paziente = ?");
             $stmt->bind_param(
-                "ssssssssssssi",
+                "ssssssssssssii",
                 $allergie, $dettagli_allergie, $fumo, $dettagli_fumo, $alcol, $dettagli_alcol,
                 $patologie, $dettagli_patologie, $interventi, $dettagli_interventi, $esami, $dettagli_esami,
-                $anamnesi_id
+                $anamnesi_id, $id_paziente
             );
         } else {
             $stmt = $conn->prepare("
@@ -123,15 +160,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $success_msg = "Anamnesi aggiornata correttamente!";
             } else {
                 $success_msg = "Anamnesi inserita correttamente!";
-                $existing_anamnesi = true;
                 $anamnesi_id = $stmt->insert_id;
             }
+            // ricarica in modifica sulla nuova/aggiornata anamnesi
+            header("Location: aggiungi_anamnesi.php?id=$id_paziente&anamnesi_id=$anamnesi_id");
+            exit;
         } else {
             $errors[] = "Errore durante il salvataggio: " . $stmt->error;
         }
         $stmt->close();
     }
 }
+
+/* Aggiorna lista anamnesi (dopo eventuali modifiche) */
+$anamnesi_list = [];
+$stmt = $conn->prepare("SELECT * FROM anamnesi WHERE fk_paziente = ? ORDER BY id DESC");
+$stmt->bind_param("i", $id_paziente);
+$stmt->execute();
+$res = $stmt->get_result();
+while ($row = $res->fetch_assoc()) {
+    $anamnesi_list[] = $row;
+}
+$stmt->close();
 
 $conn->close();
 ?>
@@ -180,6 +230,12 @@ $conn->close();
             border-color: #3b82f6;
             background: #ffffff;
         }
+
+        /* Lista anamnesi */
+        .anamnesi-list { margin-bottom: 20px; }
+        .anamnesi-item { padding: 10px; border-bottom: 1px solid #e6e6e6; display:flex; justify-content:space-between; align-items:center; }
+        .anamnesi-meta { color: #64748b; font-size:0.9rem; }
+        .btn-small { font-size:0.85rem; padding:6px 10px; margin-left:8px; text-decoration:none; border-radius:4px; background:#f1f5f9; color:#0f172a; }
     </style>
 </head>
 <body>
@@ -211,18 +267,46 @@ $conn->close();
         <?php if (!empty($errors)): ?>
             <div style="background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
                 <ul style="margin: 0; padding-left: 20px;">
-                    <?php foreach ($errors as $error) { echo "<li>$error</li>"; } ?>
+                    <?php foreach ($errors as $error) { echo "<li>".htmlspecialchars($error)."</li>"; } ?>
                 </ul>
             </div>
         <?php endif; ?>
 
         <?php if (!empty($success_msg)): ?>
             <div style="background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-                <?php echo $success_msg; ?>
+                <?php echo htmlspecialchars($success_msg); ?>
             </div>
         <?php endif; ?>
 
         <div class="card-cruscotto">
+
+            <!-- Lista anamnesi esistenti -->
+            <?php if (!empty($anamnesi_list)): ?>
+                <div class="anamnesi-list">
+                    <h3 style="margin-top:0;">Anamnesi precedenti</h3>
+                    <?php foreach ($anamnesi_list as $a): ?>
+                        <div class="anamnesi-item">
+                            <div>
+                                <div class="anamnesi-meta">ID <?php echo htmlspecialchars($a['id']); ?></div>
+                                <div style="color:#0f172a;">
+                                    Allergie: <?php echo htmlspecialchars($a['allergie']); ?>;
+                                    Patologie: <?php echo htmlspecialchars($a['patologie']); ?>;
+                                    Esami: <?php echo htmlspecialchars($a['esami']); ?>
+                                </div>
+                            </div>
+                            <div style="white-space:nowrap;">
+                                <a class="btn-small" href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&anamnesi_id=<?php echo $a['id']; ?>">Modifica</a>
+                                <a class="btn-small" href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&delete_anamnesi=<?php echo $a['id']; ?>" onclick="return confirm('Eliminare questa anamnesi?')">Elimina</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <div style="margin-bottom:16px;">
+                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-small">+ Nuova anamnesi</a>
+            </div>
+
             <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
                 <?php if ($existing_anamnesi): ?>
                     <input type="hidden" name="anamnesi_id" value="<?php echo $anamnesi_id; ?>">
