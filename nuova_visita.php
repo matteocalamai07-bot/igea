@@ -152,7 +152,7 @@ if (!empty($errors)) {
         <h2>Supporti utilizzati</h2>
     </div>
 
-    <!-- ✅ SEZIONE CORRETTA -->
+    <!-- SEZIONE CORRETTA -->
     <div>
         <h2>Alimenti da evitare</h2>
 
@@ -195,7 +195,7 @@ function aggiungiDomanda() {
     document.getElementById("contenitore_domande").appendChild(div);
 }
 
-/* ✅ FILTRO CORRETTO */
+/* FILTRO CORRETTO */
 function filtraAlimenti() {
     let input = document.getElementById("cercaAlimento").value.toLowerCase();
     let items = document.getElementsByClassName("alimento-item");
