@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mar 13, 2026 alle 12:09
--- Versione del server: 10.4.32-MariaDB
--- Versione PHP: 8.2.12
+-- Creato il: Apr 08, 2026 alle 13:14
+-- Versione del server: 10.4.28-MariaDB
+-- Versione PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,11 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `terranova`
 --
-CREATE DATABASE IF NOT EXISTS `terranova`
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_general_ci;
 
-USE `terranova`;
 -- --------------------------------------------------------
 
 --
@@ -160,7 +156,8 @@ INSERT INTO `alimenti` (`id`, `nome`) VALUES
 (117, 'Pepe'),
 (118, 'Menta'),
 (119, 'Rosmarino'),
-(120, 'Salvia');
+(120, 'Salvia'),
+(121, '1test_alimento');
 
 -- --------------------------------------------------------
 
@@ -205,8 +202,8 @@ CREATE TABLE `anamnesi` (
 
 CREATE TABLE `appuntamento` (
   `id` int(11) NOT NULL,
-  `data` timestamp NOT NULL,
-  `fk_paziente` int(11) NOT NULL
+  `data` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `fk_paziente` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -323,6 +320,13 @@ CREATE TABLE `paziente` (
   `email` varchar(300) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `paziente`
+--
+
+INSERT INTO `paziente` (`id`, `nome`, `cognome`, `datanascita`, `citta`, `indirizzo`, `civico`, `professione`, `email`, `telefono`) VALUES
+(1, 'Christian', 'Cericola', '2026-03-06', 'Tenerife', 'tenerifeletsgo', 26, 'studente', 'christian.cericola@polomanettiporciatti.edu.it', '3756377546');
 
 -- --------------------------------------------------------
 
@@ -579,13 +583,13 @@ ALTER TABLE `visita`
 -- AUTO_INCREMENT per la tabella `alimenti`
 --
 ALTER TABLE `alimenti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la tabella `appuntamento`
@@ -609,7 +613,7 @@ ALTER TABLE `domande`
 -- AUTO_INCREMENT per la tabella `farmaci`
 --
 ALTER TABLE `farmaci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT per la tabella `integratori`
@@ -627,7 +631,7 @@ ALTER TABLE `osservazioni_finali`
 -- AUTO_INCREMENT per la tabella `paziente`
 --
 ALTER TABLE `paziente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `sonno`
