@@ -5,6 +5,24 @@
     if ($conn->connect_error) {
         die("Connessione fallita: " . $conn->connect_error);
     }
+
+    // ==========================================
+    // LOGICA DI PAGINAZIONE
+    // ==========================================
+    $elementi_per_pagina = 7;
+    
+    // Recupera il numero di pagina corrente (di default 1)
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
+    
+    // Calcola l'offset per la query
+    $offset = ($page - 1) * $elementi_per_pagina;
+    
+    // Conta il totale degli alimenti per capire quante pagine ci sono
+    $count_query = "SELECT COUNT(*) as totale FROM alimenti";
+    $count_result = $conn->query($count_query);
+    $totale_elementi = $count_result->fetch_assoc()['totale'];
+    $totale_pagine = ceil($totale_elementi / $elementi_per_pagina);
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -12,6 +30,25 @@
         <meta charset="UTF-8">
         <title>Igea - Alimenti</title>
         <link rel="stylesheet" href="style.css">
+        <style>
+            /* Stile per i bottoni della paginazione */
+            .btn-page {
+                padding: 6px 12px;
+                border: 1px solid rgba(15,23,42,0.2);
+                background-color: #ffffff;
+                color: #0f172a;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 0.9rem;
+                font-weight: bold;
+                transition: background-color 0.2s, border-color 0.2s;
+            }
+            .btn-page:hover {
+                background-color: #f1f5f9;
+                border-color: #6366f1; /* Colore primario hover */
+                color: #6366f1;
+            }
+        </style>
     </head>
     <body>
         
@@ -47,7 +84,24 @@
             </div>
 
             <div class="card-cruscotto">
-                <h2 style="margin-top:0;">Alimenti Registrati</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin: 0;">Alimenti Registrati</h2>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <?php if($page > 1): ?>
+                            <a href="?page=<?= $page - 1 ?>" class="btn-page">&laquo; Prec</a>
+                        <?php endif; ?>
+                        
+                        <span style="font-size: 0.9rem; color: #475569;">
+                            Pagina <strong><?= $page ?></strong> di <strong><?= max(1, $totale_pagine) ?></strong>
+                        </span>
+                        
+                        <?php if($page < $totale_pagine): ?>
+                            <a href="?page=<?= $page + 1 ?>" class="btn-page">Succ &raquo;</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <table>
                     <thead>
                         <tr>
@@ -57,16 +111,21 @@
                     </thead>
                     <tbody>
                         <?php
-                            $query = "SELECT * FROM alimenti";
+                            // Aggiunti LIMIT e OFFSET per mostrare solo 10 alimenti alla volta
+                            $query = "SELECT * FROM alimenti ORDER BY id DESC LIMIT $elementi_per_pagina OFFSET $offset";
                             $result = $conn->query($query);
 
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>".$row['nome']."</td>";
-                                echo "<td>
-                                        <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">Elimina</a>
-                                      </td>";
-                                echo "</tr>";
+                            if ($result && $result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>".$row['nome']."</td>";
+                                    echo "<td>
+                                            <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">Elimina</a>
+                                          </td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='2' style='text-align:center; padding: 20px; color: #475569;'>Nessun alimento registrato.</td></tr>";
                             }
                         ?>
                     </tbody>
