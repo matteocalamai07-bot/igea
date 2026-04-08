@@ -58,8 +58,10 @@ $result_attivita = $conn->query($query_attivita);
             center: 'title',
             right: 'dayGridMonth,timeGridWeek'
           },
-          events: <?php echo $eventi_json; ?>,
-          height: 600
+            events: <?php echo $eventi_json; ?>,
+            height: 450,
+            height: "auto",
+            fixedWeekCount: false,
         });
         calendar.render();
       });
@@ -154,6 +156,13 @@ $result_attivita = $conn->query($query_attivita);
         .fc-toolbar-chunk {
             display: flex;
             gap: 10px;
+        }
+        /* AUMENTA L'ALTEZZA DELLE CELLE */
+        .fc .fc-daygrid-day-frame {
+            min-height: 100px;
+        }
+        .card-cruscotto:last-child {
+            margin-top: -120px;
         }
     </style>
 </head>

@@ -210,7 +210,7 @@ body {
 ========================================= */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* 1/3 Attività, 2/3 Calendario */
+    grid-template-columns: 1.3fr 1fr; /* 1/3 Attività, 2/3 Calendario */
     gap: 20px;
     align-items: start;
 }
@@ -225,6 +225,7 @@ body {
         0 30px 60px rgba(15,23,42,0.12),
         inset 0 1px 0 rgba(255,255,255,0.4);
 }
+
 
 .card-cruscotto h2 {
     margin-top: 0;
@@ -574,3 +575,158 @@ form + a + br + a:hover {
     transform: scale(0.97);
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
+/* =========================================
+   SCHEDA PAZIENTE (FIX COMPLETO)
+========================================= */
+
+/* Trasforma la container in una vera card */
+.container {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(16px);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow:
+        0 30px 60px rgba(15,23,42,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* Titoli */
+.container h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(15, 23, 42, 0.08);
+    padding-bottom: 10px;
+}
+
+/* Riga dati (stile form bello) */
+.container p {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px;
+
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(15,23,42,0.08);
+
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+/* Label */
+.container p strong {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* Valori */
+.container p span {
+    color: #334155;
+}
+
+/* Hover modifica */
+.editable:hover {
+    background: rgba(99,102,241,0.08);
+}
+
+/* Bottoni sopra (top-links) */
+.top-links {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-top {
+    background: linear-gradient(135deg, #6366f1, #0ea5e9);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-top:hover {
+    box-shadow: 0 10px 20px rgba(99,102,241,0.3);
+}
+/* =========================================
+   ESTENSIONI PER NUOVA VISITA
+========================================= */
+
+/* Spaziatura tra le sezioni del form (titoli H2 dentro il form) */
+form section {
+    margin-bottom: 30px;
+}
+
+form section h2 {
+    font-size: 1.1rem;
+    color: #6366f1; /* Colore indaco per distinguere le sezioni */
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+    padding-bottom: 5px;
+}
+
+/* Stile per il contenitore degli alimenti (Scrollbar personalizzata) */
+#listaAlimenti {
+    scrollbar-width: thin;
+    scrollbar-color: #6366f1 rgba(15, 23, 42, 0.05);
+}
+
+#listaAlimenti::-webkit-scrollbar {
+    width: 6px;
+}
+
+#listaAlimenti::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.05);
+}
+
+#listaAlimenti::-webkit-scrollbar-thumb {
+    background-color: #6366f1;
+    border-radius: 10px;
+}
+
+/* Checkbox personalizzate nel form */
+.alimento-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #6366f1;
+}
+
+.alimento-item:hover {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 4px;
+}
+
+/* Bottoni secondari (Aggiungi Domanda) */
+button[type="button"].btn-top {
+    border: none;
+    cursor: pointer;
+    background: #475569; /* Grigio ardesia per non distrarre dal tasto Salva */
+}
+
+button[type="button"].btn-top:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+}
+
+/* Stile per le domande dinamiche aggiunte via JS */
+#contenitore_domande > div {
+    transition: all 0.3s ease;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+    

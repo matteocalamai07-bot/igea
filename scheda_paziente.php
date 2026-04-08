@@ -11,7 +11,7 @@
 <html lang="it">
     <head>
         <meta charset="UTF-8">
-        <title>Igea - Scheda Paziente</title>
+        <title>Scheda Paziente</title>
         <link rel="stylesheet" href="style.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <style>
@@ -29,15 +29,16 @@
         </style>
     </head>
     <body>
-        <header>
-            <h1>Igea - Scheda Paziente</h1>
+        <aside class="sidebar">
+            <h1>Scheda Paziente</h1>
             <nav>
                 <a href="index.php">Home</a>
                 <a href="pazienti.php">Pazienti</a>
                 <a href="farmaci.php">Terapie</a>
                 <a href="alimenti.php">Alimenti</a>
             </nav>
-        </header>
+        </aside>
+    <main class="main-content">
 
         <br><br>
         <div class="top-links">
@@ -189,6 +190,7 @@
                 window.location.href = deleteUrl;
             };
         </script>
+        </main>
     </body>
 </html>
 
