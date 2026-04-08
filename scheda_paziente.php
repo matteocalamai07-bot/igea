@@ -1,195 +1,276 @@
 <?php
-    session_start();
+session_start();
 
-    $conn = new mysqli("localhost", "root", "", "terranova");
-    if ($conn->connect_error) {
-        die("Connessione fallita: " . $conn->connect_error);
-    }
+$conn = new mysqli("localhost", "root", "", "terranova");
+if ($conn->connect_error) {
+    die("Connessione fallita: " . $conn->connect_error);
+}
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    die("ID paziente non valido");
+}
+
+$id_paziente = intval($_GET['id']);
+
+/* PAZIENTE */
+$res = $conn->query("SELECT * FROM paziente WHERE id = $id_paziente");
+$paziente = $res->fetch_assoc();
+
+if (!$paziente) {
+    die("Paziente non trovato");
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="it">
-    <head>
-        <meta charset="UTF-8">
-        <title>Igea - Scheda Paziente</title>
-        <link rel="stylesheet" href="style.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <style>
-            .editable {
-                cursor: pointer;
-                border-bottom: 1px dashed #ccc;
-            }
-            .editable:hover {
-                background-color: #f0f0f0;
-            }
-            .editing input {
-                width: 100%;
-                box-sizing: border-box;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <h1>Igea - Scheda Paziente</h1>
-            <nav>
-                <a href="index.php">Home</a>
-                <a href="pazienti.php">Pazienti</a>
-                <a href="farmaci.php">Terapie</a>
-                <a href="alimenti.php">Alimenti</a>
-            </nav>
-        </header>
+<head>
+<meta charset="UTF-8">
+<title>Scheda Paziente</title>
 
-        <br><br>
-        <div class="top-links">
-            <a href="pazienti.php" class="btn-top">Torna alla lista dei pazienti</a>
-            <a href="index.php" class="btn-top">Torna alla Home</a>
-            <?php 
-                echo "<a href='nuova_visita.php?id=" . $_GET['id'] . "' class='btn-top'>Nuova Visita</a>";
-            ?>
-            
-        </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <div class="container">
-            <h2 style="text-align: center;">Dettagli Paziente</h2>
-            <div>
-                <?php 
-                    $query = "SELECT * FROM paziente WHERE id = " . $_GET['id'];
-                    $result = $conn->query($query);
-                    if ($result->num_rows > 0) {
-                        $row = $result->fetch_assoc();
-                        echo "<p><strong>Nome:</strong> <span class='editable' data-field='nome' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['nome']) . "</span></p>";
-                        echo "<p><strong>Cognome:</strong> <span class='editable' data-field='cognome' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['cognome']) . "</span></p>";
-                        echo "<p><strong>Data di Nascita:</strong> <span class='editable' data-field='datanascita' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['datanascita']) . "</span></p>";
-                        echo "<p><strong>Città:</strong> <span class='editable' data-field='citta' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['citta']) . "</span></p>";
-                        echo "<p><strong>Indirizzo:</strong> <span class='editable' data-field='indirizzo' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['indirizzo']) . "</span></p>";
-                        echo "<p><strong>Numero Civico:</strong> <span class='editable' data-field='civico' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['civico']) . "</span></p>";
-                        echo "<p><strong>Professione:</strong> <span class='editable' data-field='professione' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['professione']) . "</span></p>";
-                        echo "<p><strong>Telefono:</strong> <span class='editable' data-field='telefono' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['telefono']) . "</span></p>";
-                        echo "<p><strong>Email:</strong> <span class='editable' data-field='email' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['email']) . "</span></p>";
-                    } else {
-                        echo "<p>Paziente non trovato.</p>";
-                    }
-                ?>
-            </div>
-            <h2 style="text-align: center;">Anamnesi Paziente</h2>
-            <div>
-                <?php
-                    $query_anamnesi = "SELECT * FROM anamnesi WHERE fk_paziente = " . $_GET['id'];
-                    $result_anamnesi = $conn->query($query_anamnesi);
-                    if ($result_anamnesi->num_rows > 0) {
-                        while ($row_anamnesi = $result_anamnesi->fetch_assoc()) {
-                            echo "<p><strong>Allergie:</strong> " . htmlspecialchars($row_anamnesi['allergie']) . "</p>";
-                            echo "<p><strong>Dettagli Allergie:</strong> " . htmlspecialchars($row_anamnesi['dettagli_allergie']) . "</p>";
-                            echo "<p><strong>Fumo:</strong> " . htmlspecialchars($row_anamnesi['fumo']) . "</p>";
-                            echo "<p><strong>Dettagli Fumo:</strong> " . htmlspecialchars($row_anamnesi['dettagli_fumo']) . "</p>";
-                            echo "<p><strong>Alcol:</strong> " . htmlspecialchars($row_anamnesi['alcol']) . "</p>";
-                            echo "<p><strong>Dettagli Alcol:</strong> " . htmlspecialchars($row_anamnesi['dettagli_alcol']) . "</p>";
-                            echo "<p><strong>Patologie:</strong> " . htmlspecialchars($row_anamnesi['patologie']) . "</p>";
-                            echo "<p><strong>Dettagli Patologie:</strong> " . htmlspecialchars($row_anamnesi['dettagli_patologie']) . "</p>";
-                            echo "<p><strong>Interventi:</strong> " . htmlspecialchars($row_anamnesi['interventi']) . "</p>";
-                            echo "<p><strong>Dettagli Interventi:</strong> " . htmlspecialchars($row_anamnesi['dettagli_interventi']) . "</p>";
-                            echo "<p><strong>Esami:</strong> " . htmlspecialchars($row_anamnesi['esami']) . "</p>";
-                            echo "<p><strong>Dettagli Esami:</strong> " . htmlspecialchars($row_anamnesi['dettagli_esami']) . "</p>";
-                            echo "<p>
-                                    <button class='btn-delete-anamnesi'
-                                        onclick=\"confermaEliminazione('elimina_anamnesi.php?id=".$row_anamnesi['id']."'); return false;\">
-                                        Elimina Anamnesi
-                                    </button>
-                                </p>";
-                        }
-                    } else {
-                        echo "<p>Nessuna anamnesi disponibile.</p>";
-                        echo "<p><a href='aggiungi_anamnesi.php?id=" . $_GET['id'] . "'>Aggiungi Anamnesi</a></p>";
-                    }
-                ?>
-        </div>
+<style>
+body {
+    font-family: Arial;
+    background: #f4f6f9;
+    margin: 20px;
+}
 
-        <!-- POPUP MODALE ELIMINAZIONE -->
+h1 {
+    text-align: center;
+}
 
-        <div class="modal-overlay" id="confirmModal">
-            <div class="modal">
-            <h3>Conferma eliminazione</h3>
-            <p>Sei sicuro di voler eliminare questo paziente?</p>
-                <div class="modal-buttons">
-                    <button class="btn-cancel" onclick="chiudiModal()">Annulla</button>
-                    <button class="btn-delete" id="confirmDelete">Elimina</button>
-                </div>
-            </div>
-        </div>
+/* LAYOUT */
+.layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
 
-        <script>
-            $(document).ready(function() {
-                $('.editable').click(function() {
-                    var $this = $(this);
-                    var field = $this.data('field');
-                    var id = $this.data('id');
-                    var currentValue = $this.text();
+/* CARD */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
 
-                    // Determine input type
-                    var inputType = 'text';
-                    if (field === 'datanascita') {
-                        inputType = 'date';
-                    } else if (field === 'email') {
-                        inputType = 'email';
-                    } else if (field === 'telefono') {
-                        inputType = 'tel';
-                    }
+/* BOTTONI */
+.btn-top {
+    padding: 8px 12px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 5px;
+}
 
-                    var input = $('<input type="' + inputType + '" value="' + currentValue + '" />');
-                    $this.html(input);
-                    input.focus().select();
+/* EDIT */
+.editable {
+    cursor: pointer;
+    border-bottom: 1px dashed #ccc;
+}
 
-                    input.blur(function() {
-                        var newValue = $(this).val();
-                        if (newValue !== currentValue) {
-                            // Send AJAX request
-                            $.post('update_paziente.php', {
-                                id: id,
-                                field: field,
-                                value: newValue
-                            }, function(response) {
-                                var data = JSON.parse(response);
-                                if (data.success) {
-                                    $this.text(newValue);
-                                } else {
-                                    alert('Errore: ' + data.message);
-                                    $this.text(currentValue);
-                                }
-                            }).fail(function() {
-                                alert('Errore nella comunicazione con il server');
-                                $this.text(currentValue);
-                            });
-                        } else {
-                            $this.text(currentValue);
-                        }
-                    });
+/* VISITE */
+.visita-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
 
-                    input.keypress(function(e) {
-                        if (e.which === 13) { // Enter key
-                            $(this).blur();
-                        }
-                    });
-                });
-            });
+.visita-item:hover {
+    background: #ecf0f1;
+}
+</style>
 
-            /* POPUP ELIMINAZIONE */
+</head>
+<body>
 
-            let deleteUrl = "";
+<h1>Igea - Scheda Paziente</h1>
 
-            function confermaEliminazione(url){
-                deleteUrl = url;
-                document.getElementById("confirmModal").style.display = "flex";
-            }
+<div style="margin-bottom:20px;">
+    <a href="pazienti.php" class="btn-top">Lista pazienti</a>
+    <a href="index.php" class="btn-top">Home</a>
+    <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>" class="btn-top">Nuova Anamnesi</a>
+    <a href="nuova_visita.php?id=<?php echo $id_paziente; ?>" class="btn-top">Nuova Visita</a>
+</div>
 
-            function chiudiModal(){
-                document.getElementById("confirmModal").style.display = "none";
-            }
+<div class="layout">
 
-            document.getElementById("confirmDelete").onclick = function(){
-                window.location.href = deleteUrl;
-            };
-        </script>
-    </body>
+<!-- SINISTRA -->
+<div>
+
+<div class="card">
+<h2>Anagrafica</h2>
+
+<p><b>Nome:</b>
+<span class="editable" data-field="nome" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['nome']) ?>
+</span></p>
+
+<p><b>Cognome:</b>
+<span class="editable" data-field="cognome" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['cognome']) ?>
+</span></p>
+
+<p><b>Data di nascita:</b>
+<span class="editable" data-field="datanascita" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['datanascita']) ?>
+</span></p>
+
+<p><b>Città:</b>
+<span class="editable" data-field="citta" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['citta']) ?>
+</span></p>
+
+<p><b>Indirizzo:</b>
+<span class="editable" data-field="indirizzo" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['indirizzo']) ?>
+</span></p>
+
+<p><b>Civico:</b>
+<span class="editable" data-field="civico" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['civico']) ?>
+</span></p>
+
+<p><b>Professione:</b>
+<span class="editable" data-field="professione" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['professione']) ?>
+</span></p>
+
+<p><b>Telefono:</b>
+<span class="editable" data-field="telefono" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['telefono']) ?>
+</span></p>
+
+<p><b>Email:</b>
+<span class="editable" data-field="email" data-id="<?= $paziente['id'] ?>">
+<?= htmlspecialchars($paziente['email']) ?>
+</span></p>
+
+</div>
+
+<div class="card">
+<h2>Anamnesi</h2>
+
+<?php
+$anamnesi = $conn->query("SELECT * FROM anamnesi WHERE fk_paziente = $id_paziente");
+
+if ($anamnesi->num_rows > 0) {
+    while($a = $anamnesi->fetch_assoc()){
+?>
+
+<div style="margin-bottom:20px; padding:10px; border:1px solid #ddd; border-radius:8px;">
+
+<p><b>Allergie:</b> <?= htmlspecialchars($a['allergie']) ?></p>
+<p><b>Dettagli allergie:</b> <?= htmlspecialchars($a['dettagli_allergie']) ?></p>
+
+<p><b>Fumo:</b> <?= htmlspecialchars($a['fumo']) ?></p>
+<p><b>Dettagli fumo:</b> <?= htmlspecialchars($a['dettagli_fumo']) ?></p>
+
+<p><b>Alcol:</b> <?= htmlspecialchars($a['alcol']) ?></p>
+<p><b>Dettagli alcol:</b> <?= htmlspecialchars($a['dettagli_alcol']) ?></p>
+
+<p><b>Patologie:</b> <?= htmlspecialchars($a['patologie']) ?></p>
+<p><b>Dettagli patologie:</b> <?= htmlspecialchars($a['dettagli_patologie']) ?></p>
+
+<p><b>Interventi:</b> <?= htmlspecialchars($a['interventi']) ?></p>
+<p><b>Dettagli interventi:</b> <?= htmlspecialchars($a['dettagli_interventi']) ?></p>
+
+<p><b>Esami:</b> <?= htmlspecialchars($a['esami']) ?></p>
+<p><b>Dettagli esami:</b> <?= htmlspecialchars($a['dettagli_esami']) ?></p>
+
+<!-- BOTTONE ELIMINA -->
+<button 
+    style="background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer;"
+    onclick="confermaEliminazione('elimina_anamnesi.php?id=<?= $a['id'] ?>')">
+    Elimina anamnesi
+</button>
+
+</div>
+
+<?php
+    }
+} else {
+    echo "<p>Nessuna anamnesi presente</p>";
+}
+?>
+
+</div>
+
+</div>
+
+<!-- DESTRA -->
+<div>
+
+<div class="card">
+<h2>Storico Visite</h2>
+
+<?php
+$visite = $conn->query("
+    SELECT id
+    FROM visita
+    WHERE fk_paziente = $id_paziente
+    ORDER BY id DESC
+");
+
+if ($visite->num_rows > 0) {
+    while($v = $visite->fetch_assoc()){
+        echo "
+        <div class='visita-item' onclick=\"window.location='visite.php?id={$v['id']}'\">
+            <b>Visita #{$v['id']}</b>
+        </div>";
+    }
+} else {
+    echo "<p>Nessuna visita presente</p>";
+}
+?>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SCRIPT CONFERMA ELIMINAZIONE -->
+ <script>
+let deleteUrl = "";
+
+function confermaEliminazione(url){
+    if(confirm("Sei sicuro di voler eliminare questa anamnesi?")){
+        window.location.href = url;
+    }
+}
+</script>
+
+<!-- SCRIPT EDIT INLINE -->
+<script>
+$('.editable').click(function(){
+    let span = $(this);
+    let val = span.text();
+    let field = span.data('field');
+    let id = span.data('id');
+
+    let input = $('<input type="text">').val(val);
+    span.html(input);
+    input.focus();
+
+    input.blur(function(){
+        let newVal = $(this).val();
+
+        $.post('update_paziente.php',{
+            id:id,
+            field:field,
+            value:newVal
+        },function(){
+            span.text(newVal);
+        });
+    });
+});
+</script>
+
+</body>
 </html>
 
 <?php $conn->close(); ?>

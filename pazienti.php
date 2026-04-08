@@ -73,7 +73,7 @@ if ($conn->connect_error) {
                             <a href='scheda_paziente.php?id={$row['id']}' style='font-weight:600; text-decoration:none; color:#4f46e5;'>Visualizza</a>
                           </td>";
                     echo "<td>
-                            <a href='aggiungi_anamnesi.php?id={$row['id']}' style='font-weight:600; text-decoration:none; color:#0ea5e9;'>Aggiungi/Modifica</a>
+                            <a href='aggiungi_anamnesi.php?id={$row['id']}' style='font-weight:600; text-decoration:none; color:#0ea5e9;'>Aggiungi</a>
                           </td>";
                     echo "<td>
                             <a href='#' onclick=\"confermaEliminazione('elimina_paziente.php?id=".$row['id']."'); return false;\">Elimina</a>
