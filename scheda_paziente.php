@@ -70,6 +70,9 @@ h1 {
 .editable {
     cursor: pointer;
     border-bottom: 1px dashed #ccc;
+    display: inline-block;
+    min-width: 100px;
+    min-height: 1em;
 }
 
 /* VISITE */
