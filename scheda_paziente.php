@@ -155,46 +155,25 @@ h1 {
 <h2>Anamnesi</h2>
 
 <?php
-$anamnesi = $conn->query("SELECT * FROM anamnesi WHERE fk_paziente = $id_paziente");
-
-if ($anamnesi->num_rows > 0) {
-    while($a = $anamnesi->fetch_assoc()){
-?>
-
-<div style="margin-bottom:20px; padding:10px; border:1px solid #ddd; border-radius:8px;">
-
-<p><b>Allergie:</b> <?= htmlspecialchars($a['allergie']) ?></p>
-<p><b>Dettagli allergie:</b> <?= htmlspecialchars($a['dettagli_allergie']) ?></p>
-
-<p><b>Fumo:</b> <?= htmlspecialchars($a['fumo']) ?></p>
-<p><b>Dettagli fumo:</b> <?= htmlspecialchars($a['dettagli_fumo']) ?></p>
-
-<p><b>Alcol:</b> <?= htmlspecialchars($a['alcol']) ?></p>
-<p><b>Dettagli alcol:</b> <?= htmlspecialchars($a['dettagli_alcol']) ?></p>
-
-<p><b>Patologie:</b> <?= htmlspecialchars($a['patologie']) ?></p>
-<p><b>Dettagli patologie:</b> <?= htmlspecialchars($a['dettagli_patologie']) ?></p>
-
-<p><b>Interventi:</b> <?= htmlspecialchars($a['interventi']) ?></p>
-<p><b>Dettagli interventi:</b> <?= htmlspecialchars($a['dettagli_interventi']) ?></p>
-
-<p><b>Esami:</b> <?= htmlspecialchars($a['esami']) ?></p>
-<p><b>Dettagli esami:</b> <?= htmlspecialchars($a['dettagli_esami']) ?></p>
-
-<!-- BOTTONE ELIMINA -->
-<button 
-    style="background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer;"
-    onclick="confermaEliminazione('elimina_anamnesi.php?id=<?= $a['id'] ?>')">
-    Elimina anamnesi
-</button>
-
-</div>
-
-<?php
+    $anamnesi = $conn->query("
+        SELECT data, id
+        FROM anamnesi
+        WHERE fk_paziente = $id_paziente
+        ORDER BY id ASC
+    ");
+    
+    if ($anamnesi->num_rows > 0) {
+        $numeroAnamnesi = 1;
+        while($a = $anamnesi->fetch_assoc()){
+            echo "
+            <div class='visita-item' onclick=\"window.location='visualizza_anamnesi.php?id={$a['id']}'\">
+                <b>Anamnesi N.{$numeroAnamnesi} del {$a['data']}</b>
+            </div>";
+            $numeroAnamnesi++;
+        }
+    } else {
+        echo "<p>Nessuna anamnesi presente</p>";
     }
-} else {
-    echo "<p>Nessuna anamnesi presente</p>";
-}
 ?>
 
 </div>
@@ -209,18 +188,20 @@ if ($anamnesi->num_rows > 0) {
 
 <?php
 $visite = $conn->query("
-    SELECT id
+    SELECT data, id
     FROM visita
     WHERE fk_paziente = $id_paziente
-    ORDER BY id DESC
+    ORDER BY id ASC
 ");
 
 if ($visite->num_rows > 0) {
     while($v = $visite->fetch_assoc()){
+        $numVisita = 1;
         echo "
         <div class='visita-item' onclick=\"window.location='visite.php?id={$v['id']}'\">
-            <b>Visita #{$v['id']}</b>
+            <b>Visita N.{$numVisita} del {$v['data']}</b>
         </div>";
+        $numVisita++;
     }
 } else {
     echo "<p>Nessuna visita presente</p>";
@@ -232,17 +213,6 @@ if ($visite->num_rows > 0) {
 </div>
 
 </div>
-
-<!-- SCRIPT CONFERMA ELIMINAZIONE -->
- <script>
-let deleteUrl = "";
-
-function confermaEliminazione(url){
-    if(confirm("Sei sicuro di voler eliminare questa anamnesi?")){
-        window.location.href = url;
-    }
-}
-</script>
 
 <!-- SCRIPT EDIT INLINE -->
 <script>
