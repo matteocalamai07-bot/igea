@@ -238,7 +238,7 @@ if ($conn->connect_error) {
                         // Logica per determinare colore e testo del pulsante Anamnesi
                         if ($row['has_anamnesi'] > 0) {
                             $classe_anamnesi = "btn-anamnesi-presente";
-                            $testo_anamnesi = " aggiungi";
+                            $testo_anamnesi = "+ Aggiungi";
                         } else {
                             $classe_anamnesi = "btn-anamnesi-mancante";
                             $testo_anamnesi = "+ Aggiungi";
