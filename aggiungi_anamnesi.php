@@ -350,10 +350,13 @@ $conn->close();
                     <?php foreach ($anamnesi_list as $a): ?>
                         <div class="anamnesi-item">
                             <div>
-                                <div class="anamnesi-meta">Scheda ID: <?php echo htmlspecialchars($a['id']); ?></div>
+                                <div class="anamnesi-meta">Scheda ID: <?php echo htmlspecialchars($a['id']); ?> Data: <?php echo htmlspecialchars($a['data']); ?></div>
                                 <div class="anamnesi-text">
                                     <strong>Allergie:</strong> <?php echo htmlspecialchars($a['allergie']); ?>; 
+                                    <strong>Fumo:</strong> <?php echo htmlspecialchars($a['fumo']); ?>; 
+                                    <strong>Alcol:</strong> <?php echo htmlspecialchars($a['alcol']); ?>;
                                     <strong>Patologie:</strong> <?php echo htmlspecialchars($a['patologie']); ?>; 
+                                    <strong>Interventi:</strong> <?php echo htmlspecialchars($a['interventi']); ?>;
                                     <strong>Esami:</strong> <?php echo htmlspecialchars($a['esami']); ?>
                                 </div>
                             </div>
