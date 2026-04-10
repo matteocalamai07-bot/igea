@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 08, 2026 alle 13:14
+-- Creato il: Apr 10, 2026 alle 10:38
 -- Versione del server: 10.4.28-MariaDB
 -- Versione PHP: 8.2.4
 
@@ -156,8 +156,7 @@ INSERT INTO `alimenti` (`id`, `nome`) VALUES
 (117, 'Pepe'),
 (118, 'Menta'),
 (119, 'Rosmarino'),
-(120, 'Salvia'),
-(121, '1test_alimento');
+(120, 'Salvia');
 
 -- --------------------------------------------------------
 
@@ -179,6 +178,7 @@ CREATE TABLE `alimenti_sospesi` (
 
 CREATE TABLE `anamnesi` (
   `id` int(11) NOT NULL,
+  `data` date NOT NULL DEFAULT current_timestamp(),
   `allergie` varchar(10) NOT NULL,
   `dettagli_allergie` text DEFAULT NULL,
   `fumo` varchar(10) NOT NULL,
@@ -192,18 +192,6 @@ CREATE TABLE `anamnesi` (
   `esami` varchar(10) NOT NULL,
   `dettagli_esami` text DEFAULT NULL,
   `fk_paziente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `appuntamento`
---
-
-CREATE TABLE `appuntamento` (
-  `id` int(11) NOT NULL,
-  `data` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `fk_paziente` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -228,20 +216,6 @@ CREATE TABLE `attivita_fisica` (
 CREATE TABLE `attivita_visita` (
   `fk_visita` int(11) NOT NULL,
   `fk_attivita` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `domande`
---
-
-CREATE TABLE `domande` (
-  `id` int(11) NOT NULL,
-  `domanda` text NOT NULL,
-  `risposta` text NOT NULL,
-  `nota` text NOT NULL,
-  `fk_visita` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -320,13 +294,6 @@ CREATE TABLE `paziente` (
   `email` varchar(300) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dump dei dati per la tabella `paziente`
---
-
-INSERT INTO `paziente` (`id`, `nome`, `cognome`, `datanascita`, `citta`, `indirizzo`, `civico`, `professione`, `email`, `telefono`) VALUES
-(1, 'Christian', 'Cericola', '2026-03-06', 'Tenerife', 'tenerifeletsgo', 26, 'studente', 'christian.cericola@polomanettiporciatti.edu.it', '3756377546');
 
 -- --------------------------------------------------------
 
@@ -457,13 +424,6 @@ ALTER TABLE `anamnesi`
   ADD KEY `fk_paziente` (`fk_paziente`);
 
 --
--- Indici per le tabelle `appuntamento`
---
-ALTER TABLE `appuntamento`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_paziente` (`fk_paziente`);
-
---
 -- Indici per le tabelle `attivita_fisica`
 --
 ALTER TABLE `attivita_fisica`
@@ -475,13 +435,6 @@ ALTER TABLE `attivita_fisica`
 ALTER TABLE `attivita_visita`
   ADD PRIMARY KEY (`fk_visita`,`fk_attivita`),
   ADD KEY `fk_attivita` (`fk_attivita`);
-
---
--- Indici per le tabelle `domande`
---
-ALTER TABLE `domande`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_visita` (`fk_visita`);
 
 --
 -- Indici per le tabelle `farmaci`
@@ -583,18 +536,12 @@ ALTER TABLE `visita`
 -- AUTO_INCREMENT per la tabella `alimenti`
 --
 ALTER TABLE `alimenti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT per la tabella `anamnesi`
 --
 ALTER TABLE `anamnesi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT per la tabella `appuntamento`
---
-ALTER TABLE `appuntamento`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -604,16 +551,10 @@ ALTER TABLE `attivita_fisica`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `domande`
---
-ALTER TABLE `domande`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT per la tabella `farmaci`
 --
 ALTER TABLE `farmaci`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `integratori`
@@ -631,7 +572,7 @@ ALTER TABLE `osservazioni_finali`
 -- AUTO_INCREMENT per la tabella `paziente`
 --
 ALTER TABLE `paziente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `sonno`
@@ -687,23 +628,11 @@ ALTER TABLE `anamnesi`
   ADD CONSTRAINT `anamnesi_ibfk_1` FOREIGN KEY (`fk_paziente`) REFERENCES `paziente` (`id`);
 
 --
--- Limiti per la tabella `appuntamento`
---
-ALTER TABLE `appuntamento`
-  ADD CONSTRAINT `fk_paziente` FOREIGN KEY (`fk_paziente`) REFERENCES `paziente` (`id`);
-
---
 -- Limiti per la tabella `attivita_visita`
 --
 ALTER TABLE `attivita_visita`
   ADD CONSTRAINT `fk_attivita` FOREIGN KEY (`fk_attivita`) REFERENCES `attivita_fisica` (`id`),
   ADD CONSTRAINT `fk_av_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
-
---
--- Limiti per la tabella `domande`
---
-ALTER TABLE `domande`
-  ADD CONSTRAINT `fk_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
 
 --
 -- Limiti per la tabella `farmaci_prescritti`
