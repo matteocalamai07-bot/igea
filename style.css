@@ -229,6 +229,57 @@ body {
     align-items: start;
 }
 
+@media (max-width: 980px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.detail-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.detail-label {
+    min-width: 140px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.detail-list li {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    color: var(--text-muted);
+}
+
+.detail-list li strong {
+    display: block;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
+.section-group {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
 .card-cruscotto {
     background: var(--bg-card-transparent);
     backdrop-filter: blur(16px);

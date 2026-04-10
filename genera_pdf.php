@@ -1,8 +1,4 @@
 <?php
-require 'vendor/autoload.php';
-
-use Dompdf\Dompdf;
-
 $conn = new mysqli("localhost","root","","terranova");
 if ($conn->connect_error) die("Errore connessione");
 
@@ -28,155 +24,281 @@ $stato = $conn->query("SELECT * FROM `stato_psico-fisico` WHERE fk_visita=$id")-
 $domande = $conn->query("SELECT * FROM domande WHERE fk_visita=$id");
 $osservazioni = $conn->query("SELECT * FROM osservazioni_finali WHERE fk_visita=$id");
 
-/* DATA */
-$data = date("d/m/Y");
-
 /* =========================
-   HTML PRO
+   GENERAZIONE HTML STAMPABILE
 ========================= */
-$html = '
-<style>
-body {
-    font-family: DejaVu Sans, sans-serif;
-    font-size: 12px;
-    color: #2c3e50;
-}
+?>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Referto Visita - <?php echo $visita['nome'] . " " . $visita['cognome']; ?></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.6;
+            background: white;
+            padding: 20px;
+        }
 
-.header {
-    border-bottom: 2px solid #3498db;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-}
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+        }
 
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-    color: #3498db;
-}
+        .header {
+            border-bottom: 3px solid #3498db;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            text-align: center;
+        }
 
-.title {
-    font-size: 18px;
-    margin-top: 5px;
-}
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
 
-.section {
-    margin-bottom: 20px;
-}
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
 
-.section h2 {
-    background: #3498db;
-    color: white;
-    padding: 5px;
-    font-size: 14px;
-}
+        .meta {
+            color: #666;
+            font-size: 12px;
+        }
 
-.box {
-    border: 1px solid #ddd;
-    padding: 10px;
-}
+        .section {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
 
-.row {
-    margin-bottom: 5px;
-}
+        .section h2 {
+            background: linear-gradient(135deg, #3498db, #0ea5e9);
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+        }
 
-.label {
-    font-weight: bold;
-}
+        .box {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            border-radius: 4px;
+            background: #f9fafb;
+        }
 
-ul {
-    margin: 0;
-    padding-left: 15px;
-}
+        .row {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
 
-.footer {
-    position: fixed;
-    bottom: 0;
-    text-align: center;
-    font-size: 10px;
-    color: gray;
-}
-</style>
+        .row:last-child {
+            margin-bottom: 0;
+        }
 
-<div class="header">
-    <div class="logo">IGEA</div>
-    <div class="title">Referto Visita Paziente</div>
-    <div>Data: '.$data.'</div>
+        .label {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 120px;
+        }
+
+        .value {
+            flex: 1;
+            color: #555;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-left: 3px solid #3498db;
+            border-radius: 3px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .container {
+                max-width: 100%;
+                margin: 0;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        .no-print {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .no-print button {
+            background: linear-gradient(135deg, #3498db, #0ea5e9);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .no-print button:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="no-print">
+        <button onclick="window.print()">🖨️ Stampa / Salva come PDF</button>
+    </div>
+
+    <div class="header">
+        <div class="logo">IGEA</div>
+        <div class="title">Referto Visita Paziente</div>
+        <div class="meta">Data: <?php echo date("d/m/Y H:i"); ?></div>
+    </div>
+
+    <div class="section">
+        <h2>Dati Paziente</h2>
+        <div class="box">
+            <div class="row">
+                <span class="label">Nome:</span>
+                <span class="value"><?php echo htmlspecialchars($visita['nome'] . " " . $visita['cognome']); ?></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Valutazione Generale</h2>
+        <div class="box">
+            <div class="row">
+                <span class="label">Livello Stress:</span>
+                <span class="value"><?php echo htmlspecialchars($visita['livello_stress']); ?>/10</span>
+            </div>
+            <div class="row">
+                <span class="label">Alimentazione:</span>
+                <span class="value"><?php echo htmlspecialchars($visita['alimentazione']); ?></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Qualità del Sonno</h2>
+        <div class="box">
+            <div class="row">
+                <span class="label">Ore di sonno:</span>
+                <span class="value"><?php echo htmlspecialchars($sonno['ore'] ?? '-'); ?></span>
+            </div>
+            <div class="row">
+                <span class="label">Risvegli notturni:</span>
+                <span class="value"><?php echo htmlspecialchars($sonno['risvegli'] ?? '-'); ?></span>
+            </div>
+            <div class="row">
+                <span class="label">Difficoltà ad addormentarsi:</span>
+                <span class="value"><?php echo htmlspecialchars($sonno['difficolta'] ?? '-'); ?></span>
+            </div>
+            <div class="row">
+                <span class="label">Qualità percepita:</span>
+                <span class="value"><?php echo htmlspecialchars($sonno['qualita'] ?? '-'); ?></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Stato Psico-Fisico</h2>
+        <div class="box">
+            <div class="row">
+                <span class="label">Ansia:</span>
+                <span class="value"><?php echo htmlspecialchars($stato['ansia'] ?? '-'); ?></span>
+            </div>
+            <div class="row">
+                <span class="label">Umore:</span>
+                <span class="value"><?php echo htmlspecialchars($stato['umore'] ?? '-'); ?></span>
+            </div>
+            <div class="row">
+                <span class="label">Motivazione:</span>
+                <span class="value"><?php echo htmlspecialchars($stato['motivazione'] ?? '-'); ?></span>
+            </div>
+            <div class="row">
+                <span class="label">Concentrazione:</span>
+                <span class="value"><?php echo htmlspecialchars($stato['concentrazione'] ?? '-'); ?></span>
+            </div>
+        </div>
+    </div>
+
+    <?php if ($domande->num_rows > 0): ?>
+    <div class="section">
+        <h2>Domande e Risposte</h2>
+        <ul>
+            <?php while($d = $domande->fetch_assoc()): ?>
+                <li>
+                    <strong><?php echo htmlspecialchars($d['domanda']); ?></strong><br>
+                    <span style="color: #666;">Risposta: <?php echo htmlspecialchars($d['risposta']); ?></span>
+                </li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($osservazioni->num_rows > 0): ?>
+    <div class="section">
+        <h2>Osservazioni Finali</h2>
+        <ul>
+            <?php while($o = $osservazioni->fetch_assoc()): ?>
+                <li><?php echo htmlspecialchars($o['osservazione']); ?></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <div class="footer">
+        Referto generato automaticamente dal sistema IGEA - <?php echo date("d/m/Y H:i"); ?>
+    </div>
 </div>
 
-<div class="section">
-<h2>Dati Paziente</h2>
-<div class="box">
-<div class="row"><span class="label">Nome:</span> '.$visita['nome'].' '.$visita['cognome'].'</div>
-</div>
-</div>
-
-<div class="section">
-<h2>Valutazione Generale</h2>
-<div class="box">
-<div class="row"><span class="label">Stress:</span> '.$visita['livello_stress'].'</div>
-<div class="row"><span class="label">Alimentazione:</span> '.$visita['alimentazione'].'</div>
-</div>
-</div>
-
-<div class="section">
-<h2>Qualità del Sonno</h2>
-<div class="box">
-<div class="row">Ore: '.$sonno['ore'].'</div>
-<div class="row">Risvegli: '.$sonno['risvegli'].'</div>
-<div class="row">Difficoltà: '.$sonno['difficolta'].'</div>
-<div class="row">Qualità: '.$sonno['qualita'].'</div>
-</div>
-</div>
-
-<div class="section">
-<h2>Stato Psico-Fisico</h2>
-<div class="box">
-<div class="row">Ansia: '.$stato['ansia'].'</div>
-<div class="row">Umore: '.$stato['umore'].'</div>
-<div class="row">Motivazione: '.$stato['motivazione'].'</div>
-<div class="row">Concentrazione: '.$stato['concentrazione'].'</div>
-</div>
-</div>
-
-<div class="section">
-<h2>Domande e Risposte</h2>
-<div class="box">
-<ul>';
-
-while($d = $domande->fetch_assoc()){
-    $html .= '<li><b>'.$d['domanda'].'</b><br>Risposta: '.$d['risposta'].'</li>';
-}
-
-$html .= '</ul>
-</div>
-</div>
-
-<div class="section">
-<h2>Osservazioni Finali</h2>
-<div class="box">
-<ul>';
-
-while($o = $osservazioni->fetch_assoc()){
-    $html .= '<li>'.$o['osservazione'].'</li>';
-}
-
-$html .= '</ul>
-</div>
-</div>
-
-<div class="footer">
-Referto generato automaticamente - IGEA
-</div>
-';
-
-/* =========================
-   GENERAZIONE PDF
-========================= */
-$pdf = new Dompdf();
-$pdf->loadHtml($html);
-$pdf->setPaper("A4", "portrait");
-$pdf->render();
-
-/* DOWNLOAD */
-$pdf->stream("referto_visita_$id.pdf", ["Attachment"=>true]);
-exit;
+</body>
+</html>

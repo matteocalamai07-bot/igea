@@ -48,14 +48,43 @@ $query_visite = "
 ";
 $result_visite = $conn->query($query_visite);
 
+$query_appuntamenti = "
+    SELECT id, data_appuntamento, titolo, ora_inizio, ora_fine
+    FROM appuntamenti
+";
+$result_appuntamenti = $conn->query($query_appuntamenti);
+
 $eventi_calendario = [];
 if ($result_visite && $result_visite->num_rows > 0) {
     while($row = $result_visite->fetch_assoc()) {
         $eventi_calendario[] = [
+            'id' => 'vis_' . $row['data'] . '_' . md5($row['nome'] . $row['cognome']),
             'title' => 'Visita: ' . $row['nome'] . ' ' . $row['cognome'],
             'start' => $row['data'],
             'allDay' => true,
-            'color' => 'var(--primary-color)' 
+            'color' => 'var(--primary-color)',
+            'extendedProps' => [
+                'tipo' => 'visita'
+            ]
+        ];
+    }
+}
+
+if ($result_appuntamenti && $result_appuntamenti->num_rows > 0) {
+    while($row = $result_appuntamenti->fetch_assoc()) {
+        $eventi_calendario[] = [
+            'id' => 'app_' . $row['id'],
+            'title' => $row['titolo'],
+            'start' => $row['data_appuntamento'] . 'T' . substr($row['ora_inizio'], 0, 5),
+            'end' => $row['data_appuntamento'] . 'T' . substr($row['ora_fine'], 0, 5),
+            'allDay' => false,
+            'color' => '#10b981',
+            'extendedProps' => [
+                'tipo' => 'appuntamento',
+                'data_appuntamento' => $row['data_appuntamento'],
+                'ora_inizio' => substr($row['ora_inizio'], 0, 5),
+                'ora_fine' => substr($row['ora_fine'], 0, 5)
+            ]
         ];
     }
 }
@@ -234,7 +263,7 @@ $result_attivita = $conn->query($query_attivita);
         .dashboard-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: 380px 1fr;
+            grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
             gap: 20px;
             min-height: 0;
             height: 100%;
@@ -262,6 +291,16 @@ $result_attivita = $conn->query($query_attivita);
 
         .left-column .card-cruscotto { flex: 1; overflow: hidden; }
         .card-cruscotto h2 { margin-top: 0; font-size: 1.2rem; margin-bottom: 15px; }
+
+        .card-cruscotto.calendar-card {
+            min-height: 560px;
+        }
+
+        #calendar {
+            flex: 1;
+            min-height: 520px;
+            width: 100%;
+        }
 
         .lista-attivita {
             flex: 1;
@@ -298,6 +337,108 @@ $result_attivita = $conn->query($query_attivita);
         .fc-toolbar-chunk { display: flex; gap: 15px; align-items: center; }
         .fc .fc-button-group { display: flex; gap: 8px; }
         .fc .fc-button-group > .fc-button { border-radius: 5px !important; margin: 0 !important; }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-card);
+            border-radius: 14px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            padding: 25px;
+        }
+
+        .modal h2 {
+            font-size: 1.35rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .modal label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .modal input[type="text"],
+        .modal input[type="date"],
+        .modal input[type="time"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-page);
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .modal textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            resize: vertical;
+            background: var(--bg-page);
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .modal-actions button {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .modal-actions .btn-cancel {
+            background: #f3f4f6;
+            color: var(--text-main);
+        }
+
+        .modal-actions .btn-save {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
 
         /* HEADER GRAFICO */
         .chart-header {
@@ -349,10 +490,40 @@ $result_attivita = $conn->query($query_attivita);
             
             <div class="action-bar">
                 <a href="nuovo_paziente.php" class="btn-azione">+ Nuovo Paziente</a>
+                <a href="#" class="btn-azione" id="openAppointmentModalBtn">+ Appuntamento</a>
                 
                 <div class="search-container">
                     <input type="text" id="cercaPaziente" class="search-box-btn-style" placeholder="Cerca paziente..." onkeyup="cerca()">
                     <div id="risultatiRicerca"></div>
+                </div>
+            </div>
+
+            <div id="appointmentModal" class="modal-overlay">
+                <div class="modal">
+                    <button type="button" class="modal-close" id="closeAppointmentModal">×</button>
+                    <h2>Nuovo appuntamento</h2>
+                    <form id="appointmentForm" method="POST" action="salva_appuntamento.php">
+                        <input type="hidden" id="appointment_id" name="appointment_id" value="">
+                        <input type="hidden" id="form_action" name="form_action" value="save">
+
+                        <label for="data_appuntamento">Data</label>
+                        <input type="date" id="data_appuntamento" name="data_appuntamento" required>
+
+                        <label for="titolo">Titolo</label>
+                        <input type="text" id="titolo" name="titolo" placeholder="Es. Visita paziente" required>
+
+                        <label for="ora_inizio">Ora inizio</label>
+                        <input type="time" id="ora_inizio" name="ora_inizio" required>
+
+                        <label for="ora_fine">Ora fine</label>
+                        <input type="time" id="ora_fine" name="ora_fine" required>
+
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" id="cancelAppointment">Annulla</button>
+                            <button type="button" class="btn-cancel" id="deleteAppointment" style="display:none;">Elimina</button>
+                            <button type="submit" class="btn-save">Salva</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -383,6 +554,34 @@ $result_attivita = $conn->query($query_attivita);
                 </div>
 
                 <div class="card-cruscotto">
+                    <h2>Prossimi Appuntamenti</h2>
+                    <ul class="lista-attivita">
+                        <?php
+                        $query_appuntamenti_prossimi = "
+                            SELECT data_appuntamento, titolo, ora_inizio, ora_fine
+                            FROM appuntamenti
+                            WHERE data_appuntamento >= CURDATE()
+                            ORDER BY data_appuntamento ASC, ora_inizio ASC
+                            LIMIT 6
+                        ";
+                        $result_appuntamenti_prossimi = $conn->query($query_appuntamenti_prossimi);
+
+                        if ($result_appuntamenti_prossimi && $result_appuntamenti_prossimi->num_rows > 0) {
+                            while($row = $result_appuntamenti_prossimi->fetch_assoc()) {
+                                $data_formattata = date("d/m/Y", strtotime($row['data_appuntamento']));
+                                $orario = substr($row['ora_inizio'], 0, 5) . ' - ' . substr($row['ora_fine'], 0, 5);
+                                echo "<li>";
+                                echo "<span style='font-size: 0.85rem; color: var(--primary-color); font-weight: bold;'>" . $data_formattata . "</span>";
+                                echo "<strong style='display: block; font-size: 1.05rem; margin: 4px 0;'>" . htmlspecialchars($row['titolo']) . "</strong>";
+                                echo "<span style='font-size: 0.9rem; color: var(--text-muted);'>" . $orario . "</span>";
+                                echo "</li>";
+                            }
+                        } else {
+                            echo "<li style='color: var(--text-muted);'>Nessun appuntamento programmato.</li>";
+                        }
+                        ?>
+                    </ul>
+                </div>
                     <div class="chart-header">
                         <button id="btnPrevYear" class="chart-btn">&laquo; Anno Prec.</button>
                         <span id="chartYearDisplay" class="chart-title"></span>
@@ -394,7 +593,7 @@ $result_attivita = $conn->query($query_attivita);
                 </div>
             </div>
 
-            <div class="card-cruscotto" style="padding-bottom: 0;">
+            <div class="card-cruscotto calendar-card">
                 <div id="calendar"></div>
             </div>
         </div>
@@ -415,10 +614,103 @@ $result_attivita = $conn->query($query_attivita);
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek'
                 },
+                selectable: true,
+                dateClick: function(info) {
+                    openAppointmentModal(info.dateStr);
+                },
+                eventClick: function(info) {
+                    if (info.event.extendedProps.tipo === 'appuntamento') {
+                        openAppointmentModal(info.event.startStr.slice(0, 10), {
+                            id: info.event.id,
+                            titolo: info.event.title,
+                            data_appuntamento: info.event.extendedProps.data_appuntamento,
+                            ora_inizio: info.event.extendedProps.ora_inizio,
+                            ora_fine: info.event.extendedProps.ora_fine
+                        });
+                    }
+                },
                 events: <?php echo $eventi_json; ?>,
+                eventDisplay: 'block',
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
                 height: '100%'
             });
             calendar.render();
+
+            function openAppointmentModal(dateStr, eventData = null) {
+                var modal = document.getElementById('appointmentModal');
+                var dataInput = document.getElementById('data_appuntamento');
+                var titoloInput = document.getElementById('titolo');
+                var oraInizioInput = document.getElementById('ora_inizio');
+                var oraFineInput = document.getElementById('ora_fine');
+                var appointmentIdInput = document.getElementById('appointment_id');
+                var formActionInput = document.getElementById('form_action');
+                var deleteButton = document.getElementById('deleteAppointment');
+
+                if (eventData) {
+                    dataInput.value = eventData.data_appuntamento;
+                    titoloInput.value = eventData.titolo;
+                    oraInizioInput.value = eventData.ora_inizio;
+                    oraFineInput.value = eventData.ora_fine;
+                    appointmentIdInput.value = eventData.id.replace('app_', '');
+                    formActionInput.value = 'edit';
+                    deleteButton.style.display = 'inline-flex';
+                } else {
+                    dataInput.value = dateStr;
+                    titoloInput.value = '';
+                    oraInizioInput.value = '';
+                    oraFineInput.value = '';
+                    appointmentIdInput.value = '';
+                    formActionInput.value = 'save';
+                    deleteButton.style.display = 'none';
+                }
+
+                modal.classList.add('active');
+            }
+
+            function closeAppointmentModal() {
+                var modal = document.getElementById('appointmentModal');
+                modal.classList.remove('active');
+            }
+
+            document.getElementById('openAppointmentModalBtn').addEventListener('click', function(event) {
+                event.preventDefault();
+                openAppointmentModal(new Date().toISOString().slice(0, 10));
+            });
+
+            document.getElementById('closeAppointmentModal').addEventListener('click', closeAppointmentModal);
+            document.getElementById('cancelAppointment').addEventListener('click', closeAppointmentModal);
+            document.getElementById('appointmentModal').addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeAppointmentModal();
+                }
+            });
+
+            var appointmentForm = document.getElementById('appointmentForm');
+            var appointmentIdInput = document.getElementById('appointment_id');
+            var formActionInput = document.getElementById('form_action');
+            var deleteAppointmentBtn = document.getElementById('deleteAppointment');
+
+            appointmentForm.addEventListener('submit', function() {
+                if (appointmentIdInput.value) {
+                    formActionInput.value = 'edit';
+                } else {
+                    formActionInput.value = 'save';
+                }
+            });
+
+            deleteAppointmentBtn.addEventListener('click', function() {
+                if (!appointmentIdInput.value) {
+                    return;
+                }
+                if (confirm('Sei sicuro di eliminare questo appuntamento?')) {
+                    formActionInput.value = 'delete';
+                    appointmentForm.submit();
+                }
+            });
 
             // ==========================================
             // 2. INIZIALIZZAZIONE E GESTIONE GRAFICO

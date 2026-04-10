@@ -282,6 +282,20 @@ CREATE TABLE `osservazioni_finali` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `domande`
+--
+
+CREATE TABLE `domande` (
+  `id` int(11) NOT NULL,
+  `domanda` text NOT NULL,
+  `risposta` text NOT NULL,
+  `nota` text NOT NULL,
+  `fk_visita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `paziente`
 --
 
@@ -402,6 +416,20 @@ CREATE TABLE `visita` (
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `appuntamenti`
+--
+
+CREATE TABLE `appuntamenti` (
+  `id` int(11) NOT NULL,
+  `data_appuntamento` date NOT NULL,
+  `titolo` varchar(255) NOT NULL,
+  `ora_inizio` time NOT NULL,
+  `ora_fine` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indici per le tabelle scaricate
 --
@@ -473,6 +501,13 @@ ALTER TABLE `osservazioni_finali`
   ADD KEY `fk_visita` (`fk_visita`);
 
 --
+-- Indici per le tabelle `domande`
+--
+ALTER TABLE `domande`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_visita` (`fk_visita`);
+
+--
 -- Indici per le tabelle `paziente`
 --
 ALTER TABLE `paziente`
@@ -532,6 +567,12 @@ ALTER TABLE `visita`
   ADD KEY `fk_paziente` (`fk_paziente`);
 
 --
+-- Indici per le tabelle `appuntamenti`
+--
+ALTER TABLE `appuntamenti`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT per le tabelle scaricate
 --
 
@@ -569,6 +610,12 @@ ALTER TABLE `integratori`
 -- AUTO_INCREMENT per la tabella `osservazioni_finali`
 --
 ALTER TABLE `osservazioni_finali`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `domande`
+--
+ALTER TABLE `domande`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -614,6 +661,12 @@ ALTER TABLE `visita`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `appuntamenti`
+--
+ALTER TABLE `appuntamenti`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Limiti per le tabelle scaricate
 --
 
@@ -656,6 +709,12 @@ ALTER TABLE `integratori_prescritti`
 --
 ALTER TABLE `osservazioni_finali`
   ADD CONSTRAINT `osservazioni_finali_ibfk_1` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
+-- Limiti per la tabella `domande`
+--
+ALTER TABLE `domande`
+  ADD CONSTRAINT `domande_ibfk_1` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
 
 --
 -- Limiti per la tabella `sonno`
