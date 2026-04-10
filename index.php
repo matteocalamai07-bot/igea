@@ -508,7 +508,7 @@ $result_attivita = $conn->query($query_attivita);
             var testo = document.getElementById("cercaPaziente").value;
             var risultatiBox = document.getElementById("risultatiRicerca");
             
-            if (testo.length > 1) {
+            if (testo.length > 0) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", "ajax_cerca_paziente.php?q=" + testo, true);
                 xhr.onload = function() {
