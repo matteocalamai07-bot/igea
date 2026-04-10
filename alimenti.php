@@ -9,7 +9,7 @@
     // ==========================================
     // LOGICA DI PAGINAZIONE
     // ==========================================
-    $elementi_per_pagina = 7;
+    $elementi_per_pagina = 5;
     
     // Recupera il numero di pagina corrente (di default 1)
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -31,27 +31,169 @@
         <title>Igea - Alimenti</title>
         <link rel="stylesheet" href="style.css">
         <style>
+            /* Stili per adattare gli elementi al tema chiaro/scuro */
+            .page-title {
+                font-size: 2rem; 
+                color: #0f172a; 
+                margin-bottom: 25px; 
+                margin-top: 0;
+                transition: color 0.3s;
+            }
+            .section-label {
+                display: block; 
+                font-size: 0.9rem; 
+                color: #475569; 
+                margin-bottom: 8px; 
+                font-weight: 600;
+                transition: color 0.3s;
+            }
+            .search-input {
+                width: 300px; 
+                height: 40px; 
+                padding: 0 15px; 
+                border: 1px solid #cbd5e1; 
+                border-radius: 5px; 
+                box-sizing: border-box; 
+                font-size: 0.95rem; 
+                outline: none;
+                background-color: #f8fafc;
+                color: #0f172a;
+                transition: all 0.3s;
+            }
+            .search-input:focus {
+                border-color: #3b82f6; 
+                background-color: #ffffff;
+            }
+
+            /* --- STILE PER IL BOX DEI SUGGERIMENTI AJAX --- */
+            #risultatiRicerca {
+                position: absolute;
+                top: 100%; /* Si posiziona esattamente sotto il contenitore padre */
+                left: 0;
+                width: 100%; /* Stessa larghezza dell'input */
+                background-color: #ffffff;
+                border: 1px solid #cbd5e1;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 1000;
+                max-height: 250px;
+                overflow-y: auto;
+                margin-top: 5px;
+                display: none;
+            }
+            #risultatiRicerca:not(:empty) {
+                display: block; /* Mostra il contenitore solo se ci sono risultati */
+            }
+            /* Stile per i singoli elementi della ricerca (assumendo che ajax restituisca div, p o a) */
+            #risultatiRicerca div, 
+            #risultatiRicerca p, 
+            #risultatiRicerca a {
+                display: block;
+                padding: 10px 15px;
+                margin: 0;
+                color: #0f172a;
+                text-decoration: none;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            #risultatiRicerca div:last-child, 
+            #risultatiRicerca p:last-child, 
+            #risultatiRicerca a:last-child {
+                border-bottom: none;
+            }
+            #risultatiRicerca div:hover, 
+            #risultatiRicerca p:hover, 
+            #risultatiRicerca a:hover {
+                background-color: #f8fafc;
+            }
+
+            /* --- STILE PER I PULSANTI ELIMINA IN ROSSO --- */
+            .btn-elimina {
+                display: inline-block;
+                padding: 6px 12px;
+                background-color: #ef4444; /* Rosso vivo */
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 0.85rem;
+                font-weight: bold;
+                border: 1px solid #dc2626; /* Rosso scuro per il bordo */
+                transition: background-color 0.2s, transform 0.1s;
+            }
+            .btn-elimina:hover {
+                background-color: #dc2626;
+                color: #ffffff;
+            }
+            .btn-elimina:active {
+                transform: scale(0.95);
+            }
+
             /* Stile per i bottoni della paginazione */
             .btn-page {
                 padding: 6px 12px;
-                border: 1px solid rgba(15,23,42,0.2);
+                border: 1px solid #cbd5e1;
                 background-color: #ffffff;
                 color: #0f172a;
                 text-decoration: none;
                 border-radius: 5px;
                 font-size: 0.9rem;
                 font-weight: bold;
-                transition: background-color 0.2s, border-color 0.2s;
+                transition: all 0.2s;
             }
             .btn-page:hover {
                 background-color: #f1f5f9;
-                border-color: #6366f1; /* Colore primario hover */
+                border-color: #6366f1; 
                 color: #6366f1;
             }
+            .pagination-text {
+                font-size: 0.9rem; 
+                color: #475569;
+                transition: color 0.3s;
+            }
+            .empty-msg {
+                text-align: center; 
+                padding: 20px; 
+                color: #475569;
+            }
+
+            /* --- OVERRIDE TEMA SCURO --- */
+            body.dark-mode .page-title,
+            body.dark-mode .card-cruscotto h2 { color: #f8fafc; }
+            body.dark-mode .section-label,
+            body.dark-mode .pagination-text,
+            body.dark-mode .empty-msg { color: #cbd5e1; }
+            
+            body.dark-mode .search-input { background-color: #1e293b; border-color: #334155; color: #f8fafc; }
+            body.dark-mode .search-input:focus { border-color: #3b82f6; background-color: #0f172a; }
+
+            body.dark-mode .btn-page { background-color: #334155; color: #f8fafc; border-color: #475569; }
+            body.dark-mode .btn-page:hover { background-color: #475569; border-color: #818cf8; color: #818cf8; }
+
+            /* Risultati ricerca in tema scuro */
+            body.dark-mode #risultatiRicerca { background-color: #0f172a; border-color: #334155; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+            body.dark-mode #risultatiRicerca div, 
+            body.dark-mode #risultatiRicerca p, 
+            body.dark-mode #risultatiRicerca a { color: #f8fafc; border-bottom-color: #1e293b; }
+            body.dark-mode #risultatiRicerca div:hover, 
+            body.dark-mode #risultatiRicerca p:hover, 
+            body.dark-mode #risultatiRicerca a:hover { background-color: #1e293b; }
+
+            /* Finestra Modale in tema scuro */
+            body.dark-mode .modal { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; }
+            body.dark-mode .modal h3 { color: #f8fafc; }
+            body.dark-mode .modal p { color: #cbd5e1; }
+            body.dark-mode .btn-cancel { background-color: #334155; color: #f8fafc; border-color: #475569; }
+            body.dark-mode .btn-cancel:hover { background-color: #475569; }
         </style>
     </head>
     <body>
-        
+        <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        </script>
         <aside class="sidebar">
             <h1>Igea</h1>
             <nav>
@@ -65,18 +207,18 @@
         <main class="main-content">
             
             <div>
-                <h1 style="font-size: 2rem; color: #0f172a; margin-bottom: 25px; margin-top: 0;">Gestione Alimenti</h1>
+                <h1 class="page-title">Gestione Alimenti</h1>
                 
                 <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 30px;">
                     
                     <div>
-                        <label style="display: block; font-size: 0.9rem; color: #475569; margin-bottom: 8px; font-weight: 600;">Aggiungi un nuovo alimento</label>
+                        <label class="section-label">Aggiungi un nuovo alimento</label>
                         <a href="nuovo_alimento.php" class="btn-azione" style="height: 40px; padding: 0 20px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none;">+ Nuovo Alimento</a>
                     </div>
 
                     <div style="position: relative;">
-                        <label style="display: block; font-size: 0.9rem; color: #475569; margin-bottom: 8px; font-weight: 600;">Ricerca Alimenti da eliminare</label>
-                        <input type="text" id="searchAlimenti" placeholder="Digita il nome dell'alimento..." autocomplete="off" style="width: 300px; height: 40px; padding: 0 15px; border: 1px solid rgba(15,23,42,0.15); border-radius: 5px; box-sizing: border-box; font-size: 0.95rem; outline: none;">
+                        <label class="section-label">Ricerca Alimenti da eliminare</label>
+                        <input type="text" id="searchAlimenti" class="search-input" placeholder="Digita il nome dell'alimento..." autocomplete="off">
                         <div id="risultatiRicerca"></div>
                     </div>
 
@@ -92,7 +234,7 @@
                             <a href="?page=<?= $page - 1 ?>" class="btn-page">&laquo; Prec</a>
                         <?php endif; ?>
                         
-                        <span style="font-size: 0.9rem; color: #475569;">
+                        <span class="pagination-text">
                             Pagina <strong><?= $page ?></strong> di <strong><?= max(1, $totale_pagine) ?></strong>
                         </span>
                         
@@ -106,12 +248,12 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Elimina</th>
+                            <th>Azione</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            // Aggiunti LIMIT e OFFSET per mostrare solo 10 alimenti alla volta
+                            // Aggiunti LIMIT e OFFSET per mostrare solo elementi paginati
                             $query = "SELECT * FROM alimenti ORDER BY id DESC LIMIT $elementi_per_pagina OFFSET $offset";
                             $result = $conn->query($query);
 
@@ -120,12 +262,12 @@
                                     echo "<tr>";
                                     echo "<td>".$row['nome']."</td>";
                                     echo "<td>
-                                            <a href='#' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">Elimina</a>
+                                            <a href='#' class='btn-elimina' onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\">Elimina</a>
                                           </td>";
                                     echo "</tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='2' style='text-align:center; padding: 20px; color: #475569;'>Nessun alimento registrato.</td></tr>";
+                                echo "<tr><td colspan='2' class='empty-msg'>Nessun alimento registrato.</td></tr>";
                             }
                         ?>
                     </tbody>
@@ -140,7 +282,7 @@
             <p>Sei sicuro di voler eliminare questo elemento?</p>
                 <div class="modal-buttons">
                     <button class="btn-cancel" onclick="chiudiModal()">Annulla</button>
-                    <button class="btn-delete" id="confirmDelete">Elimina</button>
+                    <button class="btn-delete btn-elimina" id="confirmDelete" style="border: none;">Elimina</button>
                 </div>
             </div>
         </div>
@@ -164,6 +306,15 @@
             };
 
             xhr.send();
+        });
+
+        // Chiude i risultati di ricerca se si clicca fuori
+        document.addEventListener('click', function(event) {
+            let searchBox = document.getElementById('searchAlimenti');
+            let resultsBox = document.getElementById('risultatiRicerca');
+            if (!searchBox.contains(event.target) && !resultsBox.contains(event.target)) {
+                resultsBox.innerHTML = "";
+            }
         });
 
         /* POPUP ELIMINAZIONE */

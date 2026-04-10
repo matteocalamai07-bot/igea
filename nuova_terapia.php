@@ -39,11 +39,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html lang="it">
     <head>
+        
         <meta charset="UTF-8">
         <title>Igea - Inserimento Terapia</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body> 
+        <script>
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        </script>
         
         <aside class="sidebar">
             <h1>Igea</h1>

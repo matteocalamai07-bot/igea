@@ -193,7 +193,7 @@ $conn->close();
     <title>Igea - Anamnesi</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Stili extra per il form per non toccare il file CSS principale */
+        /* Stili extra per il form adattati al tema chiaro e scuro */
         .form-row {
             display: flex;
             flex-wrap: wrap;
@@ -214,31 +214,97 @@ $conn->close();
             color: #475569;
             margin-bottom: 8px;
             font-weight: 600;
+            transition: color 0.3s;
         }
         .form-input {
             width: 100%;
             height: 40px;
             padding: 0 15px;
-            border: 1px solid rgba(15,23,42,0.15);
+            border: 1px solid #cbd5e1;
             border-radius: 5px;
             box-sizing: border-box;
             font-size: 0.95rem;
             outline: none;
             background: #f8fafc;
+            color: #0f172a;
+            transition: all 0.3s;
         }
         .form-input:focus {
             border-color: #3b82f6;
             background: #ffffff;
         }
+        
+        /* Assicura che le opzioni si vedano bene nel menù a tendina */
+        .form-input option {
+            background-color: #ffffff;
+            color: #0f172a;
+        }
 
         /* Lista anamnesi */
-        .anamnesi-list { margin-bottom: 20px; }
-        .anamnesi-item { padding: 10px; border-bottom: 1px solid #e6e6e6; display:flex; justify-content:space-between; align-items:center; }
-        .anamnesi-meta { color: #64748b; font-size:0.9rem; }
-        .btn-small { font-size:0.85rem; padding:6px 10px; margin-left:8px; text-decoration:none; border-radius:4px; background:#f1f5f9; color:#0f172a; }
+        .anamnesi-list { margin-bottom: 30px; }
+        .anamnesi-item { padding: 15px; border-bottom: 1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; }
+        .anamnesi-meta { color: #64748b; font-size:0.9rem; margin-bottom: 5px; font-weight: bold;}
+        .anamnesi-text { color: #0f172a; }
+        .btn-small { font-size:0.85rem; padding:6px 10px; margin-left:8px; text-decoration:none; border-radius:4px; background:#f1f5f9; color:#0f172a; border: 1px solid #cbd5e1; transition: all 0.2s; }
+        .btn-small:hover { background: #e2e8f0; }
+
+        /* Stili Pop-up Modale */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal {
+            background: #ffffff; padding: 25px; border-radius: 8px;
+            width: 90%; max-width: 450px; text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .modal h3 { margin-top: 0; color: #0f172a; }
+        .modal p { color: #475569; margin-bottom: 25px; line-height: 1.5; }
+        .modal-buttons { display: flex; justify-content: center; gap: 15px; }
+        .btn-cancel {
+            background: #e2e8f0; color: #475569; border: none; font-weight: bold;
+            padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-cancel:hover { background: #cbd5e1; }
+        .btn-elimina {
+            background-color: #ef4444; color: #ffffff; border: 1px solid #dc2626; font-weight: bold;
+            padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s; text-decoration: none;
+        }
+        .btn-elimina:hover { background-color: #dc2626; color: #ffffff; }
+
+        /* Messaggi */
+        .msg-error { background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .msg-success { background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+
+        /* --- OVERRIDE TEMA SCURO --- */
+        body.dark-mode .form-label { color: #cbd5e1; }
+        body.dark-mode .form-input { background-color: #1e293b; border-color: #334155; color: #f8fafc; }
+        body.dark-mode .form-input:focus { border-color: #3b82f6; background-color: #0f172a; }
+        body.dark-mode .form-input option { background-color: #1e293b; color: #f8fafc; }
+        
+        body.dark-mode .anamnesi-item { border-bottom-color: #334155; }
+        body.dark-mode .anamnesi-text { color: #f8fafc; }
+        body.dark-mode .anamnesi-meta { color: #94a3b8; }
+        body.dark-mode .btn-small { background-color: #334155; color: #f8fafc; border-color: #475569; }
+        body.dark-mode .btn-small:hover { background-color: #475569; }
+
+        body.dark-mode .msg-error { background: #450a0a; border-color: #f87171; color: #fca5a5; }
+        body.dark-mode .msg-success { background: #052e16; border-color: #4ade80; color: #86efac; }
+        
+        body.dark-mode .modal { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; }
+        body.dark-mode .modal h3 { color: #f8fafc; }
+        body.dark-mode .modal p { color: #cbd5e1; }
+        body.dark-mode .btn-cancel { background-color: #334155; color: #f8fafc; }
+        body.dark-mode .btn-cancel:hover { background-color: #475569; }
     </style>
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 
     <aside class="sidebar">
         <h1>Igea</h1>
@@ -252,59 +318,56 @@ $conn->close();
 
     <main class="main-content">
 
-        <div>
-            <div style="margin-bottom: 20px;">
-                <a href="pazienti.php" style="color: #475569; text-decoration: none; font-size: 0.9rem;">&larr; Torna alla lista pazienti</a>
-            </div>
-            <h1 style="font-size: 2rem; color: #0f172a; margin-top: 0; margin-bottom: 5px;">
-                Anamnesi di <?php echo htmlspecialchars($nome_paziente); ?>
-            </h1>
-            <p style="color: #64748b; margin-top: 0; margin-bottom: 30px;">
-                <?php echo $existing_anamnesi ? 'Modifica le informazioni cliniche del paziente.' : 'Inserisci le informazioni cliniche del paziente.'; ?>
-            </p>
-        </div>
-
-        <?php if (!empty($errors)): ?>
-            <div style="background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-                <ul style="margin: 0; padding-left: 20px;">
-                    <?php foreach ($errors as $error) { echo "<li>".htmlspecialchars($error)."</li>"; } ?>
-                </ul>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!empty($success_msg)): ?>
-            <div style="background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-                <?php echo htmlspecialchars($success_msg); ?>
-            </div>
-        <?php endif; ?>
-
         <div class="card-cruscotto">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">
+                <div>
+                    <h2 style="margin: 0; font-size: 1.8rem;">Anamnesi di <?php echo htmlspecialchars($nome_paziente); ?></h2>
+                    <p style="color: #64748b; margin-top: 5px; margin-bottom: 0;">
+                        <?php echo $existing_anamnesi ? 'Modifica le informazioni cliniche del paziente.' : 'Inserisci le informazioni cliniche del paziente.'; ?>
+                    </p>
+                </div>
+                <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 10px 16px; text-decoration: none; white-space: nowrap;">← Torna alla lista pazienti</a>
+            </div>
 
-            <!-- Lista anamnesi esistenti -->
+            <?php if (!empty($errors)): ?>
+                <div class="msg-error">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <?php foreach ($errors as $error) { echo "<li>".htmlspecialchars($error)."</li>"; } ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($success_msg)): ?>
+                <div class="msg-success">
+                    <?php echo htmlspecialchars($success_msg); ?>
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty($anamnesi_list)): ?>
                 <div class="anamnesi-list">
                     <h3 style="margin-top:0;">Anamnesi precedenti</h3>
                     <?php foreach ($anamnesi_list as $a): ?>
                         <div class="anamnesi-item">
                             <div>
-                                <div class="anamnesi-meta">ID <?php echo htmlspecialchars($a['id']); ?></div>
-                                <div style="color:#0f172a;">
-                                    Allergie: <?php echo htmlspecialchars($a['allergie']); ?>;
-                                    Patologie: <?php echo htmlspecialchars($a['patologie']); ?>;
-                                    Esami: <?php echo htmlspecialchars($a['esami']); ?>
+                                <div class="anamnesi-meta">Scheda ID: <?php echo htmlspecialchars($a['id']); ?></div>
+                                <div class="anamnesi-text">
+                                    <strong>Allergie:</strong> <?php echo htmlspecialchars($a['allergie']); ?>; 
+                                    <strong>Patologie:</strong> <?php echo htmlspecialchars($a['patologie']); ?>; 
+                                    <strong>Esami:</strong> <?php echo htmlspecialchars($a['esami']); ?>
                                 </div>
                             </div>
                             <div style="white-space:nowrap;">
                                 <a class="btn-small" href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&anamnesi_id=<?php echo $a['id']; ?>">Modifica</a>
-                                <a class="btn-small" href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&delete_anamnesi=<?php echo $a['id']; ?>" onclick="return confirm('Eliminare questa anamnesi?')">Elimina</a>
+                                <a class="btn-small btn-elimina" style="color: white;" href="#" onclick="confermaEliminazioneAnamnesi('aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&delete_anamnesi=<?php echo $a['id']; ?>'); return false;">Elimina</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
 
-            <div style="margin-bottom:16px;">
-                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-small">+ Nuova anamnesi</a>
+            <div style="margin-bottom: 25px;">
+                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-azione" style="font-size: 0.85rem; padding: 8px 12px; text-decoration: none;">+ Aggiungi una Nuova Anamnesi</a>
             </div>
 
             <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
@@ -412,6 +475,34 @@ $conn->close();
         </div>
 
     </main>
+
+    <div class="modal-overlay" id="confirmModalAnamnesi">
+        <div class="modal">
+            <h3>Conferma eliminazione</h3>
+            <p>Sei sicuro di voler eliminare questa anamnesi? I dati andranno persi per sempre.</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="chiudiModalAnamnesi()">Annulla</button>
+                <button class="btn-elimina" id="confirmDeleteAnamnesi" style="border: none;">Elimina</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteAnamnesiUrl = "";
+
+        function confermaEliminazioneAnamnesi(url) {
+            deleteAnamnesiUrl = url;
+            document.getElementById("confirmModalAnamnesi").style.display = "flex";
+        }
+
+        function chiudiModalAnamnesi() {
+            document.getElementById("confirmModalAnamnesi").style.display = "none";
+        }
+
+        document.getElementById("confirmDeleteAnamnesi").onclick = function() {
+            window.location.href = deleteAnamnesiUrl;
+        };
+    </script>
 
 </body>
 </html>

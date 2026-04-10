@@ -16,6 +16,11 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <script>
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        </script>
         
         <aside class="sidebar">
             <h1>Igea</h1>

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 10, 2026 alle 10:38
--- Versione del server: 10.4.28-MariaDB
--- Versione PHP: 8.2.4
+-- Creato il: Mar 13, 2026 alle 12:09
+-- Versione del server: 10.4.32-MariaDB
+-- Versione PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -23,7 +23,8 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `terranova`
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_general_ci;
-USE `terranova
+
+USE `terranova`;
 -- --------------------------------------------------------
 
 --
@@ -181,7 +182,6 @@ CREATE TABLE `alimenti_sospesi` (
 
 CREATE TABLE `anamnesi` (
   `id` int(11) NOT NULL,
-  `data` date NOT NULL DEFAULT current_timestamp(),
   `allergie` varchar(10) NOT NULL,
   `dettagli_allergie` text DEFAULT NULL,
   `fumo` varchar(10) NOT NULL,
@@ -194,6 +194,18 @@ CREATE TABLE `anamnesi` (
   `dettagli_interventi` text DEFAULT NULL,
   `esami` varchar(10) NOT NULL,
   `dettagli_esami` text DEFAULT NULL,
+  `fk_paziente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `appuntamento`
+--
+
+CREATE TABLE `appuntamento` (
+  `id` int(11) NOT NULL,
+  `data` timestamp NOT NULL,
   `fk_paziente` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -219,6 +231,20 @@ CREATE TABLE `attivita_fisica` (
 CREATE TABLE `attivita_visita` (
   `fk_visita` int(11) NOT NULL,
   `fk_attivita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `domande`
+--
+
+CREATE TABLE `domande` (
+  `id` int(11) NOT NULL,
+  `domanda` text NOT NULL,
+  `risposta` text NOT NULL,
+  `nota` text NOT NULL,
+  `fk_visita` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -427,6 +453,13 @@ ALTER TABLE `anamnesi`
   ADD KEY `fk_paziente` (`fk_paziente`);
 
 --
+-- Indici per le tabelle `appuntamento`
+--
+ALTER TABLE `appuntamento`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_paziente` (`fk_paziente`);
+
+--
 -- Indici per le tabelle `attivita_fisica`
 --
 ALTER TABLE `attivita_fisica`
@@ -438,6 +471,13 @@ ALTER TABLE `attivita_fisica`
 ALTER TABLE `attivita_visita`
   ADD PRIMARY KEY (`fk_visita`,`fk_attivita`),
   ADD KEY `fk_attivita` (`fk_attivita`);
+
+--
+-- Indici per le tabelle `domande`
+--
+ALTER TABLE `domande`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_visita` (`fk_visita`);
 
 --
 -- Indici per le tabelle `farmaci`
@@ -548,9 +588,21 @@ ALTER TABLE `anamnesi`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `appuntamento`
+--
+ALTER TABLE `appuntamento`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT per la tabella `attivita_fisica`
 --
 ALTER TABLE `attivita_fisica`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `domande`
+--
+ALTER TABLE `domande`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -631,11 +683,23 @@ ALTER TABLE `anamnesi`
   ADD CONSTRAINT `anamnesi_ibfk_1` FOREIGN KEY (`fk_paziente`) REFERENCES `paziente` (`id`);
 
 --
+-- Limiti per la tabella `appuntamento`
+--
+ALTER TABLE `appuntamento`
+  ADD CONSTRAINT `fk_paziente` FOREIGN KEY (`fk_paziente`) REFERENCES `paziente` (`id`);
+
+--
 -- Limiti per la tabella `attivita_visita`
 --
 ALTER TABLE `attivita_visita`
   ADD CONSTRAINT `fk_attivita` FOREIGN KEY (`fk_attivita`) REFERENCES `attivita_fisica` (`id`),
   ADD CONSTRAINT `fk_av_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
+
+--
+-- Limiti per la tabella `domande`
+--
+ALTER TABLE `domande`
+  ADD CONSTRAINT `fk_visita` FOREIGN KEY (`fk_visita`) REFERENCES `visita` (`id`);
 
 --
 -- Limiti per la tabella `farmaci_prescritti`
