@@ -308,154 +308,334 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Igea - Nuova Visita Paziente</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 15px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .form-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-left, .form-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-blocco {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-page);
+            border-radius: 8px;
+        }
+
+        .form-blocco h3 {
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .button-add {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .button-add:hover {
+            background: #5558e3;
+        }
+
+        .bottone-sezione {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .error-list {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .error-list li {
+            margin: 4px 0;
+        }
+    </style>
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 
-<h1>Igea - Nuova visita paziente</h1>
-<br>
-
-<div class="top-links">
-    <a href="scheda_paziente.php?id=<?php echo $id_paziente; ?>" class="btn-top">Torna alla scheda del paziente</a>
-    <a href="index.php" class="btn-top">Torna alla Home</a>
-</div>
-
-<?php
-if (!empty($success_msg)) {
-    echo "<p style='color:green;'>" . htmlspecialchars($success_msg) . "</p>";
-}
-if (!empty($errors)) {
-    echo "<ul style='color:red;'>";
-    foreach ($errors as $error) {
-        echo "<li>" . htmlspecialchars($error) . "</li>";
-    }
-    echo "</ul>";
-}
-?>
-
-<form method="POST" action="nuova_visita.php?id=<?php echo $id_paziente; ?>">
-
-    <div>
-        <h2>Qualità del sonno</h2>
-        <label for="ore_sonno">Ore di sonno:</label>
-        <input type="text" id="ore_sonno" name="ore_sonno">
-        <br>
-
-        <label for="risvegli_notturni">Risvegli notturni:</label>
-        <input type="text" id="risvegli_notturni" name="risvegli_notturni">
-        <br>
-
-        <label for="difficolta_sonno">Difficoltà ad addormentarsi:</label>
-        <input type="text" id="difficolta_sonno" name="difficolta_sonno">
-        <br>
-
-        <label for="qualita_sonno">Qualità percepita del sonno:</label>
-        <input type="text" id="qualita_sonno" name="qualita_sonno">
-    </div>
-
-    <div>
-        <h2>Livello di stress</h2>
-        <label for="livello_stress">Valutazione (1-10):</label>
-        <input type="number" id="livello_stress" name="livello_stress" min="1" max="10">
-    </div>
-
-    <div>
-        <h2>Stato psico-fisico</h2>
-        <label for="ansia">Ansia:</label>
-        <input type="text" id="ansia" name="ansia">
-        <br>
-
-        <label for="umore">Umore:</label>
-        <input type="text" id="umore" name="umore">
-        <br>
-
-        <label for="motivazione">Motivazione:</label>
-        <input type="text" id="motivazione" name="motivazione">
-        <br>
-
-        <label for="concentrazione">Concentrazione:</label>
-        <input type="text" id="concentrazione" name="concentrazione">
-    </div>
-
-    <div>
-        <h2>Stile di vita</h2>
-        <label for="attivita_fisica">Attività fisica:</label>
-        <div id="contenitore_attivita_fisica"></div>
-        <button type="button" onclick="aggiungiAttivitaFisica()">+ Aggiungi attività fisica</button>
-        <br>
-        <label for="alimentazione">Alimentazione:</label>
-        <input type="text" id="alimentazione" name="alimentazione">
-    </div>
-
-    <div>
-        <h2>Aggiunta domande</h2>
-        <div id="contenitore_domande"></div>
-        <button type="button" onclick="aggiungiDomanda()">+ Aggiungi domanda</button>
-    </div>
-
-    <div>
-        <h2>Supporti utilizzati</h2>
-        <label for="farmaci">Farmaci:</label>
-        <select name="farmaci[]" id="farmaci" multiple>
-            <?php foreach ($farmaci as $farmaco): ?>
-                <option value="<?php echo $farmaco['id']; ?>">
-                    <?php echo htmlspecialchars($farmaco['nome']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <br>
-        <label for="integratori">Integratori:</label>
-        <select name="integratori[]" id="integratori" multiple>
-            <?php foreach ($integratori as $integratore): ?>
-                <option value="<?php echo $integratore['id']; ?>">
-                    <?php echo htmlspecialchars($integratore['nome']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <br>
-        <label for="supporti">Supporti:</label>
-        <select name="supporti[]" id="supporti" multiple>
-            <?php foreach ($supporti as $supporto): ?>
-                <option value="<?php echo $supporto['id']; ?>">
-                    <?php echo htmlspecialchars($supporto['nome']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <br>
-        <label for="terapie">Terapie:</label>
-        <select name="terapie[]" id="terapie" multiple>
-            <?php foreach ($terapie as $terapia): ?>
-                <option value="<?php echo $terapia['id']; ?>">
-                    <?php echo htmlspecialchars($terapia['nome']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-
-    <div>
-        <h2>Alimenti da evitare</h2>
-
-        <input type="text" id="cercaAlimento" placeholder="Cerca alimento..." onkeyup="filtraAlimenti()">
-
-        <div id="listaAlimenti" style="max-height:200px; overflow-y:auto; border:1px solid #ccc; padding:10px;">
-            <?php foreach ($alimenti as $alimento): ?>
-                <div class="alimento-item">
-                    <label>
-                        <input type="checkbox" name="alimenti_evitat[]" value="<?php echo $alimento['id']; ?>">
-                        <?php echo htmlspecialchars($alimento['nome']); ?>
-                    </label>
-                </div>
-            <?php endforeach; ?>
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Nuova Visita</h1>
+            <div class="button-group">
+                <a href="pazienti.php" class="btn-azione">← Pazienti</a>
+                <a href="scheda_paziente.php?id=<?php echo $id_paziente; ?>" class="btn-azione">← Scheda Paziente</a>
+            </div>
         </div>
-    </div>
 
-    <div>
-        <h2>Osservazioni finali:</h2>
-        <div id="contenitore_osservazioni"></div>
-        <button type="button" onclick="aggiungiOsservazione()">+ Aggiungi osservazione</button>
-    </div>
-    <br>
-    <button type="submit">Salva visita</button>
-</form>
+        <?php if (!empty($errors)): ?>
+            <ul class="error-list">
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo htmlspecialchars($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <div class="form-wrapper">
+            <form method="POST" action="nuova_visita.php?id=<?php echo $id_paziente; ?>">
+                <div class="form-container">
+                    <div class="form-left">
+                        <!-- SONNO -->
+                        <div class="form-blocco">
+                            <h3>Qualità del Sonno</h3>
+                            <div class="form-group">
+                                <label for="ore_sonno">Ore di sonno:</label>
+                                <input type="text" id="ore_sonno" name="ore_sonno">
+                            </div>
+                            <div class="form-group">
+                                <label for="risvegli_notturni">Risvegli notturni:</label>
+                                <input type="text" id="risvegli_notturni" name="risvegli_notturni">
+                            </div>
+                            <div class="form-group">
+                                <label for="difficolta_sonno">Difficoltà ad addormentarsi:</label>
+                                <input type="text" id="difficolta_sonno" name="difficolta_sonno">
+                            </div>
+                            <div class="form-group">
+                                <label for="qualita_sonno">Qualità percepita:</label>
+                                <input type="text" id="qualita_sonno" name="qualita_sonno">
+                            </div>
+                        </div>
+
+                        <!-- STRESS -->
+                        <div class="form-blocco">
+                            <h3>Livello di Stress</h3>
+                            <div class="form-group">
+                                <label for="livello_stress">Valutazione (1-10):</label>
+                                <input type="number" id="livello_stress" name="livello_stress" min="1" max="10">
+                            </div>
+                        </div>
+
+                        <!-- ALIMENTAZIONE -->
+                        <div class="form-blocco">
+                            <h3>Alimentazione</h3>
+                            <div class="form-group">
+                                <label for="alimentazione">Note:</label>
+                                <textarea id="alimentazione" name="alimentazione"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-right">
+                        <!-- STATO PSICO-FISICO -->
+                        <div class="form-blocco">
+                            <h3>Stato Psico-Fisico</h3>
+                            <div class="form-group">
+                                <label for="ansia">Ansia:</label>
+                                <input type="text" id="ansia" name="ansia">
+                            </div>
+                            <div class="form-group">
+                                <label for="umore">Umore:</label>
+                                <input type="text" id="umore" name="umore">
+                            </div>
+                            <div class="form-group">
+                                <label for="motivazione">Motivazione:</label>
+                                <input type="text" id="motivazione" name="motivazione">
+                            </div>
+                            <div class="form-group">
+                                <label for="concentrazione">Concentrazione:</label>
+                                <input type="text" id="concentrazione" name="concentrazione">
+                            </div>
+                        </div>
+
+                        <!-- FARMACI E INTEGRATORI -->
+                        <div class="form-blocco">
+                            <h3>Prescrizioni</h3>
+                            <div class="form-group">
+                                <label for="farmaci">Farmaci:</label>
+                                <select name="farmaci[]" id="farmaci" multiple size="3">
+                                    <?php foreach ($farmaci as $farmaco): ?>
+                                        <option value="<?php echo $farmaco['id']; ?>">
+                                            <?php echo htmlspecialchars($farmaco['nome']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="integratori">Integratori:</label>
+                                <select name="integratori[]" id="integratori" multiple size="3">
+                                    <?php foreach ($integratori as $integratore): ?>
+                                        <option value="<?php echo $integratore['id']; ?>">
+                                            <?php echo htmlspecialchars($integratore['nome']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="supporti">Supporti:</label>
+                                <select name="supporti[]" id="supporti" multiple size="2">
+                                    <?php foreach ($supporti as $supporto): ?>
+                                        <option value="<?php echo $supporto['id']; ?>">
+                                            <?php echo htmlspecialchars($supporto['nome']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="terapie">Terapie:</label>
+                                <select name="terapie[]" id="terapie" multiple size="2">
+                                    <?php foreach ($terapie as $terapia): ?>
+                                        <option value="<?php echo $terapia['id']; ?>">
+                                            <?php echo htmlspecialchars($terapia['nome']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ATTIVITÀ FISICA -->
+                <div class="form-blocco">
+                    <h3>Attività Fisica</h3>
+                    <div id="contenitore_attivita_fisica"></div>
+                    <button type="button" class="button-add" onclick="aggiungiAttivitaFisica()">+ Aggiungi attività</button>
+                </div>
+
+                <!-- DOMANDE -->
+                <div class="form-blocco">
+                    <h3>Domande e Risposte</h3>
+                    <div id="contenitore_domande"></div>
+                    <button type="button" class="button-add" onclick="aggiungiDomanda()">+ Aggiungi domanda</button>
+                </div>
+
+                <!-- ALIMENTI DA EVITARE -->
+                <div class="form-blocco">
+                    <h3>Alimenti da Evitare</h3>
+                    <div class="form-group">
+                        <input type="text" id="cercaAlimento" placeholder="Cerca alimento..." onkeyup="filtraAlimenti()">
+                    </div>
+                    <div id="listaAlimenti" style="max-height:150px; overflow-y:auto; border:1px solid var(--border-color); padding:8px; border-radius: 4px; background: var(--bg-card);">
+                        <?php foreach ($alimenti as $alimento): ?>
+                            <div class="alimento-item" style="padding: 4px; display: flex;">
+                                <label style="display: flex; align-items: center; gap: 8px; margin: 0; width: 100%; cursor: pointer;">
+                                    <input type="checkbox" name="alimenti_evitat[]" value="<?php echo $alimento['id']; ?>">
+                                    <?php echo htmlspecialchars($alimento['nome']); ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- OSSERVAZIONI FINALI -->
+                <div class="form-blocco">
+                    <h3>Osservazioni Finali</h3>
+                    <div id="contenitore_osservazioni"></div>
+                    <button type="button" class="button-add" onclick="aggiungiOsservazione()">+ Aggiungi osservazione</button>
+                </div>
+
+                <!-- BOTTONE SALVA -->
+                <div class="bottone-sezione">
+                    <button type="submit" class="btn-azione" style="padding: 12px 24px; font-size: 1rem; font-weight: 600;">Salva Visita</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
 
 <script>
 let contatore = 0;
@@ -464,17 +644,20 @@ function aggiungiDomanda() {
     contatore++;
 
     let div = document.createElement("div");
-    div.classList.add("blocco-domanda");
+    div.style.marginBottom = "12px";
 
     div.innerHTML = `
-        <label>Domanda:</label>
-        <input type="text" name="domande[${contatore}][testo]">
+        <div class="form-group">
+            <label>Domanda:</label>
+            <input type="text" name="domande[${contatore}][testo]">
+        </div>
 
-        <label>Risposta:</label>
-        <input type="text" name="domande[${contatore}][risposta]">
+        <div class="form-group">
+            <label>Risposta:</label>
+            <input type="text" name="domande[${contatore}][risposta]">
+        </div>
 
-        <button type="button" onclick="this.parentElement.remove()">Rimuovi</button>
-        <br><br>
+        <button type="button" class="button-add" style="background: #e74c3c;" onclick="this.parentElement.remove()">Rimuovi</button>
     `;
 
     document.getElementById("contenitore_domande").appendChild(div);
@@ -486,14 +669,14 @@ function aggiungiOsservazione() {
     counterOsservazioni++;
 
     let div = document.createElement("div");
-    div.classList.add("blocco-osservazione");
+    div.style.marginBottom = "12px";
 
     div.innerHTML = `
-        <label>Osservazione:</label>
-        <input type="text" name="osservazioni[${counterOsservazioni}]">
-
-        <button type="button" onclick="this.parentElement.remove()">Rimuovi</button>
-        <br><br>
+        <div class="form-group">
+            <label>Osservazione:</label>
+            <textarea name="osservazioni[${counterOsservazioni}]" style="min-height: 40px;"></textarea>
+        </div>
+        <button type="button" class="button-add" style="background: #e74c3c;" onclick="this.parentElement.remove()">Rimuovi</button>
     `;
 
     document.getElementById("contenitore_osservazioni").appendChild(div);
@@ -505,26 +688,30 @@ function aggiungiAttivitaFisica() {
     counterAttivita++;
 
     let div = document.createElement("div");
-    div.classList.add("blocco-attivita");
+    div.style.marginBottom = "12px";
 
     div.innerHTML = `
-        <label>Nome attività:</label>
-        <input type="text" name="attivita_fisica[]">
+        <div class="form-group">
+            <label>Nome attività:</label>
+            <input type="text" name="attivita_fisica[]">
+        </div>
 
-        <label>Descrizione:</label>
-        <input type="text" name="descrizione_attivita[]">
+        <div class="form-group">
+            <label>Descrizione:</label>
+            <input type="text" name="descrizione_attivita[]">
+        </div>
 
-        <label>Note:</label>
-        <input type="text" name="note_attivita[]">
+        <div class="form-group">
+            <label>Note:</label>
+            <input type="text" name="note_attivita[]">
+        </div>
 
-        <button type="button" onclick="this.parentElement.remove()">Rimuovi</button>
-        <br><br>
+        <button type="button" class="button-add" style="background: #e74c3c;" onclick="this.parentElement.remove()">Rimuovi</button>
     `;
 
     document.getElementById("contenitore_attivita_fisica").appendChild(div);
 }
 
-/* FILTRO */
 function filtraAlimenti() {
     let input = document.getElementById("cercaAlimento").value.toLowerCase();
     let items = document.getElementsByClassName("alimento-item");
@@ -533,7 +720,7 @@ function filtraAlimenti() {
         let testo = items[i].innerText.toLowerCase();
 
         if (testo.includes(input)) {
-            items[i].style.display = "block";
+            items[i].style.display = "flex";
         } else {
             items[i].style.display = "none";
         }
@@ -541,6 +728,7 @@ function filtraAlimenti() {
 }
 </script>
 
+    </main>
 </body>
 </html>
 

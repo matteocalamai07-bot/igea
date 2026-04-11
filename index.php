@@ -135,9 +135,9 @@ $result_attivita = $conn->query($query_attivita);
 
         /* LAYOUT PRINCIPALE */
         html, body {
-            height: 100vh;
+            height: 100%;
             margin: 0;
-            overflow: hidden;
+            overflow: auto;
             font-family: Arial, sans-serif;
             background-color: var(--bg-page);
             color: var(--text-main);
@@ -164,7 +164,7 @@ $result_attivita = $conn->query($query_attivita);
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
-            padding: 20px; 
+            padding: 10px 20px 20px 20px; 
             overflow: hidden;
         }
 
@@ -183,7 +183,7 @@ $result_attivita = $conn->query($query_attivita);
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .btn-azione {
@@ -201,10 +201,14 @@ $result_attivita = $conn->query($query_attivita);
             cursor: pointer;
         }
 
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
         /* STILE DELLA RICERCA E DEL DROPDOWN AJAX */
         .search-container {
             position: relative;
-            width: 250px;
+            width: 290px;
             height: 35px;
         }
 
@@ -263,7 +267,7 @@ $result_attivita = $conn->query($query_attivita);
         .dashboard-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+            grid-template-columns: minmax(320px, 380px) 1fr;
             gap: 20px;
             min-height: 0;
             height: 100%;
@@ -289,11 +293,21 @@ $result_attivita = $conn->query($query_attivita);
             transition: background-color 0.3s, border-color 0.3s;
         }
 
-        .left-column .card-cruscotto { flex: 1; overflow: hidden; }
-        .card-cruscotto h2 { margin-top: 0; font-size: 1.2rem; margin-bottom: 15px; }
+        .left-column .card-cruscotto { 
+            flex: 1; overflow: hidden; 
+        }
+
+        .card-cruscotto h2 { 
+            margin-top: 0; 
+            font-size: 1.2rem; 
+            margin-bottom: 15px; 
+        }
 
         .card-cruscotto.calendar-card {
             min-height: 560px;
+            align-self: start;
+            grid-column: 2;
+            margin-top: -10px;
         }
 
         #calendar {
@@ -317,8 +331,6 @@ $result_attivita = $conn->query($query_attivita);
         .lista-attivita li:last-child { border-bottom: none; }
 
         .chart-container { flex: 1; position: relative; min-height: 0; width: 100%; }
-        #calendar { flex: 1; height: 100%; width: 100%; min-height: 0; }
-
         /* OVERRIDE FULLCALENDAR */
         .fc { 
             --fc-today-bg-color: rgba(99, 102, 241, 0.15);
@@ -445,7 +457,7 @@ $result_attivita = $conn->query($query_attivita);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         .chart-btn {
             background-color: transparent;
@@ -455,9 +467,11 @@ $result_attivita = $conn->query($query_attivita);
             padding: 5px 12px;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
         .chart-btn:hover { background-color: var(--border-color); }
-        .chart-title { margin: 0; font-size: 1.1rem; font-weight: bold; }
+        .chart-title { margin: 0; font-size: 0.95rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -491,7 +505,9 @@ $result_attivita = $conn->query($query_attivita);
             <div class="action-bar">
                 <a href="nuovo_paziente.php" class="btn-azione">+ Nuovo Paziente</a>
                 <a href="#" class="btn-azione" id="openAppointmentModalBtn">+ Appuntamento</a>
-                
+            </div>
+
+            <div class="search-bar">
                 <div class="search-container">
                     <input type="text" id="cercaPaziente" class="search-box-btn-style" placeholder="Cerca paziente..." onkeyup="cerca()">
                     <div id="risultatiRicerca"></div>
@@ -582,6 +598,9 @@ $result_attivita = $conn->query($query_attivita);
                         ?>
                     </ul>
                 </div>
+
+                <div class="card-cruscotto">
+                    <h2>Statistiche Visite</h2>
                     <div class="chart-header">
                         <button id="btnPrevYear" class="chart-btn">&laquo; Anno Prec.</button>
                         <span id="chartYearDisplay" class="chart-title"></span>

@@ -50,6 +50,28 @@
         <meta charset="UTF-8">
         <title>Igea - Nuovo Paziente</title>
         <link rel="stylesheet" href="style.css">
+        <style>
+            .form-container {
+                display: flex;
+                gap: 20px;
+            }
+
+            .form-left, .form-right {
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            /* inversione */
+            .form-left {
+                order: 1;
+            }
+
+            .form-right {
+                order: 2;
+            }
+        </style>
     </head>
     <body>
         <script>
@@ -70,7 +92,10 @@
 
         <main class="main-content">
             
-            <h1>Nuovo Paziente</h1>
+            <div class="page-header">
+                <h1>Nuovo Paziente</h1>
+                <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 8px 12px; text-decoration: none;">← Torna alla lista dei pazienti</a>
+            </div>
 
             <?php if (!empty($success_msg)): ?>
                 <p class="messaggio-php"><?php echo $success_msg; ?></p>
@@ -82,51 +107,75 @@
                 </ul>
             <?php endif; ?>
 
-            <form method="POST" action="">
+            <form method="POST" action="" class="form-layout">
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0;">Inserisci i Dati</h2>
-                    <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 8px 12px; text-decoration: none;">← Torna alla lista dei pazienti</a>
+                <div class="form-header">
+                    <h2>Inserisci i Dati</h2>
                 </div>
-                
-                <div>
-                    <label>Nome:</label>
-                    <input type="text" name="nome" required>
-                </div> 
-                <div>
-                    <label>Cognome:</label>
-                    <input type="text" name="cognome" required>
-                </div> 
-                <div>
-                    <label>Data di nascita:</label>
-                    <input type="date" name="data_nascita" required max="<?php echo date('Y-m-d'); ?>">
-                </div> 
-                <div>
-                    <label>Città:</label>
-                    <input type="text" name="citta" required>
-                </div> 
-                <div>
-                    <label>Indirizzo:</label>
-                    <input type="text" name="indirizzo" required>
-                </div> 
-                <div>
-                    <label>Numero civico:</label>
-                    <input type="text" name="civico" required>
-                </div> 
-                <div>
-                    <label>Professione:</label>
-                    <input type="text" name="professione">
-                </div> 
-                <div>
-                    <label>Email:</label>
-                    <input type="email" name="email">
-                </div> 
-                <div>
-                    <label>Telefono:</label>
-                    <input type="tel" name="telefono" pattern="[0-9+\-\s()]+" title="Solo numeri, spazi, parentesi e trattini">
-                </div> 
-                
-                <button type="submit">Salva Paziente</button>
+
+                <div class="form-container">
+                    <div class="form-left">
+                        <div class="form-blocco">
+                            <h3>Dati Personali</h3>
+                            <div>
+                                <label>Nome:</label>
+                                <input type="text" name="nome" required>
+                            </div> 
+                            <div>
+                                <label>Cognome:</label>
+                                <input type="text" name="cognome" required>
+                            </div> 
+                            <div>
+                                <label>Data di nascita:</label>
+                                <input type="date" name="data_nascita" required max="<?php echo date('Y-m-d'); ?>">
+                            </div>
+                        </div>
+
+                        <div class="form-blocco">
+                            <h3>Contatti</h3>
+                            <div>
+                                <label>Email:</label>
+                                <input type="email" name="email">
+                            </div> 
+                            <div>
+                                <label>Telefono:</label>
+                                <input type="tel" name="telefono" pattern="[0-9+\-\s()]+" title="Solo numeri, spazi, parentesi e trattini">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-right">
+                        <div class="form-blocco">
+                            <h3>Indirizzo</h3>
+                            <div>
+                                <label>Città:</label>
+                                <input type="text" name="citta" required>
+                            </div> 
+                            <div>
+                                <label>Indirizzo:</label>
+                                <input type="text" name="indirizzo" required>
+                            </div> 
+                            <div>
+                                <label>Numero civico:</label>
+                                <input type="text" name="civico" required>
+                            </div>
+                        </div>
+
+                        <div class="form-blocco">
+                            <h3>Professione</h3>
+                            <div>
+                                <label>Professione:</label>
+                                <input type="text" name="professione">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit-compact" style="margin-top: -4px;">Salva Paziente</button>
+                    </div>
+                </div>
+
+                <div class="form-footer" style="display: none;">
+                    <button type="submit" class="btn-submit-small">Salva Paziente</button>
+                </div>
             </form>
 
         </main>
