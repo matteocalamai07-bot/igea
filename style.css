@@ -234,11 +234,23 @@ body { display: flex; }
     border: none !important;
     text-transform: capitalize;
     font-weight: 600 !important;
+    color: white !important;
+}
+
+body.dark-mode .fc .fc-button-primary {
+    color: #f8fafc !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .fc-toolbar-chunk { display: flex; gap: 15px; align-items: center; }
 .fc .fc-button-group { display: flex; gap: 8px; }
 .fc .fc-button-group > .fc-button { border-radius: 5px !important; margin: 0 !important; }
+
+body.dark-mode .fc .fc-button:not(.fc-button-primary) {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+    border: 1px solid #475569 !important;
+}
 
 .modal-overlay {
     position: fixed;
@@ -322,6 +334,11 @@ body { display: flex; }
     color: var(--text-main);
 }
 
+body.dark-mode .modal-actions .btn-cancel {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+}
+
 .modal-actions .btn-save {
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
@@ -340,6 +357,11 @@ body { display: flex; }
     font-size: 18px;
     cursor: pointer;
     box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+body.dark-mode .modal-close {
+    background: #334155;
+    color: #f8fafc;
 }
 
 /* HEADER GRAFICO */

@@ -193,12 +193,31 @@ $conn->close();
     <title>Igea - Anamnesi</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Stili extra per il form adattati al tema chiaro e scuro */
+        body.dark-mode .card-cruscotto { background-color: var(--bg-card); }
+        
+        .card-cruscotto {
+            display: flex;
+            flex-direction: column;
+            max-height: fit-content;
+            padding: 15px 20px;
+            padding-bottom: 0;
+        }
+        
+        form {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        main.main-content {
+            padding-bottom: 0 !important;
+            overflow: hidden !important;
+        }
+        
         .form-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 12px;
         }
         .form-col-small {
             flex: 1;
@@ -210,63 +229,63 @@ $conn->close();
         }
         .form-label {
             display: block;
-            font-size: 0.9rem;
-            color: #475569;
-            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 5px;
             font-weight: 600;
             transition: color 0.3s;
         }
         .form-input {
             width: 100%;
-            height: 40px;
-            padding: 0 15px;
-            border: 1px solid #cbd5e1;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid var(--border-color);
             border-radius: 5px;
             box-sizing: border-box;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             outline: none;
-            background: #f8fafc;
-            color: #0f172a;
+            background: var(--bg-card);
+            color: var(--text-main);
             transition: all 0.3s;
         }
         .form-input:focus {
-            border-color: #3b82f6;
-            background: #ffffff;
+            border-color: var(--primary-color);
+            background: var(--bg-card);
         }
         
         /* Assicura che le opzioni si vedano bene nel menù a tendina */
         .form-input option {
-            background-color: #ffffff;
-            color: #0f172a;
+            background-color: var(--bg-card);
+            color: var(--text-main);
         }
 
         /* Lista anamnesi */
         .anamnesi-list { margin-bottom: 30px; }
-        .anamnesi-item { padding: 15px; border-bottom: 1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; }
-        .anamnesi-meta { color: #64748b; font-size:0.9rem; margin-bottom: 5px; font-weight: bold;}
-        .anamnesi-text { color: #0f172a; }
-        .btn-small { font-size:0.85rem; padding:6px 10px; margin-left:8px; text-decoration:none; border-radius:4px; background:#f1f5f9; color:#0f172a; border: 1px solid #cbd5e1; transition: all 0.2s; }
-        .btn-small:hover { background: #e2e8f0; }
+        .anamnesi-item { padding: 15px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; }
+        .anamnesi-meta { color: var(--text-muted); font-size:0.9rem; margin-bottom: 5px; font-weight: bold;}
+        .anamnesi-text { color: var(--text-main); }
+        .btn-small { font-size:0.85rem; padding:6px 10px; margin-left:8px; text-decoration:none; border-radius:4px; background:var(--bg-page); color:var(--text-main); border: 1px solid var(--border-color); transition: all 0.2s; }
+        .btn-small:hover { background: var(--border-color); }
 
         /* Stili Pop-up Modale */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.55);
             display: none; justify-content: center; align-items: center; z-index: 1000;
         }
         .modal {
-            background: #ffffff; padding: 25px; border-radius: 8px;
+            background: var(--bg-card); padding: 25px 50px; border-radius: 8px;
             width: 90%; max-width: 450px; text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid var(--border-color);
         }
-        .modal h3 { margin-top: 0; color: #0f172a; }
-        .modal p { color: #475569; margin-bottom: 25px; line-height: 1.5; }
+        .modal h3 { margin-top: 0; color: var(--text-main); }
+        .modal p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
         .modal-buttons { display: flex; justify-content: center; gap: 15px; }
         .btn-cancel {
-            background: #e2e8f0; color: #475569; border: none; font-weight: bold;
+            background: var(--bg-page); color: var(--text-main); border: 1px solid var(--border-color); font-weight: bold;
             padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s;
         }
-        .btn-cancel:hover { background: #cbd5e1; }
+        .btn-cancel:hover { background: var(--border-color); }
         .btn-elimina {
             background-color: #ef4444; color: #ffffff; border: 1px solid #dc2626; font-weight: bold;
             padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s; text-decoration: none;
@@ -274,29 +293,29 @@ $conn->close();
         .btn-elimina:hover { background-color: #dc2626; color: #ffffff; }
 
         /* Messaggi */
-        .msg-error { background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
-        .msg-success { background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .msg-error { background: #fee2e2; border-left: 4px solid #ef4444; color: #991b1b; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .msg-success { background: #dcfce7; border-left: 4px solid #22c55e; color: #166534; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
 
         /* --- OVERRIDE TEMA SCURO --- */
-        body.dark-mode .form-label { color: #cbd5e1; }
-        body.dark-mode .form-input { background-color: #1e293b; border-color: #334155; color: #f8fafc; }
-        body.dark-mode .form-input:focus { border-color: #3b82f6; background-color: #0f172a; }
-        body.dark-mode .form-input option { background-color: #1e293b; color: #f8fafc; }
+        body.dark-mode .form-label { color: var(--text-main); }
+        body.dark-mode .form-input { background-color: var(--bg-page); border-color: var(--border-color); color: var(--text-main); }
+        body.dark-mode .form-input:focus { border-color: var(--primary-color); background-color: var(--bg-page); }
+        body.dark-mode .form-input option { background-color: var(--bg-card); color: var(--text-main); }
         
-        body.dark-mode .anamnesi-item { border-bottom-color: #334155; }
-        body.dark-mode .anamnesi-text { color: #f8fafc; }
-        body.dark-mode .anamnesi-meta { color: #94a3b8; }
-        body.dark-mode .btn-small { background-color: #334155; color: #f8fafc; border-color: #475569; }
-        body.dark-mode .btn-small:hover { background-color: #475569; }
+        body.dark-mode .anamnesi-item { border-bottom-color: var(--border-color); }
+        body.dark-mode .anamnesi-text { color: var(--text-main); }
+        body.dark-mode .anamnesi-meta { color: var(--text-muted); }
+        body.dark-mode .btn-small { background-color: var(--bg-page); color: var(--text-main); border-color: var(--border-color); }
+        body.dark-mode .btn-small:hover { background-color: var(--border-color); }
 
-        body.dark-mode .msg-error { background: #450a0a; border-color: #f87171; color: #fca5a5; }
-        body.dark-mode .msg-success { background: #052e16; border-color: #4ade80; color: #86efac; }
+        body.dark-mode .msg-error { background: #7f1d1d; border-color: #f87171; color: #fecaca; }
+        body.dark-mode .msg-success { background: #166534; border-color: #86efac; color: #dcfce7; }
         
-        body.dark-mode .modal { background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; }
-        body.dark-mode .modal h3 { color: #f8fafc; }
-        body.dark-mode .modal p { color: #cbd5e1; }
-        body.dark-mode .btn-cancel { background-color: #334155; color: #f8fafc; }
-        body.dark-mode .btn-cancel:hover { background-color: #475569; }
+        body.dark-mode .modal { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); }
+        body.dark-mode .modal h3 { color: var(--text-main); }
+        body.dark-mode .modal p { color: var(--text-muted); }
+        body.dark-mode .btn-cancel { background-color: var(--bg-page); color: var(--text-main); border-color: var(--border-color); }
+        body.dark-mode .btn-cancel:hover { background-color: var(--border-color); }
     </style>
 </head>
 <body>
@@ -320,10 +339,10 @@ $conn->close();
 
         <div class="card-cruscotto">
             
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
                 <div>
-                    <h2 style="margin: 0; font-size: 1.8rem;">Anamnesi di <?php echo htmlspecialchars($nome_paziente); ?></h2>
-                    <p style="color: #64748b; margin-top: 5px; margin-bottom: 0;">
+                    <h2 style="margin: 0; font-size: 1.8rem; color: var(--text-main);">Anamnesi di <?php echo htmlspecialchars($nome_paziente); ?></h2>
+                    <p style="color: var(--text-muted); margin-top: 5px; margin-bottom: 0;">
                         <?php echo $existing_anamnesi ? 'Modifica le informazioni cliniche del paziente.' : 'Inserisci le informazioni cliniche del paziente.'; ?>
                     </p>
                 </div>
@@ -369,8 +388,11 @@ $conn->close();
                 </div>
             <?php endif; ?>
 
-            <div style="margin-bottom: 25px;">
-                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-azione" style="font-size: 0.85rem; padding: 8px 12px; text-decoration: none;">+ Aggiungi una Nuova Anamnesi</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 15px;">
+                <button type="button" class="btn-azione" style="font-size: 1.1em; padding: 28px 40px; border: none; cursor: pointer; background: linear-gradient(135deg, #6366f1, #0ea5e9) !important; color: white;" onclick="document.querySelector('form').submit();">
+                    <?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?>
+                </button>
+                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-azione" style="font-size: 1em; padding: 12px 24px; text-decoration: none; background: linear-gradient(135deg, #6366f1, #0ea5e9) !important; color: white;">+ Aggiungi una Nuova Anamnesi</a>
             </div>
 
             <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
@@ -466,12 +488,6 @@ $conn->close();
                         <label class="form-label">Dettagli esami</label>
                         <input type="text" name="dettagli_esami" class="form-input" placeholder="Quali esami e quando..." value="<?php echo htmlspecialchars($dettagli_esami); ?>">
                     </div>
-                </div>
-
-                <div style="margin-top: 30px; text-align: right;">
-                    <button type="submit" class="btn-azione" style="height: 40px; padding: 0 30px; border: none; font-size: 1rem; cursor: pointer;">
-                        <?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?>
-                    </button>
                 </div>
 
             </form>

@@ -252,6 +252,7 @@ $alimenti = $conn->query("
                 <a href="pazienti.php" class="btn-azione">← Pazienti</a>
                 <a href="scheda_paziente.php?id=<?php echo $visita['fk_paziente']; ?>" class="btn-azione">← Scheda Paziente</a>
                 <a href="genera_pdf.php?id=<?php echo $id_visita; ?>" class="btn-azione">📄 PDF</a>
+                <a href="elimina_visita.php?id=<?php echo $id_visita; ?>" class="btn-azione btn-elimina" onclick="return confirm('Sei sicuro di voler eliminare questa visita?');">Elimina</a>
             </div>
         </div>
 

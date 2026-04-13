@@ -372,7 +372,7 @@ $result_attivita = $conn->query($query_attivita);
             background: var(--bg-card);
             border-radius: 14px;
             box-shadow: 0 25px 60px rgba(0,0,0,0.2);
-            padding: 25px;
+            padding: 25px 60px;
         }
 
         .modal h2 {
@@ -428,8 +428,8 @@ $result_attivita = $conn->query($query_attivita);
         }
 
         .modal-actions .btn-cancel {
-            background: #f3f4f6;
-            color: var(--text-main);
+            background: #ff4444;
+            color: white;
         }
 
         .modal-actions .btn-save {
