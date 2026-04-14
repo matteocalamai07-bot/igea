@@ -21,8 +21,50 @@ WHERE v.id=$id
 $sonno = $conn->query("SELECT * FROM sonno WHERE fk_visita=$id")->fetch_assoc();
 $stato = $conn->query("SELECT * FROM `stato_psico-fisico` WHERE fk_visita=$id")->fetch_assoc();
 
+$attivita = $conn->query("
+    SELECT a.*
+    FROM attivita_fisica a
+    JOIN attivita_visita av ON a.id = av.fk_attivita
+    WHERE av.fk_visita = $id
+");
+
 $domande = $conn->query("SELECT * FROM domande WHERE fk_visita=$id");
 $osservazioni = $conn->query("SELECT * FROM osservazioni_finali WHERE fk_visita=$id");
+
+$farmaci = $conn->query("
+    SELECT f.nome 
+    FROM farmaci f
+    JOIN farmaci_prescritti fp ON f.id = fp.fk_farmaci
+    WHERE fp.fk_visita = $id
+");
+
+$integratori = $conn->query("
+    SELECT i.nome 
+    FROM integratori i
+    JOIN integratori_prescritti ip ON i.id = ip.fk_integratori
+    WHERE ip.fk_visita = $id
+");
+
+$supporti = $conn->query("
+    SELECT s.nome 
+    FROM supporti s
+    JOIN supporti_prescritti sp ON s.id = sp.fk_supporti
+    WHERE sp.fk_visita = $id
+");
+
+$terapie = $conn->query("
+    SELECT t.nome 
+    FROM terapie t
+    JOIN terapie_prescritte tp ON t.id = tp.fk_terapie
+    WHERE tp.fk_visita = $id
+");
+
+$alimenti = $conn->query("
+    SELECT a.nome
+    FROM alimenti a
+    JOIN alimenti_sospesi aps ON a.id = aps.fk_alimenti
+    WHERE aps.fk_visita = $id
+");
 
 /* =========================
    GENERAZIONE HTML STAMPABILE
@@ -290,6 +332,82 @@ $osservazioni = $conn->query("SELECT * FROM osservazioni_finali WHERE fk_visita=
         <ul>
             <?php while($o = $osservazioni->fetch_assoc()): ?>
                 <li><?php echo htmlspecialchars($o['osservazione']); ?></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($attivita->num_rows > 0): ?>
+    <div class="section">
+        <h2>Attività Fisica</h2>
+        <ul>
+            <?php while($att = $attivita->fetch_assoc()): ?>
+                <li>
+                    <strong><?php echo htmlspecialchars($att['nome']); ?></strong><br>
+                    <span style="color: #666;">
+                        <?php if (!empty($att['descrizione'])): ?>
+                            <?php echo htmlspecialchars($att['descrizione']); ?><br>
+                        <?php endif; ?>
+                        <?php if (!empty($att['note'])): ?>
+                            Note: <?php echo htmlspecialchars($att['note']); ?>
+                        <?php endif; ?>
+                    </span>
+                </li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($farmaci->num_rows > 0): ?>
+    <div class="section">
+        <h2>Farmaci Prescritti</h2>
+        <ul>
+            <?php while($f = $farmaci->fetch_assoc()): ?>
+                <li><?php echo htmlspecialchars($f['nome']); ?></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($integratori->num_rows > 0): ?>
+    <div class="section">
+        <h2>Integratori Prescritti</h2>
+        <ul>
+            <?php while($int = $integratori->fetch_assoc()): ?>
+                <li><?php echo htmlspecialchars($int['nome']); ?></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($supporti->num_rows > 0): ?>
+    <div class="section">
+        <h2>Supporti Prescritti</h2>
+        <ul>
+            <?php while($sup = $supporti->fetch_assoc()): ?>
+                <li><?php echo htmlspecialchars($sup['nome']); ?></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($terapie->num_rows > 0): ?>
+    <div class="section">
+        <h2>Terapie Prescritte</h2>
+        <ul>
+            <?php while($ter = $terapie->fetch_assoc()): ?>
+                <li><?php echo htmlspecialchars($ter['nome']); ?></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($alimenti->num_rows > 0): ?>
+    <div class="section">
+        <h2>Alimenti da Evitare</h2>
+        <ul>
+            <?php while($ali = $alimenti->fetch_assoc()): ?>
+                <li><?php echo htmlspecialchars($ali['nome']); ?></li>
             <?php endwhile; ?>
         </ul>
     </div>
