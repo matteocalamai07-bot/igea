@@ -135,11 +135,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $domande = $_POST["domande"] ?? [];
     $osservazioni = $_POST["osservazioni"] ?? [];
 
-    $farmaci_selezionati = $_POST["farmaci"] ?? [];
-    $integratori_selezionati = $_POST["integratori"] ?? [];
-    $supporti_selezionati = $_POST["supporti"] ?? [];
-    $terapie_selezionate = $_POST["terapie"] ?? [];
-    $alimenti_evitat = $_POST["alimenti_evitat"] ?? [];
+    // Rimuovi duplicati dagli array di selezione
+    $farmaci_selezionati = array_unique($_POST["farmaci"] ?? []);
+    $integratori_selezionati = array_unique($_POST["integratori"] ?? []);
+    $supporti_selezionati = array_unique($_POST["supporti"] ?? []);
+    $terapie_selezionate = array_unique($_POST["terapie"] ?? []);
+    $alimenti_evitat = array_unique($_POST["alimenti_evitat"] ?? []);
 
     if ($livello_stress !== "") {
         if (!is_numeric($livello_stress) || intval($livello_stress) < 1 || intval($livello_stress) > 10) {

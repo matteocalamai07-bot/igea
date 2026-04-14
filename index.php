@@ -472,6 +472,208 @@ $result_attivita = $conn->query($query_attivita);
         }
         .chart-btn:hover { background-color: var(--border-color); }
         .chart-title { margin: 0; font-size: 0.95rem; font-weight: bold; }
+
+        /* MODAL ELIMINAZIONE APPUNTAMENTO */
+        .delete-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-modal-overlay.active {
+            display: flex;
+        }
+
+        .delete-modal-dialog {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 420px;
+            width: 90%;
+            padding: 0;
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .delete-modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .delete-modal-header-icon {
+            font-size: 24px;
+        }
+
+        .delete-modal-header h2 {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 1.2rem;
+        }
+
+        .delete-modal-body {
+            padding: 20px 24px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .delete-modal-detail {
+            background: var(--bg-page);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .delete-modal-detail-label {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .delete-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-modal {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-cancel {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-modal-cancel:hover {
+            background: var(--border-color);
+            opacity: 0.8;
+        }
+
+        .btn-modal-delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-modal-delete:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-modal-delete:active {
+            transform: translateY(0);
+        }
+
+        /* MODAL ERRORE VALIDAZIONE */
+        .error-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-modal-overlay.active {
+            display: flex;
+        }
+
+        .error-modal-dialog {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 420px;
+            width: 90%;
+            padding: 0;
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .error-modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 2px solid #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .error-modal-header-icon {
+            font-size: 28px;
+        }
+
+        .error-modal-header h2 {
+            margin: 0;
+            color: #dc2626;
+            font-size: 1.2rem;
+        }
+
+        .error-modal-body {
+            padding: 20px 24px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .error-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-modal-close-error {
+            background: #dc2626;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-close-error:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -618,6 +820,48 @@ $result_attivita = $conn->query($query_attivita);
         </div>
     </main>
 
+    <!-- MODAL ELIMINAZIONE APPUNTAMENTO -->
+    <div class="delete-modal-overlay" id="deleteAppointmentModal">
+        <div class="delete-modal-dialog">
+            <div class="delete-modal-header">
+                <div class="delete-modal-header-icon">⚠️</div>
+                <h2>Elimina Appuntamento</h2>
+            </div>
+            <div class="delete-modal-body">
+                <p>Sei sicuro di voler eliminare questo appuntamento?</p>
+                <div class="delete-modal-detail">
+                    <div class="delete-modal-detail-label">Titolo</div>
+                    <div id="deleteModalTitle">-</div>
+                </div>
+                <div class="delete-modal-detail">
+                    <div class="delete-modal-detail-label">Data e Orario</div>
+                    <div id="deleteModalDateTime">-</div>
+                </div>
+                <p style="color: #dc2626; font-size: 0.85rem; margin-top: 12px;">⚠️ Questa azione non può essere annullata.</p>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel" id="cancelDeleteAppointment">Annulla</button>
+                <button type="button" class="btn-modal btn-modal-delete" id="confirmDeleteAppointment">Elimina Appuntamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ERRORE VALIDAZIONE -->
+    <div class="error-modal-overlay" id="errorValidationModal">
+        <div class="error-modal-dialog">
+            <div class="error-modal-header">
+                <div class="error-modal-header-icon">❌</div>
+                <h2>Errore di Validazione</h2>
+            </div>
+            <div class="error-modal-body">
+                <p id="errorValidationMessage">Si è verificato un errore.</p>
+            </div>
+            <div class="error-modal-footer">
+                <button type="button" class="btn-modal-close-error" id="closeErrorValidationModal">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
@@ -659,15 +903,17 @@ $result_attivita = $conn->query($query_attivita);
             });
             calendar.render();
 
+            // Dichiarazioni globali degli input
+            var modal = document.getElementById('appointmentModal');
+            var dataInput = document.getElementById('data_appuntamento');
+            var titoloInput = document.getElementById('titolo');
+            var oraInizioInput = document.getElementById('ora_inizio');
+            var oraFineInput = document.getElementById('ora_fine');
+            var appointmentIdInput = document.getElementById('appointment_id');
+            var formActionInput = document.getElementById('form_action');
+            var deleteButton = document.getElementById('deleteAppointment');
+
             function openAppointmentModal(dateStr, eventData = null) {
-                var modal = document.getElementById('appointmentModal');
-                var dataInput = document.getElementById('data_appuntamento');
-                var titoloInput = document.getElementById('titolo');
-                var oraInizioInput = document.getElementById('ora_inizio');
-                var oraFineInput = document.getElementById('ora_fine');
-                var appointmentIdInput = document.getElementById('appointment_id');
-                var formActionInput = document.getElementById('form_action');
-                var deleteButton = document.getElementById('deleteAppointment');
 
                 if (eventData) {
                     dataInput.value = eventData.data_appuntamento;
@@ -713,11 +959,32 @@ $result_attivita = $conn->query($query_attivita);
             var formActionInput = document.getElementById('form_action');
             var deleteAppointmentBtn = document.getElementById('deleteAppointment');
 
-            appointmentForm.addEventListener('submit', function() {
-                if (appointmentIdInput.value) {
-                    formActionInput.value = 'edit';
-                } else {
-                    formActionInput.value = 'save';
+            appointmentForm.addEventListener('submit', function(event) {
+                // Validazione orari
+                if (formActionInput.value !== 'delete') {
+                    const oraInizio = oraInizioInput.value;
+                    const oraFine = oraFineInput.value;
+
+                    if (oraInizio && oraFine) {
+                        // Converti in minuti per il confronto
+                        const [hInizio, mInizio] = oraInizio.split(':').map(Number);
+                        const [hFine, mFine] = oraFine.split(':').map(Number);
+                        
+                        const minutiInizio = hInizio * 60 + mInizio;
+                        const minutiFine = hFine * 60 + mFine;
+
+                        if (minutiFine <= minutiInizio) {
+                            event.preventDefault();
+                            mostraErroreValidazione('L\'ora di fine deve essere successiva all\'ora di inizio.');
+                            return;
+                        }
+                    }
+
+                    if (appointmentIdInput.value) {
+                        formActionInput.value = 'edit';
+                    } else {
+                        formActionInput.value = 'save';
+                    }
                 }
             });
 
@@ -725,9 +992,78 @@ $result_attivita = $conn->query($query_attivita);
                 if (!appointmentIdInput.value) {
                     return;
                 }
-                if (confirm('Sei sicuro di eliminare questo appuntamento?')) {
-                    formActionInput.value = 'delete';
-                    appointmentForm.submit();
+                
+                // Mostra il modal con i dettagli dell'appuntamento
+                const titolo = titoloInput.value;
+                const data = dataInput.value;
+                const oraInizio = oraInizioInput.value;
+                const oraFine = oraFineInput.value;
+                
+                // Formatta la data
+                const dataObj = new Date(data + 'T00:00:00');
+                const dataFormattata = dataObj.toLocaleDateString('it-IT', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                document.getElementById('deleteModalTitle').textContent = titolo;
+                document.getElementById('deleteModalDateTime').textContent = 
+                    dataFormattata + ' dalle ' + oraInizio + ' alle ' + oraFine;
+                
+                document.getElementById('deleteAppointmentModal').classList.add('active');
+            });
+
+            // Gestione modal eliminazione
+            const deleteModal = document.getElementById('deleteAppointmentModal');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteAppointment');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteAppointment');
+
+            document.getElementById('cancelDeleteAppointment').addEventListener('click', function() {
+                deleteModal.classList.remove('active');
+            });
+
+            deleteModal.addEventListener('click', function(event) {
+                if (event.target === deleteModal) {
+                    deleteModal.classList.remove('active');
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && deleteModal.classList.contains('active')) {
+                    deleteModal.classList.remove('active');
+                }
+            });
+
+            confirmDeleteBtn.addEventListener('click', function() {
+                formActionInput.value = 'delete';
+                appointmentForm.submit();
+            });
+
+            // Funzione per mostrare errore di validazione
+            function mostraErroreValidazione(messaggio) {
+                document.getElementById('errorValidationMessage').textContent = messaggio;
+                document.getElementById('errorValidationModal').classList.add('active');
+            }
+
+            // Gestione modal errore validazione
+            const errorModal = document.getElementById('errorValidationModal');
+            const closeErrorBtn = document.getElementById('closeErrorValidationModal');
+
+            closeErrorBtn.addEventListener('click', function() {
+                errorModal.classList.remove('active');
+            });
+
+            errorModal.addEventListener('click', function(event) {
+                if (event.target === errorModal) {
+                    errorModal.classList.remove('active');
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && errorModal.classList.contains('active')) {
+                    errorModal.classList.remove('active');
                 }
             });
 
