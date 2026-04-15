@@ -41,13 +41,6 @@ if (isset($_GET['ajax_chart'])) {
 // =========================================================================
 
 // 1. QUERY PER IL CALENDARIO
-$query_visite = "
-    SELECT v.data, p.nome, p.cognome 
-    FROM visita v 
-    JOIN paziente p ON v.fk_paziente = p.id
-";
-$result_visite = $conn->query($query_visite);
-
 $query_appuntamenti = "
     SELECT id, data_appuntamento, titolo, ora_inizio, ora_fine
     FROM appuntamenti
@@ -55,21 +48,6 @@ $query_appuntamenti = "
 $result_appuntamenti = $conn->query($query_appuntamenti);
 
 $eventi_calendario = [];
-if ($result_visite && $result_visite->num_rows > 0) {
-    while($row = $result_visite->fetch_assoc()) {
-        $eventi_calendario[] = [
-            'id' => 'vis_' . $row['data'] . '_' . md5($row['nome'] . $row['cognome']),
-            'title' => 'Visita: ' . $row['nome'] . ' ' . $row['cognome'],
-            'start' => $row['data'],
-            'allDay' => true,
-            'color' => 'var(--primary-color)',
-            'extendedProps' => [
-                'tipo' => 'visita'
-            ]
-        ];
-    }
-}
-
 if ($result_appuntamenti && $result_appuntamenti->num_rows > 0) {
     while($row = $result_appuntamenti->fetch_assoc()) {
         $eventi_calendario[] = [
@@ -96,6 +74,9 @@ $query_attivita = "
     FROM visita v
     JOIN paziente p ON v.fk_paziente = p.id
     LEFT JOIN osservazioni_finali o ON v.id = o.fk_visita
+    WHERE o.id IS NULL OR o.id = (
+        SELECT MIN(id) FROM osservazioni_finali WHERE fk_visita = v.id
+    )
     ORDER BY v.data DESC LIMIT 6
 ";
 $result_attivita = $conn->query($query_attivita);
@@ -333,7 +314,7 @@ $result_attivita = $conn->query($query_attivita);
         .chart-container { flex: 1; position: relative; min-height: 0; width: 100%; }
         /* OVERRIDE FULLCALENDAR */
         .fc { 
-            --fc-today-bg-color: rgba(99, 102, 241, 0.15);
+            --fc-today-bg-color: rgba(92, 166, 250, 0.2);
             --fc-border-color: var(--border-color);
             --fc-page-bg-color: var(--bg-card);
             --fc-neutral-text-color: var(--text-main);
