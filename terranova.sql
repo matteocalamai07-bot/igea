@@ -25,7 +25,9 @@ CREATE DATABASE IF NOT EXISTS `terranova`
   COLLATE utf8mb4_general_ci;
 USE `terranova`;
 -- --------------------------------------------------------
-
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' IDENTIFIED BY '' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
 --
 -- Struttura della tabella `alimenti`
 --
