@@ -13,7 +13,7 @@ $errors = [];
 ========================= */
 
 if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
-    die("ID paziente non valido.");
+    die("ID cliente non valido.");
 }
 
 $id_paziente = intval($_GET["id"]);
@@ -25,7 +25,7 @@ $check->execute();
 $result = $check->get_result();
 
 if ($result->num_rows === 0) {
-    die("Paziente non trovato.");
+    die("Cliente non trovato.");
 }
 $check->close();
 
@@ -307,7 +307,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Igea - Nuova Visita Paziente</title>
+    <title>Igea - Nuova Visita Cliente</title>
     <link rel="stylesheet" href="style.css">
 
     <style>
@@ -464,8 +464,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="page-header">
             <h1>Nuova Visita</h1>
             <div class="button-group">
-                <a href="pazienti.php" class="btn-azione">← Pazienti</a>
-                <a href="scheda_paziente.php?id=<?php echo $id_paziente; ?>" class="btn-azione">← Scheda Paziente</a>
+                <a href="pazienti.php" class="btn-azione">← Clienti</a>
+                <a href="scheda_paziente.php?id=<?php echo $id_paziente; ?>" class="btn-azione">← Scheda Cliente</a>
             </div>
         </div>
 

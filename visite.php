@@ -370,11 +370,11 @@ $alimenti = $conn->query("
         <div class="page-header">
             <div>
                 <h1>Dettaglio Visita</h1>
-                <p>Paziente: <?php echo htmlspecialchars($visita['nome'] . " " . $visita['cognome']); ?></p>
+                <p>Cliente: <?php echo htmlspecialchars($visita['nome'] . " " . $visita['cognome']); ?></p>
             </div>
             <div class="button-group">
-                <a href="pazienti.php" class="btn-azione">← Pazienti</a>
-                <a href="scheda_paziente.php?id=<?php echo $visita['fk_paziente']; ?>" class="btn-azione">← Scheda Paziente</a>
+                <a href="pazienti.php" class="btn-azione">← Clienti</a>
+                <a href="scheda_paziente.php?id=<?php echo $visita['fk_paziente']; ?>" class="btn-azione">← Scheda Cliente</a>
                 <a href="genera_pdf.php?id=<?php echo $id_visita; ?>" class="btn-azione">📄 PDF</a>
                 <a href="#" class="btn-azione btn-elimina" onclick="confermaEliminazione('Visita', 'Visita del <?php echo htmlspecialchars($visita['data']); ?>', 'elimina_visita.php?id=<?php echo $id_visita; ?>&paziente_id=<?php echo $visita['fk_paziente']; ?>'); return false;">Elimina</a>
             </div>

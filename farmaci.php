@@ -151,7 +151,7 @@
             <h1>Igea</h1>
             <nav>
                 <a href="index.php">Home</a>
-                <a href="pazienti.php">Pazienti</a>
+                <a href="pazienti.php">Clienti</a>
                 <a href="farmaci.php">Terapie</a>
                 <a href="alimenti.php">Alimenti</a>
             </nav>

@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Igea - Pazienti</title>
+    <title>Igea - Clienti</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* Stili generali e adattamento al tema */
@@ -310,7 +310,7 @@ if ($conn->connect_error) {
         <h1>Igea</h1>
         <nav>
             <a href="index.php">Home</a>
-            <a href="pazienti.php" class="active">Pazienti</a>
+            <a href="pazienti.php" class="active">Clienti</a>
             <a href="farmaci.php">Terapie</a>
             <a href="alimenti.php">Alimenti</a>
         </nav>
@@ -319,17 +319,17 @@ if ($conn->connect_error) {
     <main class="main-content">
 
         <div>
-            <h1 class="page-title">Gestione Pazienti</h1>
+            <h1 class="page-title">Gestione Clienti</h1>
             
             <div style="display: flex; align-items: flex-end; gap: 20px; margin-bottom: 30px;">
                 
                 <div>
-                    <label class="section-label">Aggiungi un nuovo paziente</label>
-                    <a href="nuovo_paziente.php" class="btn-azione" style="height: 40px; padding: 0 20px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none;">+ Nuovo Paziente</a>
+                    <label class="section-label">Aggiungi un nuovo cliente</label>
+                    <a href="nuovo_paziente.php" class="btn-azione" style="height: 40px; padding: 0 20px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none;">+ Nuovo Cliente</a>
                 </div>
 
                 <div style="position: relative;">
-                    <label class="section-label">Ricerca Paziente</label>
+                    <label class="section-label">Ricerca Cliente</label>
                     <input type="text" id="searchPaziente" class="search-input" placeholder="Digita nome o cognome..." autocomplete="off">
                     <div id="risultatiRicerca"></div>
                 </div>
@@ -338,14 +338,14 @@ if ($conn->connect_error) {
         </div>
 
         <div class="card-cruscotto">
-            <h2 style="margin-top:0;">Elenco Pazienti</h2>
+            <h2 style="margin-top:0;">Elenco Clienti</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Nome</th>
                         <th>Cognome</th>
                         <th>Data di Nascita</th>
-                        <th style="text-align: center;">Scheda Paziente</th>
+                        <th style="text-align: center;">Scheda Cliente</th>
                         <th style="text-align: center;">Anamnesi</th>
                         <th style="text-align: center;">Azione</th>
                     </tr>
@@ -382,12 +382,12 @@ if ($conn->connect_error) {
                               </td>";
                               
                         echo "<td style='text-align: center;'>
-                                <a href='#' class='btn-small btn-elimina' onclick=\"confermaEliminazione('Paziente', '{$row['nome']} {$row['cognome']}', 'elimina_paziente.php?id={$row['id']}'); return false;\">Elimina</a>
+                                <a href='#' class='btn-small btn-elimina' onclick=\"confermaEliminazione('Cliente', '{$row['nome']} {$row['cognome']}', 'elimina_paziente.php?id={$row['id']}'); return false;\">Elimina</a>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6' class='empty-msg'>Nessun paziente registrato nel database.</td></tr>";
+                    echo "<tr><td colspan='6' class='empty-msg'>Nessun cliente registrato nel database.</td></tr>";
                 }
                 ?>
                 </tbody>

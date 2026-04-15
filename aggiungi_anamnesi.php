@@ -14,7 +14,7 @@ $success_msg = "";
 ========================= */
 
 if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
-    die("ID paziente non valido.");
+    die("ID cliente non valido.");
 }
 
 $id_paziente = intval($_GET["id"]);
@@ -26,7 +26,7 @@ $check->execute();
 $result = $check->get_result();
 
 if ($result->num_rows === 0) {
-    die("Paziente non trovato.");
+    die("Cliente non trovato.");
 }
 $paziente_info = $result->fetch_assoc();
 $nome_paziente = $paziente_info['nome'] . " " . $paziente_info['cognome'];
@@ -329,7 +329,7 @@ $conn->close();
         <h1>Igea</h1>
         <nav>
             <a href="index.php">Home</a>
-            <a href="pazienti.php" class="active">Pazienti</a>
+            <a href="pazienti.php" class="active">Clienti</a>
             <a href="farmaci.php">Terapie</a>
             <a href="alimenti.php">Alimenti</a>
         </nav>
@@ -346,7 +346,7 @@ $conn->close();
                         <?php echo $existing_anamnesi ? 'Modifica le informazioni cliniche del paziente.' : 'Inserisci le informazioni cliniche del paziente.'; ?>
                     </p>
                 </div>
-                <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 10px 16px; text-decoration: none; white-space: nowrap;">← Torna alla lista pazienti</a>
+                <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 10px 16px; text-decoration: none; white-space: nowrap;">← Torna alla lista clienti</a>
             </div>
 
             <?php if (!empty($errors)): ?>

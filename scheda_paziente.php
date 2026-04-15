@@ -7,7 +7,7 @@ if ($conn->connect_error) {
 }
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("ID paziente non valido");
+    die("ID cliente non valido");
 }
 
 $id_paziente = intval($_GET['id']);
@@ -17,7 +17,7 @@ $res = $conn->query("SELECT * FROM paziente WHERE id = $id_paziente");
 $paziente = $res->fetch_assoc();
 
 if (!$paziente) {
-    die("Paziente non trovato");
+    die("Cliente non trovato");
 }
 ?>
 
@@ -25,7 +25,7 @@ if (!$paziente) {
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Igea - Scheda Paziente</title>
+<title>Igea - Scheda Cliente</title>
 <link rel="stylesheet" href="style.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -136,9 +136,9 @@ if (!$paziente) {
 
     <main class="main-content">
         <div class="page-header">
-            <h1>Scheda Paziente</h1>
+            <h1>Scheda Cliente</h1>
             <div class="button-group">
-                <a href="pazienti.php" class="btn-azione">← Lista Pazienti</a>
+                <a href="pazienti.php" class="btn-azione">← Lista Clienti</a>
                 <a href="index.php" class="btn-azione">Home</a>
                 <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>" class="btn-azione">Nuova Anamnesi</a>
                 <a href="nuova_visita.php?id=<?php echo $id_paziente; ?>" class="btn-azione">Nuova Visita</a>

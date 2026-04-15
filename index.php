@@ -669,7 +669,7 @@ $result_attivita = $conn->query($query_attivita);
         <h1>Igea</h1>
         <nav>
             <a href="index.php" class="active">Home</a>
-            <a href="pazienti.php">Pazienti</a>
+            <a href="pazienti.php">Clienti</a>
             <a href="farmaci.php">Terapie</a>
             <a href="alimenti.php">Alimenti</a>
         </nav>
@@ -686,13 +686,13 @@ $result_attivita = $conn->query($query_attivita);
             </div>
             
             <div class="action-bar">
-                <a href="nuovo_paziente.php" class="btn-azione">+ Nuovo Paziente</a>
+                <a href="nuovo_paziente.php" class="btn-azione">+ Nuovo Cliente</a>
                 <a href="#" class="btn-azione" id="openAppointmentModalBtn">+ Appuntamento</a>
             </div>
 
             <div class="search-bar">
                 <div class="search-container">
-                    <input type="text" id="cercaPaziente" class="search-box-btn-style" placeholder="Cerca paziente..." onkeyup="cerca()">
+                    <input type="text" id="cercaPaziente" class="search-box-btn-style" placeholder="Cerca cliente..." onkeyup="cerca()">
                     <div id="risultatiRicerca"></div>
                 </div>
             </div>
@@ -709,7 +709,7 @@ $result_attivita = $conn->query($query_attivita);
                         <input type="date" id="data_appuntamento" name="data_appuntamento" required>
 
                         <label for="titolo">Titolo</label>
-                        <input type="text" id="titolo" name="titolo" placeholder="Es. Visita paziente" required>
+                        <input type="text" id="titolo" name="titolo" placeholder="Es. Visita cliente" required>
 
                         <label for="ora_inizio">Ora inizio</label>
                         <input type="time" id="ora_inizio" name="ora_inizio" required>

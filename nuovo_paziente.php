@@ -48,7 +48,7 @@
 <html lang="it">
     <head>
         <meta charset="UTF-8">
-        <title>Igea - Nuovo Paziente</title>
+        <title>Igea - Nuovo Cliente</title>
         <link rel="stylesheet" href="style.css">
         <style>
             .form-container {
@@ -84,7 +84,7 @@
             <h1>Igea</h1>
             <nav>
                 <a href="index.php">Home</a>
-                <a href="pazienti.php">Pazienti</a>
+                <a href="pazienti.php">Clienti</a>
                 <a href="farmaci.php">Terapie</a>
                 <a href="alimenti.php">Alimenti</a>
             </nav>
@@ -93,8 +93,8 @@
         <main class="main-content">
             
             <div class="page-header">
-                <h1>Nuovo Paziente</h1>
-                <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 8px 12px; text-decoration: none;">← Torna alla lista dei pazienti</a>
+                <h1>Nuovo Cliente</h1>
+                <a href="pazienti.php" class="btn-azione" style="font-size: 0.9em; padding: 8px 12px; text-decoration: none;">← Torna alla lista dei clienti</a>
             </div>
 
             <?php if (!empty($success_msg)): ?>
@@ -169,12 +169,12 @@
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn-submit-compact" style="margin-top: -4px;">Salva Paziente</button>
+                        <button type="submit" class="btn-submit-compact" style="margin-top: -4px;">Salva Cliente</button>
                     </div>
                 </div>
 
                 <div class="form-footer" style="display: none;">
-                    <button type="submit" class="btn-submit-small">Salva Paziente</button>
+                    <button type="submit" class="btn-submit-small">Salva Cliente</button>
                 </div>
             </form>
 
