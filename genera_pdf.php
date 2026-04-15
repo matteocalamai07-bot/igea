@@ -236,6 +236,7 @@ $alimenti = $conn->query("
 <div class="container">
     <div class="no-print">
         <button onclick="window.print()">🖨️ Stampa / Salva come PDF</button>
+        <button onclick="window.history.back()" style="margin-left: 10px;">← Indietro</button>
     </div>
 
     <div class="header">
@@ -360,7 +361,7 @@ $alimenti = $conn->query("
 
     <?php if ($farmaci->num_rows > 0): ?>
     <div class="section">
-        <h2>Farmaci Prescritti</h2>
+        <h2>Farmaci Consigliati</h2>
         <ul>
             <?php while($f = $farmaci->fetch_assoc()): ?>
                 <li><?php echo htmlspecialchars($f['nome']); ?></li>
@@ -371,7 +372,7 @@ $alimenti = $conn->query("
 
     <?php if ($integratori->num_rows > 0): ?>
     <div class="section">
-        <h2>Integratori Prescritti</h2>
+        <h2>Integratori Consigliati</h2>
         <ul>
             <?php while($int = $integratori->fetch_assoc()): ?>
                 <li><?php echo htmlspecialchars($int['nome']); ?></li>
@@ -382,7 +383,7 @@ $alimenti = $conn->query("
 
     <?php if ($supporti->num_rows > 0): ?>
     <div class="section">
-        <h2>Supporti Prescritti</h2>
+        <h2>Supporti Consigliati</h2>
         <ul>
             <?php while($sup = $supporti->fetch_assoc()): ?>
                 <li><?php echo htmlspecialchars($sup['nome']); ?></li>
