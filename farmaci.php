@@ -138,6 +138,27 @@
             .btn-modal-delete:active {
                 transform: translateY(0);
             }
+
+            /* STILE PER IL PULSANTE ELIMINA IN ROSSO */
+            .btn-elimina {
+                display: inline-block;
+                padding: 6px 12px;
+                background-color: #ef4444;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 0.85rem;
+                font-weight: bold;
+                border: 1px solid #dc2626;
+                transition: background-color 0.2s, transform 0.1s;
+            }
+            .btn-elimina:hover {
+                background-color: #dc2626;
+                color: #ffffff;
+            }
+            .btn-elimina:active {
+                transform: scale(0.95);
+            }
         </style>
     </head>
     <body>
@@ -151,7 +172,7 @@
             <h1>Igea</h1>
             <nav>
                 <a href="index.php">Home</a>
-                <a href="pazienti.php">Pazienti</a>
+                <a href="pazienti.php">Clienti</a>
                 <a href="farmaci.php">Terapie</a>
                 <a href="alimenti.php">Alimenti</a>
             </nav>
@@ -184,7 +205,7 @@
                                 echo "<tr>";
                                 echo "<td>".$row['nome']."</td>";
                                 echo "<td>".$row['descrizione']."</td>";
-                                echo "<td><a href='#' onclick=\"confermaEliminazione('Farmaco', '".$row['nome']."', 'elimina_farmaco.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "<td><a href='#' class='btn-elimina' onclick=\"confermaEliminazione('Farmaco', '".$row['nome']."', 'elimina_farmaco.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
                                 echo "</tr>";
                             }
                         ?>
@@ -210,7 +231,7 @@
                                 echo "<tr>";
                                 echo "<td>".$row['nome']."</td>";
                                 echo "<td>".$row['descrizione']."</td>";
-                                echo "<td><a href='#' onclick=\"confermaEliminazione('Integratore', '".$row['nome']."', 'elimina_integratore.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "<td><a href='#' class='btn-elimina' onclick=\"confermaEliminazione('Integratore', '".$row['nome']."', 'elimina_integratore.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
                                 echo "</tr>";
                             }
                         ?>
@@ -236,7 +257,7 @@
                                 echo "<tr>";
                                 echo "<td>".$row['nome']."</td>";
                                 echo "<td>".$row['descrizione']."</td>";
-                                echo "<td><a href='#' onclick=\"confermaEliminazione('Supporto', '".$row['nome']."', 'elimina_supporto.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "<td><a href='#' class='btn-elimina' onclick=\"confermaEliminazione('Supporto', '".$row['nome']."', 'elimina_supporto.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
                                 echo "</tr>";
                             }
                         ?>
@@ -262,7 +283,7 @@
                                 echo "<tr>";
                                 echo "<td>".$row['nome']."</td>";
                                 echo "<td>".$row['descrizione']."</td>";
-                                echo "<td><a href='#' onclick=\"confermaEliminazione('Terapia', '".$row['nome']."', 'elimina_terapia.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
+                                echo "<td><a href='#' class='btn-elimina' onclick=\"confermaEliminazione('Terapia', '".$row['nome']."', 'elimina_terapia.php?id=".$row['id']."'); return false;\">Elimina</a></td>";
                                 echo "</tr>";
                             }
                         ?>
