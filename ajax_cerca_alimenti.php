@@ -39,7 +39,7 @@ if ($result->num_rows > 0) {
 
         echo "<a href='#'
                 onclick=\"confermaEliminazione('elimina_alimento.php?id=".$row['id']."'); return false;\"
-                style='text-decoration:none;color:black;display:block;'>";
+                style='text-decoration:none;display:block;'>";
 
         echo htmlspecialchars($row['nome']);
 

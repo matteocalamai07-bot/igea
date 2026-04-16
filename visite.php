@@ -357,6 +357,19 @@ $alimenti = $conn->query("
         .btn-modal-delete:active {
             transform: translateY(0);
         }
+
+        /* STILE PULSANTE ELIMINA ROSSO */
+        .btn-elimina {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .btn-elimina:hover {
+            background-color: #dc2626 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
     </style>
 </head>
 <body>

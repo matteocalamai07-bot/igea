@@ -91,7 +91,7 @@
                 display: block;
                 padding: 10px 15px;
                 margin: 0;
-                color: #0f172a;
+                /*color: #0f172a;*/
                 text-decoration: none;
                 border-bottom: 1px solid #f1f5f9;
                 font-size: 0.95rem;

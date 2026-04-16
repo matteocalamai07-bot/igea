@@ -198,9 +198,10 @@ $conn->close();
         .card-cruscotto {
             display: flex;
             flex-direction: column;
-            max-height: fit-content;
             padding: 15px 20px;
             padding-bottom: 0;
+            overflow-y: auto;
+            max-height: calc(100vh - 60px);
         }
         
         form {
@@ -264,8 +265,12 @@ $conn->close();
         .anamnesi-item { padding: 15px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; }
         .anamnesi-meta { color: var(--text-muted); font-size:0.9rem; margin-bottom: 5px; font-weight: bold;}
         .anamnesi-text { color: var(--text-main); }
-        .btn-small { font-size:0.85rem; padding:6px 10px; margin-left:8px; text-decoration:none; border-radius:4px; background:var(--bg-page); color:var(--text-main); border: 1px solid var(--border-color); transition: all 0.2s; }
-        .btn-small:hover { background: var(--border-color); }
+        .btn-small { font-size:0.9rem; padding:10px 20px; margin-left:8px; text-decoration:none; border-radius:4px; background:var(--text-main); color:white; border: none; transition: all 0.2s; cursor: pointer; }
+        .btn-small:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn-small.btn-elimina {
+            background-color: #ef4444 !important; color: #ffffff !important; border: none !important;
+        }
+        .btn-small.btn-elimina:hover { background-color: #dc2626 !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
 
         /* Stili Pop-up Modale */
         .modal-overlay {
@@ -286,7 +291,116 @@ $conn->close();
             padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s;
         }
         .btn-cancel:hover { background: var(--border-color); }
-        .btn-elimina {
+
+        /* MODAL ELIMINAZIONE ELEGANTE */
+        .delete-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-modal-overlay.active {
+            display: flex;
+        }
+
+        .delete-modal-dialog {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 420px;
+            width: 90%;
+            padding: 0;
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .delete-modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .delete-modal-header-icon {
+            font-size: 24px;
+        }
+
+        .delete-modal-header h2 {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 1.2rem;
+        }
+
+        .delete-modal-body {
+            padding: 20px 24px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .delete-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-modal {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-cancel {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-modal-cancel:hover {
+            background: var(--border-color);
+            opacity: 0.8;
+        }
+
+        .btn-modal-delete {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+
+        .btn-modal-delete:hover {
+            background: #dc2626 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-modal-delete:active {
+            transform: translateY(0);
+        }
+
+        /* MODAL VECCHIO (deprecated) */
             background-color: #ef4444; color: #ffffff; border: 1px solid #dc2626; font-weight: bold;
             padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s; text-decoration: none;
         }
@@ -381,7 +495,7 @@ $conn->close();
                             </div>
                             <div style="white-space:nowrap;">
                                 <a class="btn-small" href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&anamnesi_id=<?php echo $a['id']; ?>">Modifica</a>
-                                <a class="btn-small btn-elimina" style="color: white;" href="#" onclick="confermaEliminazioneAnamnesi('aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&delete_anamnesi=<?php echo $a['id']; ?>'); return false;">Elimina</a>
+                                <a class="btn-small btn-elimina" href="#" onclick="confermaEliminazioneAnamnesi('aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&delete_anamnesi=<?php echo $a['id']; ?>'); return false;">Elimina</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -389,10 +503,10 @@ $conn->close();
             <?php endif; ?>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 15px;">
-                <button type="button" class="btn-azione" style="font-size: 1.1em; padding: 28px 40px; border: none; cursor: pointer; background: linear-gradient(135deg, #6366f1, #0ea5e9) !important; color: white;" onclick="document.querySelector('form').submit();">
+                <button type="button" class="btn-azione" style="font-size: 0.95em; padding: 12px 24px; border: none; cursor: pointer; background: linear-gradient(135deg, #6366f1, #0ea5e9) !important; color: white;" onclick="document.querySelector('form').submit();">
                     <?php echo $existing_anamnesi ? 'Aggiorna Anamnesi' : 'Salva Anamnesi'; ?>
                 </button>
-                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-azione" style="font-size: 1em; padding: 12px 24px; text-decoration: none; background: linear-gradient(135deg, #6366f1, #0ea5e9) !important; color: white;">+ Aggiungi una Nuova Anamnesi</a>
+                <a href="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>&new=1" class="btn-azione" style="font-size: 0.95em; padding: 12px 24px; text-decoration: none; background: linear-gradient(135deg, #6366f1, #0ea5e9) !important; color: white;">+ Aggiungi una Nuova Anamnesi</a>
             </div>
 
             <form method="POST" action="aggiungi_anamnesi.php?id=<?php echo $id_paziente; ?>">
@@ -494,6 +608,58 @@ $conn->close();
         </div>
 
     </main>
+
+    <!-- MODAL ELIMINAZIONE ELEGANTE -->
+    <div class="delete-modal-overlay" id="deleteModalAnamnesi">
+        <div class="delete-modal-dialog">
+            <div class="delete-modal-header">
+                <div class="delete-modal-header-icon">⚠️</div>
+                <h2>Elimina Anamnesi</h2>
+            </div>
+            <div class="delete-modal-body">
+                <p>Sei sicuro di voler eliminare questa anamnesi?</p>
+                <p style="color: #dc2626; font-size: 0.85rem; margin-top: 12px;">⚠️ Questa azione non può essere annullata.</p>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel" onclick="chiudiModalAnamnesi()">Annulla</button>
+                <button type="button" class="btn-modal btn-modal-delete" id="confirmDeleteAnamnesi">Elimina</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteAnamnesiUrl = "";
+
+        function confermaEliminazioneAnamnesi(url) {
+            deleteAnamnesiUrl = url;
+            document.getElementById("deleteModalAnamnesi").classList.add("active");
+        }
+
+        function chiudiModalAnamnesi() {
+            document.getElementById("deleteModalAnamnesi").classList.remove("active");
+            deleteAnamnesiUrl = "";
+        }
+
+        document.getElementById("confirmDeleteAnamnesi").addEventListener("click", function() {
+            if (deleteAnamnesiUrl) {
+                window.location.href = deleteAnamnesiUrl;
+            }
+        });
+
+        // Chiudi modal cliccando fuori
+        document.getElementById("deleteModalAnamnesi").addEventListener("click", function(event) {
+            if (event.target === this) {
+                chiudiModalAnamnesi();
+            }
+        });
+
+        // Chiudi con tasto Escape
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                chiudiModalAnamnesi();
+            }
+        });
+    </script>
 
     <div class="modal-overlay" id="confirmModalAnamnesi">
         <div class="modal">
